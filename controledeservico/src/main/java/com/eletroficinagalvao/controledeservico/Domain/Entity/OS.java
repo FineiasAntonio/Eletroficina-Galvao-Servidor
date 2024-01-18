@@ -54,6 +54,7 @@ public class OS {
     @JoinColumn (name = "id_reserva")
     @OneToOne
     private Reserva id_reserva;
-
+    @Column (name = "valorTotal")
+    private double valorTotal;
 
 }

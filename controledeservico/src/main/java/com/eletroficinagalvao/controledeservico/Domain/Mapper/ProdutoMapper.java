@@ -49,7 +49,7 @@ public class ProdutoMapper {
                 .produto(dto.produto())
                 .referencia(dto.referencia())
                 .quantidadeNescessaria(dto.quantidade().trim().isEmpty() ? 0 : Integer.parseInt(dto.quantidade()))
-                .quantidadeReservada(dto.quantidade().trim().isEmpty() ? 0 : Integer.parseInt(dto.quantidade()))
+                .quantidadeReservada(dto.quantidade().trim().isEmpty() ? 0 : Integer.parseInt(dto.quantidade()) * -1)
                 .precoUnitario(Double.parseDouble(dto.precoUnitario()))
                 .build();
     }

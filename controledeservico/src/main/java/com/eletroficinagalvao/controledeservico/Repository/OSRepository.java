@@ -11,6 +11,9 @@ import java.util.List;
 @Repository
 public interface OSRepository extends JpaRepository<OS, Integer> {
 
+    @Query("SELECT os FROM OS os WHERE os.situacao = AGUARDANDO_PECA")
+    public List<OS> getWaitingOrders();
+
     @Query("SELECT os FROM OS os WHERE os.nome LIKE %:name%")
     public List<OS> getByLikeThisName(@Param("name") String name);
 

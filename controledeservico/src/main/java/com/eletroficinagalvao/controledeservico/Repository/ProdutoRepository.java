@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ProdutoRepository extends JpaRepository<Produto, String> {
 
@@ -14,6 +15,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, String> {
     public List<Produto> getByLikeThisName(@Param("name") String name);
 
     @Query("SELECT produto FROM Produto produto WHERE produto.quantidade > 0")
-    public List<Produto> listAvaiableItems();
+    public Set<Produto> listAvaiableItems();
 
 }
