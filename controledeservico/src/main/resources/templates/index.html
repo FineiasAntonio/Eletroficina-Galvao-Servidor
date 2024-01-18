@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="header">
+        <img class="logo" src="media/pdf_loja_logo.png">
+        <h1>Eletroficina Galvão Serviços</h1>
+        
+        <ul>
+          <li><a href="index.html">Ordens de Serviço</a></li>
+          <li><a href="estoque.html">Estoque</a></li>
+          <li><a>Controle</a></li>
+        </ul>
+
+    </div>
+
+    <div id="container">  
+        <input type="text" id="search_bar" placeholder="Pesquisar">     
+        <button id="abrir_modal">Nova Ordem</button>
+        <div id="tabela">
+          <table>
+          <thead>
+            <tr>
+                <th scope="col">Ordem de Serviço</th>
+                <th scope="col">Cliente</th>
+                <th scope="col">Produto</th>
+                <th scope="col">Data de Saída</th>
+                <th scope="col">Serviço</th>
+                <th scope="col">Situação</th>
+                <th scope="col">Técnico</th>
+            </tr>
+          </thead>
+          <tbody>            
+          </tbody>
+          </table>
+        </div>
+        
+      </div>
+    
+    <dialog id="modal">
+      <h1>Nova Ordem de Serviço</h1>
+      <button id="fechar_modal">X</button>
+      <form>
+        <div>
+          <h2>Informações do cliente</h2>
+          <input type="text" placeholder="Nome" id="nome">
+          <input type="number" placeholder="CPF/CNPJ" id="cpf">
+          <input type="text" placeholder="Endereço" id="endereco">
+          <input type="number" placeholder="Telefone" id="telefone">
+        </div>
+        <hr>
+        <div>
+          <h2>Informações do produto</h2>
+          <input type="text" placeholder="Produto" id="produto">
+          <input type="number" placeholder="Número de série" id="numeroSerie">
+        </div>
+        <hr>
+        <div>
+          <h2>Informações do serviço</h2>
+          <input type="text" placeholder="Serviço" id="servico">
+          
+          <label>Data para entrega</label>
+          <input type="date" placeholder="Data de entrega" id="dataSaida">
+
+          <label>Técnico responsável</label>
+          <select id="funcionarioBox">
+            
+          </select>
+
+          <div id="anexo">
+            <p>Anexar Imagem</p>
+            <input type="file" id="images" accept="image/jpeg" multiple/>
+            <label for="images" id="images_label">+</label>
+          </div>
+
+          <label>Observações do cliente</label>
+          <input type="text" id="obs">
+
+          <button id="submit" type="submit">Enviar</button>
+
+        </div>
+      </form>
+    </dialog>
+    <dialog id="os_selecionada">
+      <button id="fechar_modal">X</button>
+      <div id="data_div">
+        
+      </div>
+    </dialog>
+
+    <button id="a">oOOos</button>
+</body>
+</html>
