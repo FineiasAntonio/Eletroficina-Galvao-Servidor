@@ -1,2 +1,7 @@
-package com.eletroficinagalvao.controledeservico.Domain.DTO;public record ReservaRequestDTO() {
+package com.eletroficinagalvao.controledeservico.Domain.DTO;
+
+public record ReservaRequestDTO(
+        String uuid,
+        String quantidade
+) {
 }

@@ -1,12 +1,15 @@
 package com.eletroficinagalvao.controledeservico.Domain.Entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table (name = "estoque")
 public class Produto {
 
@@ -23,4 +26,14 @@ public class Produto {
     private int quantidade;
     @Column (name = "preco_unitario")
     private double precoUnitario;
+    
+    public Produto(String produto, String referencia, int quantidade, double precoUnitario) {
+        this.produto = produto;
+        this.referencia = referencia;
+        this.quantidade = quantidade;
+        this.precoUnitario = precoUnitario;
+    }
+
+    
+
 }

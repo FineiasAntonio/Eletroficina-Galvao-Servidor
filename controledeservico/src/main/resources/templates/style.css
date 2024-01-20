@@ -132,7 +132,7 @@ dialog #fechar_modal {
     color: #aaaaaa;
 }
 
-#modal div{
+#novaOrdemModal div{
     margin-top: 10px;
 }
 
@@ -147,13 +147,13 @@ input[type="number"]::-webkit-outer-spin-button {
     
 }
 
-#modal label {
+#novaOrdemModal label {
     display: block;
     font-family: arial;
     margin-bottom: 8px;
 }
 
-#modal input {
+#novaOrdemModal input {
     width: 40%;
     padding: 11px;
     margin-bottom: 16px;
@@ -162,39 +162,39 @@ input[type="number"]::-webkit-outer-spin-button {
     border-bottom: 1px solid rgb(61, 61, 61);
     box-sizing: border-box;
 }
-#modal input:focus{
+#novaOrdemModal input:focus{
     outline: none;
 }
-#modal input:focus::placeholder{
+#novaOrdemModal input:focus::placeholder{
     color: black;
     font-size: 11px;
     transition: all 0.3s ease-in-out;
     transform: translateY(-15px);
 }
 
-#modal #cpf{
+#novaOrdemModal #cpf{
     width: 15%;
 }
-#modal #telefone{
+#novaOrdemModal #telefone{
     width: 20%;
 }
-#modal #obs{
+#novaOrdemModal #obs{
     width: 100%;
 }
 
-#modal #anexo{
+#novaOrdemModal #anexo{
     position: absolute;
     right: 20%;
     top: 90%;
 }
-#modal #anexo p{
+#novaOrdemModal #anexo p{
 
     font-family: arial;
 }
-#modal #images {
+#novaOrdemModal #images {
     display: none;
 }
-#modal #images_label{
+#novaOrdemModal #images_label{
     background-color: #4CAF50;
     color: white;
     padding: 10px 15px;
@@ -205,7 +205,7 @@ input[type="number"]::-webkit-outer-spin-button {
     text-align: center;
 }
 
-#modal #submit{
+#novaOrdemModal #submit{
     font-size: 25px;
     padding: 15px;
     position: relative;

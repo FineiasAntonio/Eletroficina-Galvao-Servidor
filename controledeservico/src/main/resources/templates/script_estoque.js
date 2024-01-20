@@ -1,11 +1,19 @@
 const url_estoque = "http://localhost:8080/estoque"
 const url_reservas = "http://localhost:8080/reservas"
-
 var produtoLista = []
 
+function abrirModalNovoProduto(){
+    listaProdutosModal.showModal()
+}
+function cadastrarProdutoNaLista(){
+    cadastroNovoProdutoModal.showModal()
+}
+function enviarLista(){
+    post_produto(produtoLista)
+    listaProdutosModal.close()
+}
+
 window.addEventListener("load", function(){
-    const cadastrarProdutoBtn = document.getElementById("cadastrarProdutoBtn")
-    const novoProdutoBtn = document.getElementById("novoProdutoBtn")
     const listaProdutosModal = document.getElementById("listaProdutosModal")
     const cadastroNovoProdutoModal = document.getElementById("cadastroNovoProdutoModal")
     const produtoForm = document.getElementById("produtoForm")
@@ -16,14 +24,15 @@ window.addEventListener("load", function(){
     var quantidadeInput = document.getElementById('quantidade');
     var precoInput = document.getElementById('preco');
 
-    cadastrarProdutoBtn.onclick = function(){
-        listaProdutosModal.showModal()
-    }
-    novoProdutoBtn.onclick = function(){
-        cadastroNovoProdutoModal.showModal()
-    }
+    getEstoque()
+    getReservas()
+    
     cadastroNovoProdutoModal.onclose = function(){
         produtoForm.reset()
+    }
+    listaProdutosModal.onclose = function(){
+        newProdutosTable.innerHTML = ""
+        produtoLista = []
     }
 
     produtoForm.addEventListener("submit", function(event){
@@ -50,15 +59,13 @@ window.addEventListener("load", function(){
 
     })
 
-    listaProdutosModal.onclose = function(){
-        newProdutosTable.innerHTML = ""
-        produtoLista = []
-    }
+    
 
 })
 
 
 async function post_produto(produto) {
+    console.log(produto)
     try{
         const response = await fetch(url_estoque, {
             method: "POST",
@@ -75,7 +82,50 @@ async function post_produto(produto) {
 }
 
 async function getEstoque(){
+    const estoqueTable = document.querySelector("tbody")
 
-    var response = fetch(url_estoque)
+    const response = await fetch(url_estoque);
+    const data = await response.json(); 
+
+    data.forEach(element => {
+        
+        estoqueTable.innerHTML += `
+            <tr>
+                <td>${element.produto}</td>
+                <td>${element.referencia}</td>
+                <td>${element.quantidade}</td>
+                <td>${formatarMoeda(element.precoUnitario)}</td>
+            </tr>
+        `
+
+    })
 
 }
+async function getReservas(){
+    const box = document.getElementById("divTabela2")
+
+    const response = await fetch(url_reservas)
+    const data = await response.json()
+
+    console.log(data)
+
+    data.forEach(element => {
+        if (element.ativo == true){
+
+            box.innerHTML += `
+            <details>
+                <summary>Reserva de ${element.id_reserva}</summary>
+                <p>${element.produtos_reservados}</p>
+            </details>
+            `
+
+        }
+        
+
+    })
+
+}
+
+function formatarMoeda(numero) {
+    return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }

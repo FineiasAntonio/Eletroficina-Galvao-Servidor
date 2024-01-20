@@ -70,11 +70,12 @@ public class OSMapper {
         ordemdeservico.setDataSaida(Date.valueOf(dto.dataSaida()));
         ordemdeservico.setFuncionario_id(dto.funcionario_id());
 
-        if (dto.status().equals(Integer.valueOf(0))){
+        if (dto.status().equals("0")){
             ordemdeservico.setSituacao(ServicoSituacao.CONCLUIDO);
             ordemdeservico.getId_reserva().setAtivo(false);
             ordemdeservico.setDataConclusao(Date.valueOf(LocalDate.now()));
-        } else if (dto.status().equals(Integer.valueOf(1)) || dto.status().equals(Integer.valueOf(2))) {
+        }
+        if (dto.status().equals("1") || dto.status().equals("2")) {
             ordemdeservico.setSituacao(ServicoSituacao.getStatus(Integer.parseInt(dto.status())));
             ordemdeservico.getId_reserva().setAtivo(true);
             ordemdeservico.setDataConclusao(null);

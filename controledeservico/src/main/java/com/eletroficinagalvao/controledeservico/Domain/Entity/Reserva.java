@@ -1,14 +1,17 @@
 package com.eletroficinagalvao.controledeservico.Domain.Entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Data
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table (name = "reservas")
 public class Reserva {
 
@@ -27,5 +30,14 @@ public class Reserva {
 
     @Column(name = "ativo")
     private boolean ativo;
+
+    public Reserva(List<ProdutoReservado> produtos_reservados) {
+        this.produtos_reservados = produtos_reservados;
+    }
+
+    public Reserva(List<ProdutoReservado> produtos_reservados, boolean ativo) {
+        this.produtos_reservados = produtos_reservados;
+        this.ativo = ativo;
+    }
 
 }

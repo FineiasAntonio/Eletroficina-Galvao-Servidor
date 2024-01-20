@@ -22,7 +22,7 @@
 
     <div id="container">  
         <input type="text" id="search_bar" placeholder="Pesquisar">     
-        <button id="abrir_modal">Nova Ordem</button>
+        <button onclick="novaOrdem(document.getElementById('novaOrdemModal'))">Nova Ordem</button>
         <div id="tabela">
           <table>
           <thead>
@@ -43,9 +43,9 @@
         
       </div>
     
-    <dialog id="modal">
+    <dialog id="novaOrdemModal">
       <h1>Nova Ordem de Serviço</h1>
-      <button id="fechar_modal">X</button>
+      <button onclick="fechar(document.getElementById('novaOrdemModal'))">X</button>
       <form>
         <div>
           <h2>Informações do cliente</h2>
@@ -82,16 +82,27 @@
           <label>Observações do cliente</label>
           <input type="text" id="obs">
 
-          <button id="submit" type="submit">Enviar</button>
+          
 
         </div>
       </form>
+      <button onclick="abrirFolhaOrçamento(document.getElementById('folhaOrçamentoModal'))">Folha de orçamento</button>
+          <button id="submit" type="submit">Enviar</button>
     </dialog>
     <dialog id="os_selecionada">
-      <button id="fechar_modal">X</button>
+      <button onclick="fechar(document.getElementById('novaOrdemModal'))">X</button>
       <div id="data_div">
         
       </div>
+    </dialog>
+    <dialog id="folhaOrçamentoModal">
+      <h1>Orçamento</h1>
+      <button onclick="fechar(document.getElementById('folhaOrçamentoModal'))">X</button>
+      <div id="camposOrcamento">
+        
+      </div>
+      <button id="adicionarProduto">+</button>
+      <button onclick="fechar(document.getElementById('folhaOrçamentoModal'))">Salvar Orçamento</button>
     </dialog>
 
     <button id="a">oOOos</button>

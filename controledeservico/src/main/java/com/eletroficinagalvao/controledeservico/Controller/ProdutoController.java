@@ -32,14 +32,12 @@ public class ProdutoController {
         return new ResponseEntity<>(service.getById(id), HttpStatus.OK);
     }
 
-    @GetMapping ("/nome/{name}")
-    public ResponseEntity<List<Produto>> getByLikeThisName(@PathVariable String name){
-        return new ResponseEntity<>(service.getByLikeThisName(name), HttpStatus.OK);
-    }
-
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody ProdutoDTO produto){
-        service.create(mapper.map(produto));
+    public ResponseEntity<Void> create(@RequestBody List<ProdutoDTO> produtos){
+        for (ProdutoDTO e: produtos) {
+            service.create(mapper.map(e));
+        }
+        
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

@@ -20,12 +20,12 @@ public class ProdutoMapper {
             throw new BadRequestException("produto inválido");
         }
 
-        return Produto.builder()
-                .produto(dto.produto())
-                .referencia(dto.referencia())
-                .quantidade(dto.quantidade().trim().isEmpty() ? 0 : Integer.parseInt(dto.quantidade()))
-                .precoUnitario(Double.parseDouble(dto.precoUnitario()))
-                .build();
+        return new Produto(dto.produto(),
+                         dto.referencia(),
+                         dto.quantidade().trim().isEmpty() ? 0 : Integer.parseInt(dto.quantidade()),
+                         Double.parseDouble(dto.precoUnitario()));
+
+        
     }
 
     public ProdutoReservado mapReserva(ProdutoDTO dto) {

@@ -1,14 +1,112 @@
 const url_OS = "http://localhost:8080/ordensdeservicos"
 const url_Funcionario = "http://localhost:8080/funcionarios"
 
+function novaOrdem(modal){
+    modal.showModal()
+    getAll_Funcionarios()
+}
+
+function fechar(modal){
+    modal.close()
+}
+
+
+
+var controle = 1
+var formsArray = []
+async function abrirFolhaOrçamento(modal) {
+
+    modal.onclose = function(){
+        document.getElementById("adicionarProduto").removeEventListener("click", novoCampo)
+    }
+
+    const response = await fetch("http://localhost:8080/estoque");
+    const avaiableProducts = await response.json();
+
+    modal.showModal();
+
+    novoCampo()
+
+    function novoCampo() {
+        var novoFormId = controle + 1
+        var novoForm = document.createElement("form")
+
+        novoForm.id = `${novoFormId}`
+        novoForm.innerHTML = `
+            <input id="produto${novoFormId}" placeholder="produto" disabled>
+            <input id="quantidade${novoFormId}" placeholder="quantidade" type="number" disabled>
+            <input id="precoUnitario${novoFormId}" placeholder="Preço unitário" disabled>
+            <input id="referencia${novoFormId}" placeholder="Referência" disabled>
+        `
+        
+
+        var novoSelectId = controle
+        var novoSelect = document.createElement("select")
+        novoSelect.id = novoSelectId
+
+        avaiableProducts.forEach(element => {
+            novoSelect.innerHTML += `
+                <option value="${element.id_produto}">${element.produto} - ${element.quantidade} Unidades</option>
+            `
+        })
+
+        novoSelect.innerHTML += "<option value='outro'>Outro</option>"
+
+        novoSelect.addEventListener("change", function () {
+            var value = novoSelect.value
+            var campoNome = novoForm.querySelector(`#produto${novoFormId}`)
+            var campoQuantidade = novoForm.querySelector(`#quantidade${novoFormId}`)
+            var campoPrecoUnitario = novoForm.querySelector(`#precoUnitario${novoFormId}`)
+            var campoReferencia = novoForm.querySelector(`#referencia${novoFormId}`)
+
+            if (value == "outro") {
+                novoForm.querySelector(`#produto${novoFormId}`).removeAttribute("disabled")
+                novoForm.querySelector(`#quantidade${novoFormId}`).removeAttribute("disabled")
+                novoForm.querySelector(`#precoUnitario${novoFormId}`).removeAttribute("disabled")
+                novoForm.querySelector(`#referencia${novoFormId}`).removeAttribute("disabled")
+
+                campoNome.value = ""
+                campoQuantidade.value = ""
+                campoPrecoUnitario.value = ""
+                campoReferencia.value = ""
+            } else {
+                campoNome.setAttribute("disabled", true)
+                campoQuantidade.setAttribute("disabled", true)
+                campoPrecoUnitario.setAttribute("disabled", true)
+                campoReferencia.setAttribute("disabled", true)
+
+                var produtoSelecionado
+
+                avaiableProducts.forEach(element => {
+                    if (value == element.id_produto){
+                        produtoSelecionado = element
+                    }
+                })
+                
+                campoNome.value = produtoSelecionado.produto
+                campoQuantidade.value = produtoSelecionado.quantidade
+                campoPrecoUnitario.value = formatarMoeda(produtoSelecionado.precoUnitario)
+                campoReferencia.value = produtoSelecionado.referencia
+
+            }
+        });
+
+        document.getElementById("camposOrcamento").appendChild(novoForm);
+        document.getElementById("camposOrcamento").appendChild(novoSelect);
+
+        controle++
+        formsArray.push(novoForm)
+    }
+
+    document.getElementById("adicionarProduto").addEventListener("click", novoCampo)
+    
+
+}
 
 
 window.addEventListener("load", function() {
     
-    const button_abrir = document.getElementById("abrir_modal")
-    const button_fechar = document.getElementById("fechar_modal")
-
-    const modal = document.getElementById("modal")
+    const novaOrdemModal = document.getElementById("novaOrdemModal")
     const form = document.querySelector("form");
 
     const tbody = document.querySelector("tbody")
@@ -20,22 +118,21 @@ window.addEventListener("load", function() {
         getById_OS(os_id)
     })
 
-    modal.onclose = function(){
+    novaOrdemModal.onclose = function(){
+        document.getElementById("camposOrcamento").innerHTML = ""
+        
+        controle = 1
+        formsArray = []
         const inputs = document.querySelectorAll("input")
         
         inputs.forEach(element => {
             element.value = ""
         })
     }
-    button_abrir.onclick = function(){
-        modal.showModal()
-        getAll_Funcionarios()
-    }
-    button_fechar.onclick = function(){
-        modal.close()
-    }
 
-    form.addEventListener('submit', function(event) {
+
+
+    /* form.addEventListener('submit', function(event) {
         event.preventDefault(); 
 
         const os = {
@@ -55,7 +152,7 @@ window.addEventListener("load", function() {
         post_OS(os)
 
         modal.close()
-    })
+    }) */
 
     getAll_OS()
 
@@ -162,3 +259,7 @@ function showOS(os_data){
 
     os_selecionada.showModal()
 }
+
+function formatarMoeda(numero) {
+    return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }

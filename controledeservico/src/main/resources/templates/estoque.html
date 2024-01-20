@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estoque</title>
     <link rel="stylesheet" href="style_estoque.css">
+    <script src="script_estoque.js"></script>
 </head>
 <body>
     <div id="header">
@@ -17,6 +18,58 @@
           <li><a>Controle</a></li>
         </ul>
 
+    </div>
+    <div id="body">
+        <div id="divTabela1">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Produto</th>
+                        <th scope="col">Referência</th>
+                        <th scope="col">Quantidade</th>
+                        <th scope="col">Preço unitário</th>
+                    </tr>
+                </thead>
+                <tbody id="estoqueTable">
+
+                </tbody>
+            </table>
+        
+            <button onclick="abrirModalNovoProduto()">Cadastrar Produtos</button>
+
+            <dialog id="listaProdutosModal">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Produto</th>
+                            <th scope="col">Referência</th>
+                            <th scope="col">Quantidade</th>
+                            <th scope="col">Preço unitário</th>
+                        </tr>
+                    </thead>
+                    <tbody id="newProdutosTable">
+                        
+                    </tbody>
+                </table>
+                <button onclick="cadastrarProdutoNaLista()">Adicionar Produto</button>
+                <button onclick="enviarLista()">Salvar</button>
+            </dialog>
+
+            <dialog id="cadastroNovoProdutoModal">
+                <button>X</button>
+                <form id="produtoForm">
+                    <input type="text" id="produto" placeholder="Produto">
+                    <input type="text" id="referencia" placeholder="Referência">
+                    <input type="number" id="quantidade" placeholder="Quantidade">
+                    <input type="number" id="preco" placeholder="Preço unitário">
+                    <button id="submitProduto">Enviar</button>
+                </form>
+            </dialog>
+
+        </div>
+        <div id="divTabela2">
+            
+        </div>
     </div>
 </body>
 </html>

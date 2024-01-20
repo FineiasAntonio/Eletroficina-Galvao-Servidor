@@ -18,7 +18,6 @@ public record UpdateOSRequestDTO(
         String obs,
         Funcionario funcionario_id,
         String coments,
-        List<ProdutoDTO> produtosReservados,
         List<File> imagemEntrada,
         List<File> imagemSaida,
         String status
