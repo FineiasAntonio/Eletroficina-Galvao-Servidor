@@ -41,7 +41,6 @@ public class FuncionarioService implements Services<Funcionario>{
     @Transactional
     public void create(Funcionario t) {
         try {
-            t.setServicos(0);
             repository.save(t);
             log.info("Funcionário registrado: " + t.getNome());
         } catch (Exception e){
@@ -59,7 +58,6 @@ public class FuncionarioService implements Services<Funcionario>{
     public void delete(String id) {
         repository.deleteById(Integer.valueOf(id));
     }
-
 
     
 }

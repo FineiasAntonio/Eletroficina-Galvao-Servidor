@@ -25,9 +25,13 @@ public class ReservaMapper {
 
     public Reserva criarReserva(List<ProdutoDTO> produtos){
         List<ProdutoReservado> produtosReservados = produtos.stream().map(e -> produtoMapper.mapReserva(e)).toList();
-
+    
+        for (ProdutoReservado e: produtosReservados) {
+            System.out.println(e);
+            produtoReservadoRepository.save(e);
+        }
+    
         return (Reserva) reservaRepository.save(new Reserva(produtosReservados, true));
-
     }
 
 }

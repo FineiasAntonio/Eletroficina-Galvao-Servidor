@@ -10,8 +10,6 @@ function fechar(modal){
     modal.close()
 }
 
-
-
 var controle = 1
 var formsArray = []
 async function abrirFolhaOrçamento(modal) {
@@ -33,27 +31,33 @@ async function abrirFolhaOrçamento(modal) {
 
         novoForm.id = `${novoFormId}`
         novoForm.innerHTML = `
+            <input id="uuid${novoFormId}" hidden>
             <input id="produto${novoFormId}" placeholder="produto" disabled>
-            <input id="quantidade${novoFormId}" placeholder="quantidade" type="number" disabled>
+            <input id="quantidade${novoFormId}" placeholder="quantidade" type="number">
             <input id="precoUnitario${novoFormId}" placeholder="Preço unitário" disabled>
             <input id="referencia${novoFormId}" placeholder="Referência" disabled>
         `
         
+        var campoPreco = novoForm.querySelector(`#precoUnitario${novoFormId}`)
+        campoPreco.addEventListener('blur', function(){
+            this.value = formatarMoeda(this.value)
+        })
 
         var novoSelectId = controle
         var novoSelect = document.createElement("select")
         novoSelect.id = novoSelectId
-
+        novoSelect.innerHTML += "<option hidden selected>Escolha uma opção</option>"
         avaiableProducts.forEach(element => {
             novoSelect.innerHTML += `
                 <option value="${element.id_produto}">${element.produto} - ${element.quantidade} Unidades</option>
             `
         })
-
+        
         novoSelect.innerHTML += "<option value='outro'>Outro</option>"
 
         novoSelect.addEventListener("change", function () {
             var value = novoSelect.value
+            var campoId = novoForm.querySelector(`#uuid${novoFormId}`)
             var campoNome = novoForm.querySelector(`#produto${novoFormId}`)
             var campoQuantidade = novoForm.querySelector(`#quantidade${novoFormId}`)
             var campoPrecoUnitario = novoForm.querySelector(`#precoUnitario${novoFormId}`)
@@ -61,7 +65,6 @@ async function abrirFolhaOrçamento(modal) {
 
             if (value == "outro") {
                 novoForm.querySelector(`#produto${novoFormId}`).removeAttribute("disabled")
-                novoForm.querySelector(`#quantidade${novoFormId}`).removeAttribute("disabled")
                 novoForm.querySelector(`#precoUnitario${novoFormId}`).removeAttribute("disabled")
                 novoForm.querySelector(`#referencia${novoFormId}`).removeAttribute("disabled")
 
@@ -71,7 +74,6 @@ async function abrirFolhaOrçamento(modal) {
                 campoReferencia.value = ""
             } else {
                 campoNome.setAttribute("disabled", true)
-                campoQuantidade.setAttribute("disabled", true)
                 campoPrecoUnitario.setAttribute("disabled", true)
                 campoReferencia.setAttribute("disabled", true)
 
@@ -83,8 +85,8 @@ async function abrirFolhaOrçamento(modal) {
                     }
                 })
                 
+                campoId.value = produtoSelecionado.id_produto
                 campoNome.value = produtoSelecionado.produto
-                campoQuantidade.value = produtoSelecionado.quantidade
                 campoPrecoUnitario.value = formatarMoeda(produtoSelecionado.precoUnitario)
                 campoReferencia.value = produtoSelecionado.referencia
 
@@ -102,7 +104,45 @@ async function abrirFolhaOrçamento(modal) {
     
 
 }
+function submit(){
 
+    function reservarProdutos(){
+        var produtos = []
+        formsArray.forEach(element => {
+            var produtoIndividual = {
+                id_produto: element.querySelector("input:nth-child(1)").value,
+                produto: element.querySelector("input:nth-child(2)").value,
+                quantidade: element.querySelector("input:nth-child(3)").value,
+                precoUnitario: desformatarMoeda(element.querySelector("input:nth-child(4)").value),
+                referencia: element.querySelector("input:nth-child(5)").value
+            }
+
+            produtos.push(produtoIndividual)
+        })
+
+        return produtos
+
+    }
+
+    const os = {
+        nome: document.getElementById('nome').value,
+        cpf: document.getElementById('cpf').value,
+        endereco: document.getElementById('endereco').value,
+        telefone: document.getElementById('telefone').value,
+        dataSaida: document.getElementById('dataSaida').value,
+        equipamento: document.getElementById('equipamento').value,
+        numeroSerie: document.getElementById('numeroSerie').value,
+        servico: document.getElementById('servico').value,
+        obs: document.getElementById('obs').value,
+        funcionario_id: document.getElementById("funcionarioBox").value,
+        coments: null,
+        produtosReservados: reservarProdutos(formsArray)
+    };
+
+    post_OS(os)
+
+    modal.close()
+}
 
 window.addEventListener("load", function() {
     
@@ -132,33 +172,18 @@ window.addEventListener("load", function() {
 
 
 
-    /* form.addEventListener('submit', function(event) {
-        event.preventDefault(); 
-
-        const os = {
-            nome: document.getElementById('nome').value,
-            cpf: document.getElementById('cpf').value,
-            endereco: document.getElementById('endereco').value,
-            telefone: document.getElementById('telefone').value,
-            dataSaida: document.getElementById('dataSaida').value,
-            produto: document.getElementById('produto').value,
-            numeroSerie: document.getElementById('numeroSerie').value,
-            servico: document.getElementById('servico').value,
-            obs: document.getElementById('obs').value,
-            funcionario_id: document.getElementById("funcionarioBox").value,
-            coments: null,
-        };
-
-        post_OS(os)
-
-        modal.close()
-    }) */
+    
 
     getAll_OS()
+    
 
 })
 
-
+async function getFuncionarioByID(id){
+    const response = await fetch(url_Funcionario + `/${id}`)
+    const data = await response.json()
+    return data
+}
 async function getAll_Funcionarios(){
     try {
         const response = await fetch(url_Funcionario)
@@ -260,6 +285,14 @@ function showOS(os_data){
     os_selecionada.showModal()
 }
 
-function formatarMoeda(numero) {
-    return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  }
+function formatarMoeda(valor) {
+    const valorNumerico = parseFloat(valor.toString().replace(/[^\d.]/g, ''));
+    //const valorFormatado = (isNaN(valorNumerico)) ? '' : 'R$ ' + valorNumerico.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');;
+
+    const valorFormatado = valorNumerico.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    return valorFormatado;
+}
+function desformatarMoeda(valorFormatado) {
+    const valorNumerico = parseFloat(valorFormatado.replace(/[^\d.,]/g, '').replace(',', '.'));
+    return isNaN(valorNumerico) ? 0 : valorNumerico;
+}

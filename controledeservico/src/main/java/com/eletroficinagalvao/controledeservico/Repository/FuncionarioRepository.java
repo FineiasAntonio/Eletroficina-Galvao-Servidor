@@ -7,5 +7,5 @@ import com.eletroficinagalvao.controledeservico.Domain.Entity.Funcionario;
 
 @Repository
 public interface FuncionarioRepository extends JpaRepository<Funcionario, Integer>{
-
+    
 }

@@ -25,7 +25,6 @@ public class ProdutoMapper {
                          dto.quantidade().trim().isEmpty() ? 0 : Integer.parseInt(dto.quantidade()),
                          Double.parseDouble(dto.precoUnitario()));
 
-        
     }
 
     public ProdutoReservado mapReserva(ProdutoDTO dto) {
@@ -43,13 +42,16 @@ public class ProdutoMapper {
                     return produtoRepository.save(produtoSupplier);
                 })
                 .getId_produto();
+        
+        int quantidadeNescessaria = dto.quantidade().trim().isEmpty() ? 0 : Integer.parseInt(dto.quantidade());
+        int quantidadeReservada = dto.quantidade().trim().isEmpty() ? 0 : Integer.parseInt(dto.quantidade()) * -1;
 
         return ProdutoReservado.builder()
                 .id_produto(uuid)
                 .produto(dto.produto())
                 .referencia(dto.referencia())
-                .quantidadeNescessaria(dto.quantidade().trim().isEmpty() ? 0 : Integer.parseInt(dto.quantidade()))
-                .quantidadeReservada(dto.quantidade().trim().isEmpty() ? 0 : Integer.parseInt(dto.quantidade()) * -1)
+                .quantidadeNescessaria(quantidadeNescessaria)
+                .quantidadeReservada(quantidadeReservada)
                 .precoUnitario(Double.parseDouble(dto.precoUnitario()))
                 .build();
     }

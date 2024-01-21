@@ -57,7 +57,7 @@
         <hr>
         <div>
           <h2>Informações do produto</h2>
-          <input type="text" placeholder="Produto" id="produto">
+          <input type="text" placeholder="equipamento" id="equipamento">
           <input type="number" placeholder="Número de série" id="numeroSerie">
         </div>
         <hr>
@@ -87,7 +87,7 @@
         </div>
       </form>
       <button onclick="abrirFolhaOrçamento(document.getElementById('folhaOrçamentoModal'))">Folha de orçamento</button>
-          <button id="submit" type="submit">Enviar</button>
+          <button onclick="submit()">Enviar</button>
     </dialog>
     <dialog id="os_selecionada">
       <button onclick="fechar(document.getElementById('novaOrdemModal'))">X</button>

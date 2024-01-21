@@ -16,8 +16,5 @@ public class Funcionario {
 
     @Column (name = "nome")
     private String nome;
-    @Column (name = "servicos")
-    @JsonIgnore
-    private int servicos;
 
 }
