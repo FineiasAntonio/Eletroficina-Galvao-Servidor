@@ -108,21 +108,22 @@ async function getReservas(){
     const data = await response.json()
 
     console.log(data)
+    var item = ""
+    var item = ""; // Inicialize a variável fora do loop
 
     data.forEach(element => {
-        if (element.ativo == true){
-
-            box.innerHTML += `
-            <details>
-                <summary>Reserva de ${element.id_reserva}</summary>
-                <p>${element.produtos_reservados}</p>
-            </details>
-            `
-
+        if (element.ativo == true) {
+            item += `<details>
+                        <summary>Reserva de ${element.id_reserva}</summary>`;
+            element.produtos_reservados.forEach(elementQ => {
+                var ctl = elementQ.quantidadeNescessaria + elementQ.quantidadeReservada;
+                item += `<p>${elementQ.produto} ${ctl}/${elementQ.quantidadeNescessaria}</p>`;
+            });
+            item += `</details>`;
         }
-        
-
-    })
+    });
+    
+    box.innerHTML += item;
 
 }
 
