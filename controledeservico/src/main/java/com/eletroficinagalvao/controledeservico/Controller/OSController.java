@@ -52,6 +52,7 @@ public class OSController {
 
     @PutMapping ("/{id}")
     public ResponseEntity update(@PathVariable int id, @RequestBody UpdateOSRequestDTO os){
+        System.out.println(os);
         service.update(id, os);
         return new ResponseEntity(HttpStatus.OK);
     }

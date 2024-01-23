@@ -52,7 +52,9 @@ public class OSService {
 
     @Transactional
     public void update(int id, UpdateOSRequestDTO os){
-        OS updatedOS = mapper.updateMap(getById(String.valueOf(id)), os);
+        OS correspondente = repository.findById(Integer.valueOf(id)).get();
+        OS updatedOS = mapper.updateMap(correspondente, os);
+        System.out.println(updatedOS);
         repository.save(updatedOS);
     }
 }

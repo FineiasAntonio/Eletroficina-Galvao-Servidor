@@ -10,6 +10,8 @@ function fechar(modal){
     modal.close()
 }
 
+
+
 var controle = 1
 var formsArray = []
 async function abrirFolhaOrçamento(modal) {
@@ -170,10 +172,6 @@ window.addEventListener("load", function() {
         })
     }
 
-
-
-    
-
     getAll_OS()
     
 
@@ -217,7 +215,7 @@ async function getById_OS(os_id) {
     try {
         const response = await fetch(url_OS + `/${os_id}`)
         const data = await response.json()
-        
+        console.log(data)
         showOS(data)
     } catch (error) {
         console.error("Erro durante a requisição:", error);
@@ -239,6 +237,25 @@ async function post_OS(os) {
         console.error(error)
     }
 }
+async function deleteOS(id) {
+    var response = fetch(url_OS + `/${id}`, {
+        method: "DELETE"
+    })
+
+    console.log((await response).status)
+}
+async function updateOS(id, os){
+    const response = await fetch(url_OS + `/${id}`, {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(os)
+    })
+
+    console.log((await response).status)
+    
+}
 function updateTable(list){
     const table = document.querySelector("tbody");
 
@@ -248,7 +265,7 @@ function updateTable(list){
         var row = `<tr>\
                     <td>${element.os}</td>\
                     <td>${element.nome}</td>\
-                    <td>${element.produto}</td>\
+                    <td>${element.equipamento}</td>\
                     <td>${element.dataSaida}</td>\
                     <td>${element.servico}</td>\
                     <td>${element.situacao}</td>\
@@ -263,26 +280,129 @@ function showOS(os_data){
     const os_selecionada = document.getElementById("os_selecionada")
     const div_data = document.getElementById("data_div")
 
-    console.log(os_data)
+    os_selecionada.onclose = function(){
+        div_data.innerHTML = ""
+    }
 
-    div_data.innerHTML = ""
+    os_selecionada.querySelector(".apagarOs").onclick = function() {
+        deleteOS(os_data.os);
+    };
+    
+    os_selecionada.querySelector(".editarOs").onclick = function() {
+        editarOs(os_selecionada, os_data);
+    };
+
 
     var data = `<div class="infos"><h2>Nome: </h2><label>${os_data.nome}</label></div>
                 <div class="infos"><h2>CPF: </h2><label>${os_data.cpf}</label></div>
                 <div class="infos"><h2>Endereço: </h2><label>${os_data.endereco}</label></div>
                 <div class="infos"><h2>Telefone: </h2><label>${os_data.telefone}</label></div>
                 <hr>
-                <div class="infos"><h2>Produto: </h2><label>${os_data.produto}</label></div>
+                <div class="infos"><h2>Equipamento: </h2><label>${os_data.equipamento}</label></div>
                 <div class="infos"><h2>Série: </h2><label>${os_data.numeroSerie}</label></div>
                 <hr>
                 <div class="infos"><h2>Serviço: </h2><label>${os_data.servico}</label></div>
+                <div class="infos"><h2>Data de entrada: </h2><label>${os_data.dataEntrada}</label></div>
                 <div class="infos"><h2>Data para entrega: </h2><label>${os_data.dataSaida}</label></div>
+                <div class="infos"><h2>Situação: </h2><label>${os_data.situacao}</label></div>
                 <div class="infos"><h2>Técnico responsável: </h2><label>${os_data.funcionario_id.nome}</label></div>
-                <div class="infos"><h2>Observações do cliente: </h2><label>${os_data.obs}</label></div>`
+                <div class="infos"><h2>Observações do cliente: </h2><label>${os_data.obs}</label></div>
+                <div class="infos"><h2>Coments: </h2><label>${os_data.coments}</label></div>
+                
+                `
 
     div_data.innerHTML += data
 
     os_selecionada.showModal()
+}
+async function editarOs(os_modal, os_data){
+    const response = await fetch(url_Funcionario)
+    const data = await response.json()
+
+    os_modal.querySelector("#data_div").innerHTML = `<form>
+    <div>
+      <h2>Informações do cliente</h2>
+      <input type="text" placeholder="Nome" id="nomeE" value="${os_data.nome}">
+      <input type="number" placeholder="CPF/CNPJ" id="cpfE" value="${os_data.cpf}">
+      <input type="text" placeholder="Endereço" id="enderecoE" value="${os_data.endereco}">
+      <input type="number" placeholder="Telefone" id="telefoneE" value="${os_data.telefone}">
+    </div>
+    <hr>
+    <div>
+      <h2>Informações do equipamento</h2>
+      <input type="text" placeholder="equipamento" id="equipamentoE" value="${os_data.equipamento}">
+      <input type="number" placeholder="Número de série" id="numeroSerieE" value="${os_data.numeroSerie}">
+    </div>
+    <hr>
+    <div>
+      <h2>Informações do serviço</h2>
+      <input type="text" placeholder="Serviço" id="servicoE" value="${os_data.servico}">
+      
+      <label>Data para entrega</label>
+      <input type="date" placeholder="Data de entrega" id="dataSaidaE" value="${os_data.dataSaida}">
+
+      <label>Situação</label>
+      <select id="funcionarioBoxEdit" value="${os_data.situacao}">
+        <option value = "EM_ANDAMENTO">Em Andamento</option>
+        <option value = "AGUARDANDO_PECA">Aguardando Peça</option>
+        <option value = "AGUARDANDO_RETIRADA">Aguardando Retirada</option>
+        <option value = "CONCLUIDO">Concluido</option>
+      </select>
+
+      <label>Técnico responsável</label>
+      <select id="funcionarioBoxEdit" value="${os_data.funcionario_id.nome}">
+      ${data.map(element => `<option value="${element.id}">${element.nome}</option>`).join('')}
+      </select>
+
+
+      <div id="anexoEntrada">
+        <p>Anexar Imagem de Entrada</p>
+        <input type="file" id="imagesEntrada" accept="image/jpeg" multiple/>
+        <label for="images" id="images_label">+</label>
+      </div>
+
+      <div id="anexoSaida">
+        <p>Anexar Imagem de Saída</p>
+        <input type="file" id="imagesSaida" accept="image/jpeg" multiple/>
+        <label for="images" id="images_label">+</label>
+      </div>
+
+      <label>Observações do cliente</label>
+      <input type="text" id="obsE" value="${os_data.obs}">
+
+      <label>Comentários</label>
+      <input type="text" id="comentsE" value="${os_data.coments}">
+    </div>
+  </form>
+  
+  <button class="submitUpdate">Enviar</button>
+
+  `
+
+const submitBtn = os_modal.querySelector(".submitUpdate")
+submitBtn.onclick = function() {
+    const osE = {
+        nome: document.getElementById('nomeE').value,
+        cpf: document.getElementById('cpfE').value,
+        endereco: document.getElementById('enderecoE').value,
+        telefone: document.getElementById('telefoneE').value,
+        dataSaida: document.getElementById('dataSaidaE').value,
+        equipamento: document.getElementById('equipamentoE').value,
+        numeroSerie: document.getElementById('numeroSerieE').value,
+        servico: document.getElementById('servicoE').value,
+        obs: document.getElementById('obsE').value,
+        funcionario_id: document.getElementById("funcionarioBoxEdit").value,
+        coments: document.getElementById("comentsE").value,
+    };
+
+    console.log(osE)
+
+    updateOS(os_data.os, osE)
+
+    os_modal.close()
+    os_modal.querySelector("#data_div").innerHTML = ""
+}
+
 }
 
 function formatarMoeda(valor) {

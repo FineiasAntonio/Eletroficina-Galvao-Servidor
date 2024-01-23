@@ -6,7 +6,6 @@ import java.io.File;
 import java.util.List;
 
 public record UpdateOSRequestDTO(
-        String os,
         String nome,
         String cpf,
         String endereco,
@@ -16,10 +15,7 @@ public record UpdateOSRequestDTO(
         String numeroSerie,
         String servico,
         String obs,
-        Funcionario funcionario_id,
-        String coments,
-        List<File> imagemEntrada,
-        List<File> imagemSaida,
-        String status
+        int funcionario_id,
+        String coments
 ) {
 }

@@ -29,7 +29,7 @@
             <tr>
                 <th scope="col">Ordem de Serviço</th>
                 <th scope="col">Cliente</th>
-                <th scope="col">Produto</th>
+                <th scope="col">Equipamento</th>
                 <th scope="col">Data de Saída</th>
                 <th scope="col">Serviço</th>
                 <th scope="col">Situação</th>
@@ -56,7 +56,7 @@
         </div>
         <hr>
         <div>
-          <h2>Informações do produto</h2>
+          <h2>Informações do equipamento</h2>
           <input type="text" placeholder="equipamento" id="equipamento">
           <input type="number" placeholder="Número de série" id="numeroSerie">
         </div>
@@ -89,12 +89,16 @@
       <button onclick="abrirFolhaOrçamento(document.getElementById('folhaOrçamentoModal'))">Folha de orçamento</button>
           <button onclick="submit()">Enviar</button>
     </dialog>
+
     <dialog id="os_selecionada">
-      <button onclick="fechar(document.getElementById('novaOrdemModal'))">X</button>
+      <button onclick="fechar(document.getElementById('os_selecionada'))">X</button>
+      <button class="apagarOs">Excluir</button>
+      <button class="editarOs">Editar</button>
       <div id="data_div">
         
       </div>
     </dialog>
+
     <dialog id="folhaOrçamentoModal">
       <h1>Orçamento</h1>
       <button onclick="fechar(document.getElementById('folhaOrçamentoModal'))">X</button>

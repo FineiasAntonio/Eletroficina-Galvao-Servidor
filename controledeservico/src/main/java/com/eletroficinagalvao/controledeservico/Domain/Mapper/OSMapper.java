@@ -73,8 +73,8 @@ public class OSMapper {
         ordemdeservico.setObs(dto.obs());
         ordemdeservico.setComents(dto.coments());
         ordemdeservico.setDataSaida(Date.valueOf(dto.dataSaida()));
-        ordemdeservico.setFuncionario_id(dto.funcionario_id());
-
+        ordemdeservico.setFuncionario_id(funcionarioRepository.findById(dto.funcionario_id()).get());
+/* 
         if (dto.status().equals("0")){
             ordemdeservico.setSituacao(ServicoSituacao.CONCLUIDO);
             ordemdeservico.getId_reserva().setAtivo(false);
@@ -85,7 +85,7 @@ public class OSMapper {
             ordemdeservico.getId_reserva().setAtivo(true);
             ordemdeservico.setDataConclusao(null);
         }
-
+ */
 
         return ordemdeservico;
     }
@@ -104,10 +104,8 @@ public class OSMapper {
     private static boolean isValid(UpdateOSRequestDTO dto) {
         if (
                 dto == null ||
-                dto.os().trim().isEmpty() ||
                 dto.nome().trim().isEmpty() ||
-                dto.equipamento().trim().isEmpty() ||
-                dto.funcionario_id() == null
+                dto.equipamento().trim().isEmpty()
         ) {
             return false;
         }
