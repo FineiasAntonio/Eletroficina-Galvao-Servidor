@@ -14,8 +14,6 @@ import java.util.Set;
 
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, String> {
-
-
     @Query("SELECT produto FROM Produto produto WHERE produto.produto LIKE %:name%")
     public List<Produto> getByLikeThisName(@Param("name") String name);
 

@@ -14,7 +14,7 @@ import java.util.Properties;
 @Component
 @Log4j2
 public class AppProperties {
-    private static final Path propertyFilePath = Paths.get("").toAbsolutePath().getParent();
+    private static final Path propertyFilePath = Paths.get("").toAbsolutePath();
 
     private static Properties properties = new Properties();
 

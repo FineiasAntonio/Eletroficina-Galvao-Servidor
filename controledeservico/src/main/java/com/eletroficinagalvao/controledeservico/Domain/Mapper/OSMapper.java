@@ -4,6 +4,7 @@ import com.eletroficinagalvao.controledeservico.Domain.DTO.CreateOSRequestDTO;
 import com.eletroficinagalvao.controledeservico.Domain.DTO.UpdateOSRequestDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Funcionario;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.OS;
+import com.eletroficinagalvao.controledeservico.Domain.Entity.Reserva;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.ServicoSituacao;
 import com.eletroficinagalvao.controledeservico.Exception.BadRequestException;
 import com.eletroficinagalvao.controledeservico.Repository.FuncionarioRepository;
@@ -25,7 +26,6 @@ public class OSMapper {
     FuncionarioRepository funcionarioRepository;
  
     public OS map(CreateOSRequestDTO dto) {
-
         OS ordemdeservico = new OS();
 
         if (!isValid(dto)) {
@@ -37,8 +37,6 @@ public class OSMapper {
             ordemdeservico.setId_reserva(reservaMapper.criarReserva(dto.produtosReservados()));
             log.info("Reserva criada, id: %s".formatted(ordemdeservico.getId_reserva().getId_reserva()));
         }
-
-        
 
         ordemdeservico.setNome(dto.nome());
         ordemdeservico.setCpf(dto.cpf());
@@ -54,9 +52,6 @@ public class OSMapper {
 
         ordemdeservico.setDataEntrada(Date.valueOf(LocalDate.now()));
         ordemdeservico.setSituacao(ServicoSituacao.EM_ANDAMENTO);
-
-        System.out.println(ordemdeservico);
-        System.out.println(ordemdeservico.getId_reserva());
 
         return ordemdeservico;
     }

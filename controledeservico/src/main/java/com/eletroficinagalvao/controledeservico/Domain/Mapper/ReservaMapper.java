@@ -15,8 +15,6 @@ import java.util.List;
 public class ReservaMapper {
 
     @Autowired
-    private ProdutoService produtoService;
-    @Autowired
     private ProdutoReservadoRepository produtoReservadoRepository;
     @Autowired
     private ProdutoMapper produtoMapper;
@@ -25,12 +23,12 @@ public class ReservaMapper {
 
     public Reserva criarReserva(List<ProdutoDTO> produtos){
         List<ProdutoReservado> produtosReservados = produtos.stream().map(e -> produtoMapper.mapReserva(e)).toList();
-    
-        for (ProdutoReservado e: produtosReservados) {
-            System.out.println(e);
-            produtoReservadoRepository.save(e);
-        }
-    
+        produtosReservados.stream().filter(e -> !produtoReservadoRepository.existsById(e.getId_produto())).forEach(e -> produtoReservadoRepository.save(e));
+        produtosReservados.stream().forEach(e -> {
+            if(produtoReservadoRepository.existsById(e.getId_produto())){
+                produtoReservadoRepository.reservarExistente(e.getId_produto(), e.getQuantidadeNescessaria());
+            }
+        });
         return (Reserva) reservaRepository.save(new Reserva(produtosReservados, true));
     }
 
