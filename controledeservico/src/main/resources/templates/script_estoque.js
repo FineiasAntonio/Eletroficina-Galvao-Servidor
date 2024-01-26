@@ -2,6 +2,12 @@ const url_estoque = "http://localhost:8080/estoque"
 const url_reservas = "http://localhost:8080/reservas"
 var produtoLista = []
 
+function abrirModalNovoProduto(){
+        listaProdutosModal.showModal()
+    }
+    function cadastrarProdutoNaLista(){
+        cadastroNovoProdutoModal.showModal()
+    }
 
 function enviarLista(){
     postProduto(produtoLista);
@@ -22,12 +28,7 @@ window.addEventListener("load", function(){
     var quantidadeInput = document.getElementById('quantidade');
     var precoInput = document.getElementById('preco');
 
-    function abrirModalNovoProduto(){
-        listaProdutosModal.showModal()
-    }
-    function cadastrarProdutoNaLista(){
-        cadastroNovoProdutoModal.showModal()
-    }
+
 
     listEstoque();
     listReservas();

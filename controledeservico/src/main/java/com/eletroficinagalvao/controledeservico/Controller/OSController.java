@@ -4,6 +4,7 @@ import com.eletroficinagalvao.controledeservico.Domain.DTO.CreateOSRequestDTO;
 import com.eletroficinagalvao.controledeservico.Domain.DTO.UpdateOSRequestDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.OS;
 import com.eletroficinagalvao.controledeservico.Service.ImageService;
+import com.eletroficinagalvao.controledeservico.Service.NotificationService;
 import com.eletroficinagalvao.controledeservico.Service.OSService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +27,15 @@ public class OSController {
     private OSService service;
 
     @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
     private ImageService imageService;
 
     @GetMapping
     public ResponseEntity getAll(){
+        notificationService.verifyNewNotifications();
+        System.out.println(notificationService.getNotificationPool());
         return new ResponseEntity(service.getAll(), HttpStatus.OK);
     }
 
