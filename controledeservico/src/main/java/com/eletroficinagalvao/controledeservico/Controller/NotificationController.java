@@ -29,7 +29,6 @@ public class NotificationController {
         if (notificationPool.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-
         return new ResponseEntity<>(notificationPool, HttpStatus.OK);
     }
 

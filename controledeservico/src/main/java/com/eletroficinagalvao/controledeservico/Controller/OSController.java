@@ -34,8 +34,6 @@ public class OSController {
 
     @GetMapping
     public ResponseEntity getAll(){
-        notificationService.verifyNewNotifications();
-        System.out.println(notificationService.getNotificationPool());
         return new ResponseEntity(service.getAll(), HttpStatus.OK);
     }
 

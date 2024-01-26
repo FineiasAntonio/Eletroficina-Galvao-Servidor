@@ -20,4 +20,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, String> {
     @Query("SELECT produto FROM Produto produto WHERE produto.quantidade > 0")
     public Set<Produto> listAvaiableItems();
 
+
+
 }
