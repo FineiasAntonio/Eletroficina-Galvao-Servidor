@@ -16,6 +16,7 @@ public record UpdateOSRequestDTO(
         String servico,
         String obs,
         int funcionario_id,
-        String coments
+        String coments,
+        String situacao
 ) {
 }

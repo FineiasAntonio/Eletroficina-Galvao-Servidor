@@ -73,6 +73,7 @@ public class OSMapper {
         ordemdeservico.setObs(dto.obs());
         ordemdeservico.setComents(dto.coments());
         ordemdeservico.setDataSaida(Date.valueOf(dto.dataSaida()));
+        ordemdeservico.setSituacao(ServicoSituacao.getStatus(Integer.parseInt(dto.situacao())));
         ordemdeservico.setFuncionario_id(funcionarioRepository.findById(dto.funcionario_id()).get());
 /* 
         if (dto.status().equals("0")){

@@ -42,12 +42,6 @@ public class ProdutoMapper {
                     return produtoRepository.save(produtoSupplier);
                 })
                 .getId_produto();
-
-        Produto correspondente = produtoRepository.findById(uuid).get();
-        if (correspondente.getQuantidade() != 0){
-            correspondente.setQuantidade(correspondente.getQuantidade() - Integer.parseInt(dto.quantidade()));
-            produtoRepository.save(correspondente);
-        }
         
         int quantidadeNescessaria = dto.quantidade().trim().isEmpty() ? 0 : Integer.parseInt(dto.quantidade());
         int quantidadeReservada = dto.quantidade().trim().isEmpty() ? 0 : Integer.parseInt(dto.quantidade()) * -1;

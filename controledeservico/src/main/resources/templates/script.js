@@ -137,7 +137,7 @@ function submit(){
         servico: document.getElementById('servico').value,
         obs: document.getElementById('obs').value,
         funcionario_id: document.getElementById("funcionarioBox").value,
-        coments: null,
+        coments: document.getElementById("coments").value,
         produtosReservados: reservarProdutos(formsArray)
     };
 
@@ -342,11 +342,11 @@ async function editarOs(os_modal, os_data){
       <input type="date" placeholder="Data de entrega" id="dataSaidaE" value="${os_data.dataSaida}">
 
       <label>Situação</label>
-      <select id="funcionarioBoxEdit" value="${os_data.situacao}">
-        <option value = "EM_ANDAMENTO">Em Andamento</option>
-        <option value = "AGUARDANDO_PECA">Aguardando Peça</option>
-        <option value = "AGUARDANDO_RETIRADA">Aguardando Retirada</option>
-        <option value = "CONCLUIDO">Concluido</option>
+      <select id="situacaoBox" value="${os_data.situacao}">
+        <option value = "1">Em Andamento</option>
+        <option value = "2">Aguardando Peça</option>
+        <option value = "3">Aguardando Retirada</option>
+        <option value = "0">Concluido</option>
       </select>
 
       <label>Técnico responsável</label>
@@ -393,6 +393,7 @@ submitBtn.onclick = function() {
         obs: document.getElementById('obsE').value,
         funcionario_id: document.getElementById("funcionarioBoxEdit").value,
         coments: document.getElementById("comentsE").value,
+        situacao: document.getElementById("situacaoBox").value
     };
 
     console.log(osE)
@@ -404,7 +405,6 @@ submitBtn.onclick = function() {
 }
 
 }
-
 function formatarMoeda(valor) {
     const valorNumerico = parseFloat(valor.toString().replace(/[^\d.]/g, ''));
     //const valorFormatado = (isNaN(valorNumerico)) ? '' : 'R$ ' + valorNumerico.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');;

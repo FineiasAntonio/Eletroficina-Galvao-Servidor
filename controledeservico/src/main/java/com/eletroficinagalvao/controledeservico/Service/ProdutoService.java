@@ -43,9 +43,10 @@ public class ProdutoService{
 
     @Transactional
     public void update(String id, Produto produto) {
+        System.out.println(produto);
         Produto produtoSelecionado = getById(id);
         produtoSelecionado = produto;
-        repository.save(produtoSelecionado);
+        System.out.println(repository.save(produtoSelecionado));
     }
 
     public void delete(String id) {
