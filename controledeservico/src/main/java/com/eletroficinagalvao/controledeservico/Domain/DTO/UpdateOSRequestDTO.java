@@ -5,6 +5,8 @@ import com.eletroficinagalvao.controledeservico.Domain.Entity.Funcionario;
 import java.io.File;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public record UpdateOSRequestDTO(
         String nome,
         String cpf,
@@ -17,6 +19,10 @@ public record UpdateOSRequestDTO(
         String obs,
         int funcionario_id,
         String coments,
-        String situacao
+        boolean concluido,
+        String subSituacao,
+        List<MultipartFile> imagemEntrada,
+        List<MultipartFile> imagemSaida,
+        MultipartFile video
 ) {
 }

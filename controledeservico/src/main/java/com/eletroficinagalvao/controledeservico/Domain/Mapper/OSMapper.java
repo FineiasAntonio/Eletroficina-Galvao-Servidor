@@ -2,10 +2,9 @@ package com.eletroficinagalvao.controledeservico.Domain.Mapper;
 
 import com.eletroficinagalvao.controledeservico.Domain.DTO.CreateOSRequestDTO;
 import com.eletroficinagalvao.controledeservico.Domain.DTO.UpdateOSRequestDTO;
-import com.eletroficinagalvao.controledeservico.Domain.Entity.Funcionario;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.OS;
-import com.eletroficinagalvao.controledeservico.Domain.Entity.Reserva;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.ServicoSituacao;
+import com.eletroficinagalvao.controledeservico.Domain.Entity.SubSituacao;
 import com.eletroficinagalvao.controledeservico.Exception.BadRequestException;
 import com.eletroficinagalvao.controledeservico.Repository.FuncionarioRepository;
 
@@ -51,7 +50,13 @@ public class OSMapper {
         ordemdeservico.setFuncionario_id(funcionarioRepository.findById(dto.funcionario_id()).get());
 
         ordemdeservico.setDataEntrada(Date.valueOf(LocalDate.now()));
-        ordemdeservico.setSituacao(ServicoSituacao.EM_ANDAMENTO);
+
+        if (ordemdeservico.getId_reserva().isAtivo()){
+            ordemdeservico.setSituacao(ServicoSituacao.AGUARDANDO_PECA);
+        } else {
+            ordemdeservico.setSituacao(ServicoSituacao.EM_ANDAMENTO);
+        }
+        
 
         return ordemdeservico;
     }
@@ -73,20 +78,18 @@ public class OSMapper {
         ordemdeservico.setObs(dto.obs());
         ordemdeservico.setComents(dto.coments());
         ordemdeservico.setDataSaida(Date.valueOf(dto.dataSaida()));
-        ordemdeservico.setSituacao(ServicoSituacao.getStatus(Integer.parseInt(dto.situacao())));
+        ordemdeservico.setSubSituacao(SubSituacao.getSubStatus(Integer.parseInt(dto.subSituacao())));
         ordemdeservico.setFuncionario_id(funcionarioRepository.findById(dto.funcionario_id()).get());
-/* 
-        if (dto.status().equals("0")){
+
+        if (dto.concluido()){
             ordemdeservico.setSituacao(ServicoSituacao.CONCLUIDO);
-            ordemdeservico.getId_reserva().setAtivo(false);
-            ordemdeservico.setDataConclusao(Date.valueOf(LocalDate.now()));
+        } else {
+            if (ordemdeservico.getId_reserva().isAtivo()){
+                ordemdeservico.setSituacao(ServicoSituacao.AGUARDANDO_PECA);
+            } else {
+                ordemdeservico.setSituacao(ServicoSituacao.EM_ANDAMENTO);
+            }
         }
-        if (dto.status().equals("1") || dto.status().equals("2")) {
-            ordemdeservico.setSituacao(ServicoSituacao.getStatus(Integer.parseInt(dto.status())));
-            ordemdeservico.getId_reserva().setAtivo(true);
-            ordemdeservico.setDataConclusao(null);
-        }
- */
 
         return ordemdeservico;
     }

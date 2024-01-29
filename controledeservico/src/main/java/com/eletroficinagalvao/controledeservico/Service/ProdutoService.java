@@ -73,6 +73,9 @@ public class ProdutoService{
     public void delete(String id) {
 
         reservadoRepository.findById(id).ifPresent(e -> {
+
+            // TODO: preciso arrumar um jeito de apagar a reserva porém mantê-la para o usuario
+
             if(e.getQuantidadeNescessaria() != 0 && e.getQuantidadeReservada() != 0){
                 log.error("Ainda há reserva para esse produto");
                 throw new BadRequestException("Ainda há reservas para esse produto");
