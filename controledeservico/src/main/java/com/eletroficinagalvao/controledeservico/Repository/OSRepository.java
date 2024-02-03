@@ -1,20 +1,19 @@
 package com.eletroficinagalvao.controledeservico.Repository;
 
 import com.eletroficinagalvao.controledeservico.Domain.Entity.OS;
+import com.eletroficinagalvao.controledeservico.Domain.Entity.ServicoSituacao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
-public interface OSRepository extends JpaRepository<OS, Integer> {
+public interface OSRepository extends MongoRepository<OS, Integer> {
 
-    @Query("SELECT os FROM OS os WHERE os.situacao = AGUARDANDO_PECA")
-    public List<OS> getWaitingOrders();
+    List<OS> findBySituacao(ServicoSituacao situacao);
 
-    @Query("SELECT os FROM OS os WHERE os.nome LIKE %:name%")
-    public List<OS> getByLikeThisName(@Param("name") String name);
+    List<OS> findByNomeLike(String name);
 
 }

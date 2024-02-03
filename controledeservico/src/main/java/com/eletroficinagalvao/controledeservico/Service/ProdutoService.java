@@ -41,7 +41,7 @@ public class ProdutoService{
     }
 
     public List<Produto> getByLikeThisName(String name) {
-        return repository.getByLikeThisName(name);
+        return repository.findByProdutoLike(name);
     }
 
     @Transactional

@@ -33,8 +33,8 @@ public class OSMapper {
         }
 
         if (!dto.produtosReservados().isEmpty()) {
-            ordemdeservico.setId_reserva(reservaMapper.criarReserva(dto.produtosReservados()));
-            log.info("Reserva criada, id: %s".formatted(ordemdeservico.getId_reserva().getId_reserva()));
+            ordemdeservico.setIdReserva(reservaMapper.criarReserva(dto.produtosReservados()));
+            log.info("Reserva criada, id: %s".formatted(ordemdeservico.getIdReserva().getId_reserva()));
         }
 
         ordemdeservico.setNome(dto.nome());
@@ -47,11 +47,11 @@ public class OSMapper {
         ordemdeservico.setObs(dto.obs());
         ordemdeservico.setComents(dto.coments());
         ordemdeservico.setDataSaida(Date.valueOf(dto.dataSaida()));
-        ordemdeservico.setFuncionario_id(funcionarioRepository.findById(dto.funcionario_id()).get());
+        ordemdeservico.setFuncionario(funcionarioRepository.findById(dto.funcionario_id()).get());
 
         ordemdeservico.setDataEntrada(Date.valueOf(LocalDate.now()));
 
-        if (ordemdeservico.getId_reserva().isAtivo()){
+        if (ordemdeservico.getIdReserva().isAtivo()){
             ordemdeservico.setSituacao(ServicoSituacao.AGUARDANDO_PECA);
         } else {
             ordemdeservico.setSituacao(ServicoSituacao.EM_ANDAMENTO);
@@ -79,12 +79,12 @@ public class OSMapper {
         ordemdeservico.setComents(dto.coments());
         ordemdeservico.setDataSaida(Date.valueOf(dto.dataSaida()));
         ordemdeservico.setSubSituacao(SubSituacao.getSubStatus(Integer.parseInt(dto.subSituacao())));
-        ordemdeservico.setFuncionario_id(funcionarioRepository.findById(dto.funcionario_id()).get());
+        ordemdeservico.setFuncionario(funcionarioRepository.findById(dto.funcionario_id()).get());
 
         if (dto.concluido()){
             ordemdeservico.setSituacao(ServicoSituacao.CONCLUIDO);
         } else {
-            if (ordemdeservico.getId_reserva().isAtivo()){
+            if (ordemdeservico.getIdReserva().isAtivo()){
                 ordemdeservico.setSituacao(ServicoSituacao.AGUARDANDO_PECA);
             } else {
                 ordemdeservico.setSituacao(ServicoSituacao.EM_ANDAMENTO);

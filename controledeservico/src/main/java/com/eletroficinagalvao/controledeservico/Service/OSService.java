@@ -42,7 +42,7 @@ public class OSService {
     public void create(CreateOSRequestDTO ordemdeservico){
         OS os = mapper.map(ordemdeservico);
         repository.save(os);
-        log.info("Ordem de serviço registrada no nome de: " + repositoryFuncionario.findById(os.getFuncionario_id().getId()));
+        log.info("Ordem de serviço registrada no nome de: " + repositoryFuncionario.findById(os.getFuncionario().getId()));
     }
 
     @Transactional
