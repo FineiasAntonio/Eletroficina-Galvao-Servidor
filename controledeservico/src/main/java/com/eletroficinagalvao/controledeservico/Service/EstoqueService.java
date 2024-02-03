@@ -1,13 +1,8 @@
 package com.eletroficinagalvao.controledeservico.Service;
 
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Produto;
-import com.eletroficinagalvao.controledeservico.Domain.Entity.ProdutoReservado;
-import com.eletroficinagalvao.controledeservico.Exception.BadRequestException;
 import com.eletroficinagalvao.controledeservico.Exception.NotFoundException;
 import com.eletroficinagalvao.controledeservico.Repository.ProdutoRepository;
-import com.eletroficinagalvao.controledeservico.Repository.ProdutoReservadoRepository;
-import jakarta.persistence.EntityManager;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Qualifier ("ProdutoService")
+@Qualifier ("EstoqueService")
 @Log4j2
-public class ProdutoService{
+public class EstoqueService {
 
     @Autowired
     private ProdutoRepository repository;
-
-    @Autowired
-    private ProdutoReservadoRepository reservadoRepository;
-
-    @Autowired
-    private EntityManager entityManager;
 
     public List<Produto> getAll() {
         return repository.findAll();
@@ -60,27 +49,12 @@ public class ProdutoService{
 
         Produto produtoSelecionado = getById(id);
 
-        reservadoRepository.findById(id).ifPresent(e -> {
-            BeanUtils.copyProperties(produto, e, "quantidade");
-            reservadoRepository.save(e);
-        });
-
         BeanUtils.copyProperties(produto, produtoSelecionado);
 
         repository.save(produtoSelecionado);
     }
 
     public void delete(String id) {
-
-        reservadoRepository.findById(id).ifPresent(e -> {
-
-            // TODO: preciso arrumar um jeito de apagar a reserva porém mantê-la para o usuario
-
-            if(e.getQuantidadeNescessaria() != 0 && e.getQuantidadeReservada() != 0){
-                log.error("Ainda há reserva para esse produto");
-                throw new BadRequestException("Ainda há reservas para esse produto");
-            }
-        });
 
         repository.deleteById(id);
     }

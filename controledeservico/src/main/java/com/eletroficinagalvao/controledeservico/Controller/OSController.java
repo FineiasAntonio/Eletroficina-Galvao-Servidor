@@ -2,9 +2,7 @@ package com.eletroficinagalvao.controledeservico.Controller;
 
 import com.eletroficinagalvao.controledeservico.Domain.DTO.CreateOSRequestDTO;
 import com.eletroficinagalvao.controledeservico.Domain.DTO.UpdateOSRequestDTO;
-import com.eletroficinagalvao.controledeservico.Domain.Entity.OS;
 import com.eletroficinagalvao.controledeservico.Service.ImageService;
-import com.eletroficinagalvao.controledeservico.Service.NotificationService;
 import com.eletroficinagalvao.controledeservico.Service.OSService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.*;
-import java.sql.SQLDataException;
-import java.util.List;
 
 @RestController
 @RequestMapping ("/ordensdeservicos")
@@ -25,9 +18,6 @@ public class OSController {
     @Autowired
     @Qualifier("OSService")
     private OSService service;
-
-    @Autowired
-    private NotificationService notificationService;
 
     @Autowired
     private ImageService imageService;

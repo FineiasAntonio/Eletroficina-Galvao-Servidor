@@ -8,6 +8,8 @@ import com.eletroficinagalvao.controledeservico.Repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class ProdutoMapper {
 
@@ -33,7 +35,7 @@ public class ProdutoMapper {
             throw new BadRequestException("produto inválido");
         }
 
-        String uuid = produtoRepository.findAll()
+        UUID uuid = produtoRepository.findAll()
                 .stream()
                 .filter(e -> e.getProduto().equals(dto.produto()))
                 .findFirst().orElseGet(() -> {
@@ -43,17 +45,16 @@ public class ProdutoMapper {
                 })
                 .getId();
         
-        int quantidadeNescessaria = dto.quantidade().trim().isEmpty() ? 0 : Integer.parseInt(dto.quantidade());
-        int quantidadeReservada = dto.quantidade().trim().isEmpty() ? 0 : Integer.parseInt(dto.quantidade()) * -1;
+        int quantidadeNescessaria = Integer.parseInt(dto.quantidade());
+        int quantidadeReservada = Integer.parseInt(dto.quantidade()) * -1;
 
-        return ProdutoReservado.builder()
-                .id_produto(uuid)
+        return new ProdutoReservado(Produto.builder()
+                .id(uuid)
                 .produto(dto.produto())
                 .referencia(dto.referencia())
-                .quantidadeNescessaria(quantidadeNescessaria)
-                .quantidadeReservada(quantidadeReservada)
+                .quantidade(quantidadeReservada)
                 .precoUnitario(Double.parseDouble(dto.precoUnitario()))
-                .build();
+                .build(), quantidadeNescessaria);
     }
 
     private static boolean isValid(ProdutoDTO dto) {

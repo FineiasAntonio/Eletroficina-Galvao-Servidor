@@ -3,7 +3,7 @@ package com.eletroficinagalvao.controledeservico.Controller;
 import com.eletroficinagalvao.controledeservico.Domain.DTO.ProdutoDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Produto;
 import com.eletroficinagalvao.controledeservico.Domain.Mapper.ProdutoMapper;
-import com.eletroficinagalvao.controledeservico.Service.ProdutoService;
+import com.eletroficinagalvao.controledeservico.Service.EstoqueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -14,11 +14,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping ("/estoque")
-public class ProdutoController {
+public class EstoqueController {
 
     @Autowired
-    @Qualifier ("ProdutoService")
-    private ProdutoService service;
+    @Qualifier ("EstoqueService")
+    private EstoqueService service;
     @Autowired
     private ProdutoMapper mapper;
 

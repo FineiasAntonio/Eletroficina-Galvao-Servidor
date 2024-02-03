@@ -33,8 +33,8 @@ public class OSMapper {
         }
 
         if (!dto.produtosReservados().isEmpty()) {
-            ordemdeservico.setIdReserva(reservaMapper.criarReserva(dto.produtosReservados()));
-            log.info("Reserva criada, id: %s".formatted(ordemdeservico.getIdReserva().getId_reserva()));
+            ordemdeservico.setReserva(reservaMapper.criarReserva(dto.produtosReservados(), ordemdeservico.getId()));
+            log.info("Reserva criada, id: %s".formatted(ordemdeservico.getReserva().getId()));
         }
 
         ordemdeservico.setNome(dto.nome());
@@ -51,7 +51,7 @@ public class OSMapper {
 
         ordemdeservico.setDataEntrada(Date.valueOf(LocalDate.now()));
 
-        if (ordemdeservico.getIdReserva().isAtivo()){
+        if (ordemdeservico.getReserva().isAtivo()){
             ordemdeservico.setSituacao(ServicoSituacao.AGUARDANDO_PECA);
         } else {
             ordemdeservico.setSituacao(ServicoSituacao.EM_ANDAMENTO);
@@ -84,7 +84,7 @@ public class OSMapper {
         if (dto.concluido()){
             ordemdeservico.setSituacao(ServicoSituacao.CONCLUIDO);
         } else {
-            if (ordemdeservico.getIdReserva().isAtivo()){
+            if (ordemdeservico.getReserva().isAtivo()){
                 ordemdeservico.setSituacao(ServicoSituacao.AGUARDANDO_PECA);
             } else {
                 ordemdeservico.setSituacao(ServicoSituacao.EM_ANDAMENTO);

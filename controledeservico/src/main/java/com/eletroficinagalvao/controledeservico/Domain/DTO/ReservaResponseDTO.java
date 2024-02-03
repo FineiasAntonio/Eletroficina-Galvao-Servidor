@@ -1,9 +1,8 @@
 package com.eletroficinagalvao.controledeservico.Domain.DTO;
 
-import java.util.List;
-
-import com.eletroficinagalvao.controledeservico.Domain.Entity.OS;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.ProdutoReservado;
+
+import java.util.List;
 
 public record ReservaResponseDTO(
     String uuid,

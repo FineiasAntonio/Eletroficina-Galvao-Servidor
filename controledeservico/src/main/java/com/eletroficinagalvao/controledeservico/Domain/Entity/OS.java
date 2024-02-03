@@ -17,6 +17,8 @@ import java.util.Date;
 @ToString
 public class OS {
 
+    private static int controleId = 1;
+
     @Id
     private int id;
 
@@ -39,6 +41,10 @@ public class OS {
     private String video;
     private Funcionario funcionario;
     private String coments;
-    private Reserva idReserva;
+    private Reserva reserva;
     private double valorTotal;
+
+    public OS(){
+        this.id = controleId++;
+    }
 }
