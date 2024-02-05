@@ -8,8 +8,12 @@ import com.eletroficinagalvao.controledeservico.Service.OSService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping ("/ordensdeservicos")
@@ -32,9 +36,12 @@ public class OSController {
         return new ResponseEntity(service.getById(String.valueOf(id)), HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity create(@RequestBody CreateOSRequestDTO ordemdeserviço){
-        service.create(ordemdeserviço);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity create(
+            @RequestPart CreateOSRequestDTO ordemdeserviço,
+            @RequestPart List<MultipartFile> imagensEntrada
+    ){
+        service.create(ordemdeserviço, imagensEntrada);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

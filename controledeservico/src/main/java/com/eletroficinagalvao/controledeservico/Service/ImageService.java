@@ -7,6 +7,7 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -36,19 +37,31 @@ public class ImageService {
     @Autowired
     private OSRepository repository;
 
-    public String readImage(int id, InputStream inputStream, int method) throws IOException, SQLDataException {
+    public String readImage(int id, List<MultipartFile> imagens, int method) {
         setMethod(method);
 
-        // Verifica se existe o diretório e cria
-        verify(id);
+        try {
+            // Verifica se existe o diretório e cria
+            verify(id);
 
-        byte[] buffer = new byte[8192];
-        int bytesRead;
+            OutputStream outputStream = new FileOutputStream(new File(diretorioUsuario + "\\%d_%d.jpg".formatted(id, random.nextInt(1000, 9999))));
 
-        try (OutputStream outputStream = new FileOutputStream(new File(diretorioUsuario + "\\%d_%d.jpg".formatted(id, random.nextInt(1000, 9999))))) {
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
-            }
+            imagens.stream().forEach(e -> {
+
+                byte[] buffer = new byte[8192];
+                int bytesRead;
+
+                try {
+                    while ((bytesRead = e.getInputStream().read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            });
+
+        } catch (IOException | SQLDataException e) {
+            e.printStackTrace();
         }
         return diretorioUsuario;
     }
@@ -63,8 +76,8 @@ public class ImageService {
         }
     }
 
-    private void setMethod(int method){
-        if (method == ENTRANCE_METHOD){
+    private void setMethod(int method) {
+        if (method == ENTRANCE_METHOD) {
             this.method = "Entrada";
         } else if (method == EXIT_METHOD) {
             this.method = "Saida";
@@ -88,7 +101,7 @@ public class ImageService {
                     .toList();
 
             ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(zipTemp));
-            for (File e: fotos) {
+            for (File e : fotos) {
                 try (InputStream inputStream = new FileInputStream(e)) {
 
                     byte[] buffer = new byte[8192];
@@ -96,7 +109,7 @@ public class ImageService {
 
                     zipOutputStream.putNextEntry(new ZipEntry(e.getName()));
 
-                    while ((bytesRead = inputStream.read(buffer)) != -1){
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
                         zipOutputStream.write(buffer, 0, bytesRead);
                     }
 

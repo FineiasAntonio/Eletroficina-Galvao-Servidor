@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -39,8 +40,8 @@ public class OSService {
     }
 
     @Transactional
-    public void create(CreateOSRequestDTO ordemdeservico){
-        OS os = mapper.map(ordemdeservico);
+    public void create(CreateOSRequestDTO ordemdeservico, List<MultipartFile> imagensEntrada){
+        OS os = mapper.map(ordemdeservico, imagensEntrada);
         repository.save(os);
         log.info("Ordem de serviço registrada no nome de: " + repositoryFuncionario.findById(os.getFuncionario().getId()));
     }
