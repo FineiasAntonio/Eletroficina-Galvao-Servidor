@@ -38,10 +38,10 @@ public class OSController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity create(
-            @RequestPart CreateOSRequestDTO ordemdeserviço,
+            @RequestPart CreateOSRequestDTO ordemdeservico,
             @RequestPart List<MultipartFile> imagensEntrada
     ){
-        service.create(ordemdeserviço, imagensEntrada);
+        service.create(ordemdeservico, imagensEntrada);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -51,57 +51,13 @@ public class OSController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @PutMapping ("/{id}")
-    public ResponseEntity update(@PathVariable int id, @RequestBody UpdateOSRequestDTO os){
-        System.out.println(os);
-        service.update(id, os);
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity update(@PathVariable int id,
+                                 @RequestPart UpdateOSRequestDTO os,
+                                 @RequestPart List<MultipartFile> imagensEntrada,
+                                 @RequestPart List<MultipartFile> imagensSaida
+    ){
+        service.update(id, os, imagensEntrada, imagensSaida);
         return new ResponseEntity(HttpStatus.OK);
     }
-
-// Fotos
-//    public ResponseEntity updateEntranceImage(@PathVariable int id, @RequestParam("image") List<MultipartFile> fotos) {
-//        String diretorio = null;
-//
-//        if (!fotos.isEmpty()) {
-//            for (MultipartFile e : fotos) {
-//                try {
-//                    InputStream inputStream = e.getInputStream();
-//                    diretorio = imageService.readImage(id, inputStream, ImageService.ENTRANCE_METHOD);
-//                } catch (IOException ex) {
-//                    ex.printStackTrace();
-//                } catch (SQLDataException ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//        }
-//
-//        OS entity = service.getById(String.valueOf(id));
-//        entity.setImagemEntrada(diretorio);
-//        service.update(entity);
-//
-//        return new ResponseEntity(HttpStatus.OK);
-//    }
-//
-//    public ResponseEntity updateExitImage(@PathVariable int id, @RequestParam("image") List<MultipartFile> fotos) {
-//        String diretorio = null;
-//
-//        if (!fotos.isEmpty()) {
-//            for (MultipartFile e : fotos) {
-//                try {
-//                    InputStream inputStream = e.getInputStream();
-//                    diretorio = imageService.readImage(id, inputStream, ImageService.EXIT_METHOD);
-//                } catch (IOException ex) {
-//                    ex.printStackTrace();
-//                } catch (SQLDataException ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//        }
-//
-//        OS entity = service.getById(String.valueOf(id));
-//        entity.setImagemEntrada(diretorio);
-//        service.update(entity);
-//
-//        return new ResponseEntity(HttpStatus.OK);
-//    }
 }

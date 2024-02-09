@@ -29,6 +29,8 @@ public class OSService {
     private FuncionarioRepository repositoryFuncionario;
     @Autowired
     private OSMapper mapper;
+    @Autowired
+    private ImageService imageService;
 
     public List<OS> getAll(){
         return repository.findAll();
@@ -49,13 +51,19 @@ public class OSService {
     @Transactional
     public void delete(String id){
         repository.deleteById(Integer.valueOf(id));
+        imageService.delete(Integer.parseInt(id));
+        log.info("OS apagada com sucesso");
     }
 
     @Transactional
-    public void update(int id, UpdateOSRequestDTO os){
-        OS correspondente = repository.findById(Integer.valueOf(id)).get();
-        OS updatedOS = mapper.updateMap(correspondente, os);
-        System.out.println(updatedOS);
+    public void update(int id,
+                       UpdateOSRequestDTO os,
+                       List<MultipartFile> imagensEntrada,
+                       List<MultipartFile> imagensSaida
+    ){
+        OS correspondente = repository.findById(Integer.valueOf(id)).orElseThrow(() -> new NotFoundException("Não encontrado"));
+        OS updatedOS = mapper.updateMap(correspondente, os, imagensEntrada, imagensSaida);
         repository.save(updatedOS);
+        log.info("Atualizado");
     }
 }

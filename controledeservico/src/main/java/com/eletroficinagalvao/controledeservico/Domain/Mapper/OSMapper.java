@@ -69,7 +69,11 @@ public class OSMapper {
         return ordemdeservico;
     }
 
-    public OS updateMap(OS ordemdeservico, UpdateOSRequestDTO dto) {
+    public OS updateMap(OS ordemdeservico,
+                        UpdateOSRequestDTO dto,
+                        List<MultipartFile> imagensEntrada,
+                        List<MultipartFile> imagensSaida
+    ) {
 
         if (!isValid(dto)) {
             log.error("Ordem de serviço inválida");
@@ -97,6 +101,13 @@ public class OSMapper {
             } else {
                 ordemdeservico.setSituacao(ServicoSituacao.EM_ANDAMENTO);
             }
+        }
+
+        if (!imagensEntrada.isEmpty()){
+            ordemdeservico.setImagemEntrada(imageService.readImage(ordemdeservico.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
+        }
+        if (!imagensSaida.isEmpty()){
+            ordemdeservico.setImagemSaida(imageService.readImage(ordemdeservico.getId(), imagensEntrada, ImageService.EXIT_METHOD));
         }
 
         return ordemdeservico;

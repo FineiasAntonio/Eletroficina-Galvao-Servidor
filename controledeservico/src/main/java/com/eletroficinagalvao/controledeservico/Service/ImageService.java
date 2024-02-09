@@ -44,20 +44,24 @@ public class ImageService {
             // Verifica se existe o diretório e cria
             verify(id);
 
-            OutputStream outputStream = new FileOutputStream(new File(diretorioUsuario + "\\%d_%d.jpg".formatted(id, random.nextInt(1000, 9999))));
+
 
             imagens.stream().forEach(e -> {
 
-                byte[] buffer = new byte[8192];
-                int bytesRead;
-
                 try {
+                    OutputStream outputStream = new FileOutputStream(new File(diretorioUsuario + "\\%d_%d.jpg".formatted(id, random.nextInt(1000, 9999))));
+
+                    byte[] buffer = new byte[8192];
+                    int bytesRead;
                     while ((bytesRead = e.getInputStream().read(buffer)) != -1) {
                         outputStream.write(buffer, 0, bytesRead);
                     }
+
+                    outputStream.close();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
+
             });
 
         } catch (IOException | SQLDataException e) {
@@ -85,7 +89,6 @@ public class ImageService {
             throw new IllegalArgumentException("Método inválido");
         }
     }
-
 
     // Depois
     public File getImageById(int id) {
@@ -123,5 +126,15 @@ public class ImageService {
             ex.printStackTrace();
         }
         return zipTemp;
+    }
+
+    public void delete(int id){
+        try {
+            String a =  diretorio + "/OrdensDeServicos/ImagensOS/%s".formatted(id);
+
+            Files.delete(Path.of(a));
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }
