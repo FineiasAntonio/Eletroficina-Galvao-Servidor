@@ -12,13 +12,12 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 @Document(collection = "estoque")
 public class Produto{
 
         @Id
-        private UUID id = UUID.randomUUID();
+        private UUID id;
 
         private String produto;
         private String referencia;
@@ -26,6 +25,15 @@ public class Produto{
         private double precoUnitario;
 
     public Produto(String produto, String referencia, int quantidade, double precoUnitario) {
+        this.id = UUID.randomUUID();
+        this.produto = produto;
+        this.referencia = referencia;
+        this.quantidade = quantidade;
+        this.precoUnitario = precoUnitario;
+    }
+
+    public Produto(UUID id, String produto, String referencia, int quantidade, double precoUnitario) {
+        this.id = id;
         this.produto = produto;
         this.referencia = referencia;
         this.quantidade = quantidade;

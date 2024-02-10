@@ -4,8 +4,10 @@ import com.eletroficinagalvao.controledeservico.Domain.DTO.ProdutoDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Produto;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.ProdutoReservado;
 import com.eletroficinagalvao.controledeservico.Exception.BadRequestException;
+import com.eletroficinagalvao.controledeservico.Exception.NotFoundException;
 import com.eletroficinagalvao.controledeservico.Repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -55,6 +57,11 @@ public class ProdutoMapper {
                 .quantidade(quantidadeReservada)
                 .precoUnitario(Double.parseDouble(dto.precoUnitario()))
                 .build(), quantidadeNescessaria);
+    }
+
+    public ProdutoReservado reservar(UUID uuidProduto, int quantidadeNescessaria){
+        Produto produto = produtoRepository.findById(uuidProduto).orElseThrow(() -> new NotFoundException("Produto não encontrado"));
+        return new ProdutoReservado(produto,quantidadeNescessaria*-1);
     }
 
     private static boolean isValid(ProdutoDTO dto) {

@@ -1,6 +1,7 @@
 package com.eletroficinagalvao.controledeservico.Domain.Mapper;
 
 import com.eletroficinagalvao.controledeservico.Domain.DTO.ProdutoDTO;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.ReservarProdutoDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.ProdutoReservado;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Reserva;
 import com.eletroficinagalvao.controledeservico.Repository.ReservaRepository;
@@ -17,17 +18,11 @@ public class ReservaMapper {
     @Autowired
     private ReservaRepository reservaRepository;
 
-    public Reserva criarReserva(List<ProdutoDTO> produtos, int idOS){
-        List<ProdutoReservado> produtosReservados = produtos.stream().map(e -> produtoMapper.mapReserva(e)).toList();
+    public Reserva criarReserva(List<ReservarProdutoDTO> produtos, int idOS){
+        System.out.println(produtos);
+        List<ProdutoReservado> produtosReservados = produtos.stream().map(e -> produtoMapper.reservar(e.uuidProduto(), e.quantidadeNescessaria())).toList();
 
         return reservaRepository.save(new Reserva(idOS, produtosReservados, true));
-
-//        return (Reserva) reservaRepository.save(Reserva.builder()
-//                .produtos_reservados(produtosReservados)
-//                .ativo(true)
-//                .idOS(idOS)
-//                .build()
-//        );
     }
 
 }
