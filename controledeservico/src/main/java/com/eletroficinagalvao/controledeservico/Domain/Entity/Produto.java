@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Document(collection = "estoque")
 public class Produto{
@@ -32,15 +33,5 @@ public class Produto{
         this.precoUnitario = precoUnitario;
     }
 
-    public Produto(UUID id, String produto, String referencia, int quantidade, double precoUnitario) {
-        this.id = id;
-        this.produto = produto;
-        this.referencia = referencia;
-        this.quantidade = quantidade;
-        this.precoUnitario = precoUnitario;
-    }
-
-    public Produto(Produto produto) {
-    }
 }
 

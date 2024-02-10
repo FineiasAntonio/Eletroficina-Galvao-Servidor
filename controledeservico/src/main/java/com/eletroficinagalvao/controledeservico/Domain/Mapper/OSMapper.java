@@ -24,9 +24,9 @@ public class OSMapper {
 
     @Autowired
     private ReservaMapper reservaMapper;
-    @Autowired 
+    @Autowired
     private FuncionarioRepository funcionarioRepository;
- 
+
     public OS map(CreateOSRequestDTO dto) {
         OS ordemdeservico = new OS();
 
@@ -35,10 +35,8 @@ public class OSMapper {
             throw new BadRequestException("Ordem de serviço inválida");
         }
 
-        if (!dto.produtosReservados().isEmpty()) {
-            ordemdeservico.setReserva(reservaMapper.criarReserva(dto.produtosReservados(), ordemdeservico.getId()));
-            log.info("Reserva criada, id: %s".formatted(ordemdeservico.getReserva().getId()));
-        }
+        ordemdeservico.setReserva(reservaMapper.criarReserva(dto.produtosReservados(), dto.novoProdutoReservado(), ordemdeservico.getId()).orElse(null));
+        log.info("Reserva criada, id: %s".formatted(ordemdeservico.getReserva().getId()));
 
         ordemdeservico.setNome(dto.nome());
         ordemdeservico.setCpf(dto.cpf());
@@ -54,7 +52,7 @@ public class OSMapper {
 
         ordemdeservico.setDataEntrada(Date.valueOf(LocalDate.now()));
 
-        if ((ordemdeservico.getReserva() != null) && ordemdeservico.getReserva().isAtivo()){
+        if ((ordemdeservico.getReserva() != null) && ordemdeservico.getReserva().isAtivo()) {
             ordemdeservico.setSituacao(ServicoSituacao.AGUARDANDO_PECA);
         } else {
             ordemdeservico.setSituacao(ServicoSituacao.EM_ANDAMENTO);
@@ -83,10 +81,10 @@ public class OSMapper {
         ordemdeservico.setSubSituacao(SubSituacao.getSubStatus(Integer.parseInt(dto.subSituacao())));
         ordemdeservico.setFuncionario(funcionarioRepository.findById(dto.funcionario_id()).get());
 
-        if (dto.concluido()){
+        if (dto.concluido()) {
             ordemdeservico.setSituacao(ServicoSituacao.CONCLUIDO);
         } else {
-            if (ordemdeservico.getReserva().isAtivo()){
+            if (ordemdeservico.getReserva().isAtivo()) {
                 ordemdeservico.setSituacao(ServicoSituacao.AGUARDANDO_PECA);
             } else {
                 ordemdeservico.setSituacao(ServicoSituacao.EM_ANDAMENTO);
@@ -99,19 +97,20 @@ public class OSMapper {
     private static boolean isValid(CreateOSRequestDTO dto) {
         if (
                 dto == null ||
-                dto.nome().trim().isEmpty() ||
-                dto.equipamento().trim().isEmpty()
-            
+                        dto.nome().trim().isEmpty() ||
+                        dto.equipamento().trim().isEmpty()
+
         ) {
             return false;
         }
         return true;
     }
+
     private static boolean isValid(UpdateOSRequestDTO dto) {
         if (
                 dto == null ||
-                dto.nome().trim().isEmpty() ||
-                dto.equipamento().trim().isEmpty()
+                        dto.nome().trim().isEmpty() ||
+                        dto.equipamento().trim().isEmpty()
         ) {
             return false;
         }

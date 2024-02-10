@@ -28,7 +28,6 @@ public class ProdutoMapper {
                          dto.referencia(),
                          dto.quantidade().trim().isEmpty() ? 0 : Integer.parseInt(dto.quantidade()),
                          Double.parseDouble(dto.precoUnitario()));
-
     }
 
     public ProdutoReservado mapReserva(ProdutoDTO dto) {
@@ -37,26 +36,13 @@ public class ProdutoMapper {
             throw new BadRequestException("produto inválido");
         }
 
-        UUID uuid = produtoRepository.findAll()
-                .stream()
-                .filter(e -> e.getProduto().equals(dto.produto()))
-                .findFirst().orElseGet(() -> {
-                    Produto produtoSupplier = map(dto);
-                    produtoSupplier.setQuantidade(0);
-                    return produtoRepository.save(produtoSupplier);
-                })
-                .getId();
+        Produto produtoSupplier = map(dto);
+        produtoSupplier.setQuantidade(0);
+        produtoRepository.save(produtoSupplier);
         
-        int quantidadeNescessaria = Integer.parseInt(dto.quantidade());
-        int quantidadeReservada = Integer.parseInt(dto.quantidade()) * -1;
+        int quantidadeNescessaria = Integer.parseInt(dto.quantidade())*-1;
 
-        return new ProdutoReservado(Produto.builder()
-                .id(uuid)
-                .produto(dto.produto())
-                .referencia(dto.referencia())
-                .quantidade(quantidadeReservada)
-                .precoUnitario(Double.parseDouble(dto.precoUnitario()))
-                .build(), quantidadeNescessaria);
+        return new ProdutoReservado(produtoSupplier, quantidadeNescessaria);
     }
 
     public ProdutoReservado reservar(UUID uuidProduto, int quantidadeNescessaria){
