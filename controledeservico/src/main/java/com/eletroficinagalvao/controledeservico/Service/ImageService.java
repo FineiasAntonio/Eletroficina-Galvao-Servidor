@@ -41,43 +41,35 @@ public class ImageService {
         setMethod(method);
 
         try {
-            // Verifica se existe o diretório e cria
-            verify(id);
 
+            diretorioUsuario = Files.createDirectories(Path.of(diretorio + "\\OrdensDeServicos\\ImagensOS\\%d\\%s".formatted(id, getMethod())))
+                    .toString();
 
+            byte[] buffer = new byte[4096];
+            int bytesRead;
 
-            imagens.stream().forEach(e -> {
+            for(MultipartFile e: imagens) {
 
-                try {
-                    OutputStream outputStream = new FileOutputStream(new File(diretorioUsuario + "\\%d_%d.jpg".formatted(id, random.nextInt(1000, 9999))));
+                try (
+                        InputStream inputStream = e.getInputStream();
+                        OutputStream outputStream = new FileOutputStream(new File(diretorioUsuario + "\\%d_%d.jpg".formatted(id, random.nextInt(1000, 9999))))
+                ) {
 
-                    byte[] buffer = new byte[8192];
-                    int bytesRead;
-                    while ((bytesRead = e.getInputStream().read(buffer)) != -1) {
+                    while ((bytesRead = inputStream.read(buffer)) > 0) {
                         outputStream.write(buffer, 0, bytesRead);
                     }
+                    outputStream.flush();
 
-                    outputStream.close();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
 
-            });
+            }
 
-        } catch (IOException | SQLDataException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return diretorioUsuario;
-    }
-
-    private void verify(int id) throws SQLDataException, IOException {
-        if (repository.existsById(id)) {
-            diretorioUsuario = Files.createDirectories(Path.of(diretorio + "\\OrdensDeServicos\\ImagensOS\\%d\\%s".formatted(id, getMethod())))
-                    .toString();
-        } else {
-            System.out.println("id: %s não encontrado".formatted(id));
-            throw new NotFoundException("Id não encontrado");
-        }
     }
 
     private void setMethod(int method) {
@@ -91,42 +83,42 @@ public class ImageService {
     }
 
     // Depois
-    public File getImageById(int id) {
-        File zipTemp = new File("imagens_%d.zip".formatted(id));
-        try {
-            verify(id);
-
-            zipTemp.createNewFile();
-
-            List<File> fotos = Arrays.stream(Path.of(diretorioUsuario)
-                            .toFile()
-                            .listFiles())
-                    .toList();
-
-            ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(zipTemp));
-            for (File e : fotos) {
-                try (InputStream inputStream = new FileInputStream(e)) {
-
-                    byte[] buffer = new byte[8192];
-                    int bytesRead;
-
-                    zipOutputStream.putNextEntry(new ZipEntry(e.getName()));
-
-                    while ((bytesRead = inputStream.read(buffer)) != -1) {
-                        zipOutputStream.write(buffer, 0, bytesRead);
-                    }
-
-                }
-            }
-            zipOutputStream.close();
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (SQLDataException ex) {
-            ex.printStackTrace();
-        }
-        return zipTemp;
-    }
+//    public File getImageById(int id) {
+//        File zipTemp = new File("imagens_%d.zip".formatted(id));
+//        try {
+//            verify(id);
+//
+//            zipTemp.createNewFile();
+//
+//            List<File> fotos = Arrays.stream(Path.of(diretorioUsuario)
+//                            .toFile()
+//                            .listFiles())
+//                    .toList();
+//
+//            ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(zipTemp));
+//            for (File e : fotos) {
+//                try (InputStream inputStream = new FileInputStream(e)) {
+//
+//                    byte[] buffer = new byte[8192];
+//                    int bytesRead;
+//
+//                    zipOutputStream.putNextEntry(new ZipEntry(e.getName()));
+//
+//                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+//                        zipOutputStream.write(buffer, 0, bytesRead);
+//                    }
+//
+//                }
+//            }
+//            zipOutputStream.close();
+//
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        } catch (SQLDataException ex) {
+//            ex.printStackTrace();
+//        }
+//        return zipTemp;
+//    }
 
     public void delete(int id){
         try {

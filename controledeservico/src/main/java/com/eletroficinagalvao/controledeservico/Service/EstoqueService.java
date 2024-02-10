@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Qualifier ("EstoqueService")
@@ -24,7 +25,7 @@ public class EstoqueService {
         return repository.findAll();
     }
 
-    public Produto getById(String id) {
+    public Produto getById(UUID id) {
         return repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Produto não encontrado"));
     }
@@ -45,7 +46,7 @@ public class EstoqueService {
     }
 
     @Transactional
-    public void update(String id, Produto produto) {
+    public void update(UUID id, Produto produto) {
 
         Produto produtoSelecionado = getById(id);
 
@@ -56,6 +57,6 @@ public class EstoqueService {
 
     public void delete(String id) {
 
-        repository.deleteById(id);
+        repository.deleteById(UUID.fromString(id));
     }
 }

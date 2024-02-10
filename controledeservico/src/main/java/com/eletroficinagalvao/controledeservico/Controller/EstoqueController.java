@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping ("/estoque")
@@ -29,7 +30,7 @@ public class EstoqueController {
 
     @GetMapping ("/{id}")
     public ResponseEntity<Produto> getById(@PathVariable String id){
-        return new ResponseEntity<>(service.getById(id), HttpStatus.OK);
+        return new ResponseEntity<>(service.getById(UUID.fromString(id)), HttpStatus.OK);
     }
 
     @PostMapping
@@ -49,7 +50,7 @@ public class EstoqueController {
 
     @PutMapping ("/{id}")
     public ResponseEntity<Void> update(@PathVariable String id, @RequestBody Produto produto){
-        service.update(id, produto);
+        service.update(UUID.fromString(id), produto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -20,7 +20,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 public class Reserva {
 
     @Id
-    private UUID id;
+    private UUID id = UUID.randomUUID();
 
     private int idOS;
     private List<ProdutoReservado> produtos_reservados;
@@ -35,4 +35,9 @@ public class Reserva {
         this.ativo = ativo;
     }
 
+    public Reserva(int idOS, List<ProdutoReservado> produtos_reservados, boolean ativo) {
+        this.idOS = idOS;
+        this.produtos_reservados = produtos_reservados;
+        this.ativo = ativo;
+    }
 }

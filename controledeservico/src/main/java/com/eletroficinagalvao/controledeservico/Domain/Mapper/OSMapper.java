@@ -26,10 +26,8 @@ public class OSMapper {
     private ReservaMapper reservaMapper;
     @Autowired 
     private FuncionarioRepository funcionarioRepository;
-    @Autowired
-    private ImageService imageService;
  
-    public OS map(CreateOSRequestDTO dto, List<MultipartFile> imagensEntrada) {
+    public OS map(CreateOSRequestDTO dto) {
         OS ordemdeservico = new OS();
 
         if (!isValid(dto)) {
@@ -56,24 +54,16 @@ public class OSMapper {
 
         ordemdeservico.setDataEntrada(Date.valueOf(LocalDate.now()));
 
-        if (ordemdeservico.getReserva().isAtivo()){
+        if ((ordemdeservico.getReserva() != null) && ordemdeservico.getReserva().isAtivo()){
             ordemdeservico.setSituacao(ServicoSituacao.AGUARDANDO_PECA);
         } else {
             ordemdeservico.setSituacao(ServicoSituacao.EM_ANDAMENTO);
         }
 
-        if (!imagensEntrada.isEmpty()){
-            ordemdeservico.setImagemEntrada(imageService.readImage(ordemdeservico.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
-        }
-
         return ordemdeservico;
     }
 
-    public OS updateMap(OS ordemdeservico,
-                        UpdateOSRequestDTO dto,
-                        List<MultipartFile> imagensEntrada,
-                        List<MultipartFile> imagensSaida
-    ) {
+    public OS updateMap(OS ordemdeservico, UpdateOSRequestDTO dto) {
 
         if (!isValid(dto)) {
             log.error("Ordem de serviço inválida");
@@ -101,13 +91,6 @@ public class OSMapper {
             } else {
                 ordemdeservico.setSituacao(ServicoSituacao.EM_ANDAMENTO);
             }
-        }
-
-        if (!imagensEntrada.isEmpty()){
-            ordemdeservico.setImagemEntrada(imageService.readImage(ordemdeservico.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
-        }
-        if (!imagensSaida.isEmpty()){
-            ordemdeservico.setImagemSaida(imageService.readImage(ordemdeservico.getId(), imagensEntrada, ImageService.EXIT_METHOD));
         }
 
         return ordemdeservico;

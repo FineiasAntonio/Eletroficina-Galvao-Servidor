@@ -20,12 +20,14 @@ public class ReservaMapper {
     public Reserva criarReserva(List<ProdutoDTO> produtos, int idOS){
         List<ProdutoReservado> produtosReservados = produtos.stream().map(e -> produtoMapper.mapReserva(e)).toList();
 
-        return (Reserva) reservaRepository.save(Reserva.builder()
-                .produtos_reservados(produtosReservados)
-                .ativo(true)
-                .idOS(idOS)
-                .build()
-        );
+        return reservaRepository.save(new Reserva(idOS, produtosReservados, true));
+
+//        return (Reserva) reservaRepository.save(Reserva.builder()
+//                .produtos_reservados(produtosReservados)
+//                .ativo(true)
+//                .idOS(idOS)
+//                .build()
+//        );
     }
 
 }

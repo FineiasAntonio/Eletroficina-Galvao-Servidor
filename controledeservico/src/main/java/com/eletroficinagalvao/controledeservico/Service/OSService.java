@@ -43,8 +43,14 @@ public class OSService {
 
     @Transactional
     public void create(CreateOSRequestDTO ordemdeservico, List<MultipartFile> imagensEntrada){
-        OS os = mapper.map(ordemdeservico, imagensEntrada);
-        repository.save(os);
+        OS os = mapper.map(ordemdeservico);
+        if (!imagensEntrada.isEmpty()){
+            os.setImagemEntrada(imageService.readImage(os.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
+        }
+        System.out.println(os);
+
+        repository.insert(os);
+
         log.info("Ordem de serviço registrada no nome de: " + repositoryFuncionario.findById(os.getFuncionario().getId()));
     }
 
@@ -62,7 +68,7 @@ public class OSService {
                        List<MultipartFile> imagensSaida
     ){
         OS correspondente = repository.findById(Integer.valueOf(id)).orElseThrow(() -> new NotFoundException("Não encontrado"));
-        OS updatedOS = mapper.updateMap(correspondente, os, imagensEntrada, imagensSaida);
+        OS updatedOS = mapper.updateMap(correspondente, os);
         repository.save(updatedOS);
         log.info("Atualizado");
     }

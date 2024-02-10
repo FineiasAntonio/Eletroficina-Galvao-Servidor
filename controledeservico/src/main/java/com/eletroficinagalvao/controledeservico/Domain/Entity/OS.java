@@ -20,31 +20,49 @@ public class OS {
     private static int controleId = 1;
 
     @Id
-    private int id;
+    private int id = controleId++;
 
+    @Field("nome")
     private String nome;
+    @Field("telefone")
     private String telefone;
+    @Field("endereco")
     private String endereco;
+    @Field("cpf")
     private String cpf;
+    @Field("dataEntrada")
     private Date dataEntrada;
+    @Field("dataSaida")
     private Date dataSaida;
+    @Field("dataConclusao")
     private Date dataConclusao;
+    @Field("dataEntrega")
     private Date dataEntrega;
+    @Field("equipamento")
     private String equipamento;
+    @Field("numeroSerie")
     private String numeroSerie;
+    @Field("obs")
     private String obs;
+    @Field("servico")
     private String servico;
+    @Field("situacao")
     private ServicoSituacao situacao;
+    @Field("subSituacao")
     private SubSituacao subSituacao;
+    @Field("imagemEntrada")
     private String imagemEntrada;
+    @Field("imagemSaida")
     private String imagemSaida;
+    @Field("video")
     private String video;
+    @Field("funcionario")
     private Funcionario funcionario;
+    @Field("coments")
     private String coments;
+    @Field("reserva")
     private Reserva reserva;
+    @Field("valorTotal")
     private double valorTotal;
 
-    public OS(){
-        this.id = controleId++;
-    }
 }
