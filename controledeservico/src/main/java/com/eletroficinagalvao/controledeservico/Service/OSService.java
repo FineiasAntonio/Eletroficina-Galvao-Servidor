@@ -47,7 +47,6 @@ public class OSService {
         if (!imagensEntrada.isEmpty()){
             os.setImagemEntrada(imageService.readImage(os.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
         }
-        System.out.println(os);
 
         repository.insert(os);
 
@@ -67,9 +66,17 @@ public class OSService {
                        List<MultipartFile> imagensEntrada,
                        List<MultipartFile> imagensSaida
     ){
-        OS correspondente = repository.findById(Integer.valueOf(id)).orElseThrow(() -> new NotFoundException("Não encontrado"));
+        OS correspondente = repository.findById(Integer.valueOf(id)).orElseThrow(() -> new NotFoundException("OS não encontrada"));
         OS updatedOS = mapper.updateMap(correspondente, os);
+
+        if (!imagensEntrada.isEmpty()){
+            updatedOS.setImagemEntrada(imageService.readImage(updatedOS.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
+        }
+        if (!imagensSaida.isEmpty()){
+            updatedOS.setImagemSaida(imageService.readImage(updatedOS.getId(), imagensSaida, ImageService.EXIT_METHOD));
+        }
+
         repository.save(updatedOS);
-        log.info("Atualizado");
+        log.info("OS atualizada");
     }
 }

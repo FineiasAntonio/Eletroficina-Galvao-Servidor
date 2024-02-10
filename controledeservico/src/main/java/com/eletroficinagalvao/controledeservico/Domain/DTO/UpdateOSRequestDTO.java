@@ -20,9 +20,6 @@ public record UpdateOSRequestDTO(
         int funcionario_id,
         String coments,
         boolean concluido,
-        String subSituacao,
-        List<MultipartFile> imagemEntrada,
-        List<MultipartFile> imagemSaida,
-        MultipartFile video
+        String subSituacao
 ) {
 }

@@ -8,15 +8,12 @@ import com.eletroficinagalvao.controledeservico.Domain.Entity.SubSituacao;
 import com.eletroficinagalvao.controledeservico.Exception.BadRequestException;
 import com.eletroficinagalvao.controledeservico.Repository.FuncionarioRepository;
 
-import com.eletroficinagalvao.controledeservico.Service.ImageService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.List;
 
 @Component
 @Log4j2
