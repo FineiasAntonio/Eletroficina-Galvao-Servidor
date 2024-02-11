@@ -1,4 +1,4 @@
-package com.eletroficinagalvao.controledeservico.Domain.DTO;
+package com.eletroficinagalvao.controledeservico.Domain.DTO.OS;
 
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Funcionario;
 

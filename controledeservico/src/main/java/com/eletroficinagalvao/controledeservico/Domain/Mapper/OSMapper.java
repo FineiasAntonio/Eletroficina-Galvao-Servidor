@@ -1,7 +1,7 @@
 package com.eletroficinagalvao.controledeservico.Domain.Mapper;
 
-import com.eletroficinagalvao.controledeservico.Domain.DTO.CreateOSRequestDTO;
-import com.eletroficinagalvao.controledeservico.Domain.DTO.UpdateOSRequestDTO;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.CreateOSRequestDTO;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.UpdateOSRequestDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.OS;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.ServicoSituacao;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.SubSituacao;

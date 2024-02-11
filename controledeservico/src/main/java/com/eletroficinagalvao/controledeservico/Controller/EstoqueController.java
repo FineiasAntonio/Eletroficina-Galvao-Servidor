@@ -1,6 +1,6 @@
 package com.eletroficinagalvao.controledeservico.Controller;
 
-import com.eletroficinagalvao.controledeservico.Domain.DTO.ProdutoDTO;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.Estoque.ProdutoDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Produto;
 import com.eletroficinagalvao.controledeservico.Domain.Mapper.ProdutoMapper;
 import com.eletroficinagalvao.controledeservico.Service.EstoqueService;
@@ -20,8 +20,6 @@ public class EstoqueController {
     @Autowired
     @Qualifier ("EstoqueService")
     private EstoqueService service;
-    @Autowired
-    private ProdutoMapper mapper;
 
     @GetMapping
     public ResponseEntity<List<Produto>> getAll(){
@@ -36,7 +34,7 @@ public class EstoqueController {
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody List<ProdutoDTO> produtos){
         for (ProdutoDTO e: produtos) {
-            service.create(mapper.map(e));
+            service.create(e);
         }
         
         return new ResponseEntity<>(HttpStatus.CREATED);

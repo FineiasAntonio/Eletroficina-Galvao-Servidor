@@ -1,6 +1,8 @@
 package com.eletroficinagalvao.controledeservico.Service;
 
+import com.eletroficinagalvao.controledeservico.Domain.DTO.Estoque.ProdutoDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Produto;
+import com.eletroficinagalvao.controledeservico.Domain.Mapper.ProdutoMapper;
 import com.eletroficinagalvao.controledeservico.Exception.NotFoundException;
 import com.eletroficinagalvao.controledeservico.Repository.ProdutoRepository;
 import lombok.extern.log4j.Log4j2;
@@ -20,6 +22,8 @@ public class EstoqueService {
 
     @Autowired
     private ProdutoRepository repository;
+    @Autowired
+    private ProdutoMapper produtoMapper;
 
     public List<Produto> getAll() {
         return repository.findAll();
@@ -35,14 +39,10 @@ public class EstoqueService {
     }
 
     @Transactional
-    public void create(Produto produto) {
-        // trocar o DTO aqui como parametro
+    public void create(ProdutoDTO produto) {
+        Produto p = repository.save(produtoMapper.map(produto));
 
-        // TODO: fazer a correlação com produto reservado existente para o método delete funcionar perfeitamente
-
-        Produto p = repository.save(produto);
-
-        log.info("Produto registrado: " + produto.getProduto());
+        log.info("Produto registrado: " + p.getProduto());
     }
 
     @Transactional

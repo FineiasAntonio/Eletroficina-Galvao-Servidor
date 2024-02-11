@@ -1,7 +1,7 @@
 package com.eletroficinagalvao.controledeservico.Controller;
 
-import com.eletroficinagalvao.controledeservico.Domain.DTO.CreateOSRequestDTO;
-import com.eletroficinagalvao.controledeservico.Domain.DTO.UpdateOSRequestDTO;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.CreateOSRequestDTO;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.UpdateOSRequestDTO;
 import com.eletroficinagalvao.controledeservico.Service.ImageService;
 import com.eletroficinagalvao.controledeservico.Service.OSService;
 
@@ -22,9 +22,6 @@ public class OSController {
     @Autowired
     @Qualifier("OSService")
     private OSService service;
-
-    @Autowired
-    private ImageService imageService;
 
     @GetMapping
     public ResponseEntity getAll(){

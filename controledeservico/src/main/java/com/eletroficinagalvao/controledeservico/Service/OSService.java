@@ -1,7 +1,7 @@
 package com.eletroficinagalvao.controledeservico.Service;
 
-import com.eletroficinagalvao.controledeservico.Domain.DTO.CreateOSRequestDTO;
-import com.eletroficinagalvao.controledeservico.Domain.DTO.UpdateOSRequestDTO;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.CreateOSRequestDTO;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.UpdateOSRequestDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.OS;
 import com.eletroficinagalvao.controledeservico.Domain.Mapper.OSMapper;
 import com.eletroficinagalvao.controledeservico.Exception.NotFoundException;
@@ -26,8 +26,6 @@ public class OSService {
     @Autowired
     private OSRepository repository;
     @Autowired
-    private FuncionarioRepository repositoryFuncionario;
-    @Autowired
     private OSMapper mapper;
     @Autowired
     private ImageService imageService;
@@ -50,7 +48,7 @@ public class OSService {
 
         repository.insert(os);
 
-        log.info("Ordem de serviço registrada no nome de: " + repositoryFuncionario.findById(os.getFuncionario().getId()));
+        log.info("Ordem de serviço registrada no nome de: " + os.getFuncionario().getNome());
     }
 
     @Transactional

@@ -1,11 +1,9 @@
-package com.eletroficinagalvao.controledeservico.Domain.DTO;
+package com.eletroficinagalvao.controledeservico.Domain.DTO.OS;
 
-import com.eletroficinagalvao.controledeservico.Domain.Entity.Funcionario;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.Estoque.ProdutoDTO;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.Reserva.ReservaProdutoRequestDTO;
 
 import java.util.List;
-import java.util.UUID;
-
-import org.springframework.web.multipart.MultipartFile;
 
 public record CreateOSRequestDTO(
         String nome,
@@ -19,7 +17,7 @@ public record CreateOSRequestDTO(
         String obs,
         int funcionario_id,
         String coments,
-        List<ReservarProdutoDTO> produtosReservados,
+        List<ReservaProdutoRequestDTO> produtosReservados,
         List<ProdutoDTO> novoProdutoReservado
 ) {
 }
