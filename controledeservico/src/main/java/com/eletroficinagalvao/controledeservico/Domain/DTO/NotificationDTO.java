@@ -2,9 +2,11 @@
 
 import lombok.Builder;
 
-@Builder
+import java.util.UUID;
+
+ @Builder
 public record NotificationDTO(
-        String uuid,
+        UUID uuid,
         String nomeCliente,
         int orderID,
         String produto,

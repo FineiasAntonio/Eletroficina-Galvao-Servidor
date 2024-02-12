@@ -1,6 +1,7 @@
-package backupcodigo;
+package com.eletroficinagalvao.controledeservico.Controller;
 
 import com.eletroficinagalvao.controledeservico.Domain.DTO.NotificationDTO;
+import com.eletroficinagalvao.controledeservico.Service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +20,7 @@ public class NotificationController {
 
     @GetMapping
     public ResponseEntity<List<NotificationDTO>> getNotifications(){
-
         List<NotificationDTO> notificationPool = service.getNotificationPool();
-
-        if (notificationPool.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         return new ResponseEntity<>(notificationPool, HttpStatus.OK);
     }
