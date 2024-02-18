@@ -1,60 +1,52 @@
 package com.eletroficinagalvao.controledeservico.Domain.Entity;
 
-import jakarta.persistence.*;
+import com.eletroficinagalvao.controledeservico.Domain.Entity.Funcionario;
+import com.eletroficinagalvao.controledeservico.Domain.Entity.Reserva;
+import com.eletroficinagalvao.controledeservico.Domain.Entity.ServicoSituacao;
+import com.eletroficinagalvao.controledeservico.Domain.Entity.SubSituacao;
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Data
-@Entity
+@Document(collection = "ordensdeservico")
 @ToString
-@Table (name = "ordemdeservico")
 public class OS {
 
-    @Id
-    @Column (name = "os")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int os;
+    private static int controleId = 1;
 
-    @Column (name = "nome", nullable = false)
+    @Id
+    private int id = controleId++;
+
+    public static void setControleId(int controleId) {
+        OS.controleId = controleId;
+    }
+
     private String nome;
-    @Column (name = "telefone")
     private String telefone;
-    @Column (name = "endereco")
     private String endereco;
-    @Column (name = "cpf")
     private String cpf;
-    @Column (name = "data_entrada")
     private Date dataEntrada;
-    @Column (name = "data_saida")
     private Date dataSaida;
-    @Column (name = "data_conclusao")
     private Date dataConclusao;
-    @Column (name = "equipamento")
+    private Date dataEntrega;
     private String equipamento;
-    @Column (name = "numero_serie")
     private String numeroSerie;
-    @Column (name = "obs")
     private String obs;
-    @Column (name = "servico")
     private String servico;
-    @Column (name = "situacao")
-    @Enumerated (EnumType.ORDINAL)
     private ServicoSituacao situacao;
-    @Column (name = "imagem_entrada")
+    private SubSituacao subSituacao;
     private String imagemEntrada;
-    @Column (name = "imagem_saida")
     private String imagemSaida;
-    @JoinColumn (name = "funcionario_id")
-    @ManyToOne
-    private Funcionario funcionario_id;
-    @Column (name = "coments")
+    private String video;
+    private Funcionario funcionario;
     private String coments;
-    @JoinColumn (name = "id_reserva")
-    @OneToOne
-    private Reserva id_reserva;
-    @Column (name = "valorTotal")
+    private Reserva reserva;
     private double valorTotal;
 
 }

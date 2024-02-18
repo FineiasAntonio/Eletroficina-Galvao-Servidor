@@ -36,7 +36,7 @@ public class FuncionarioController {
     @PostMapping
     public ResponseEntity create(Funcionario funcionario){
         service.create(funcionario);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 }

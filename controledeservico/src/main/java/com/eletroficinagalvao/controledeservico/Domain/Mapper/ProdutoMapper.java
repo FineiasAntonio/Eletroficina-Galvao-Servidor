@@ -1,12 +1,15 @@
 package com.eletroficinagalvao.controledeservico.Domain.Mapper;
 
-import com.eletroficinagalvao.controledeservico.Domain.DTO.ProdutoDTO;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.Estoque.ProdutoDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Produto;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.ProdutoReservado;
 import com.eletroficinagalvao.controledeservico.Exception.BadRequestException;
+import com.eletroficinagalvao.controledeservico.Exception.NotFoundException;
 import com.eletroficinagalvao.controledeservico.Repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Component
 public class ProdutoMapper {
@@ -24,7 +27,6 @@ public class ProdutoMapper {
                          dto.referencia(),
                          dto.quantidade().trim().isEmpty() ? 0 : Integer.parseInt(dto.quantidade()),
                          Double.parseDouble(dto.precoUnitario()));
-
     }
 
     public ProdutoReservado mapReserva(ProdutoDTO dto) {
@@ -33,27 +35,19 @@ public class ProdutoMapper {
             throw new BadRequestException("produto inválido");
         }
 
-        String uuid = produtoRepository.findAll()
-                .stream()
-                .filter(e -> e.getProduto().equals(dto.produto()))
-                .findFirst().orElseGet(() -> {
-                    Produto produtoSupplier = map(dto);
-                    produtoSupplier.setQuantidade(0);
-                    return produtoRepository.save(produtoSupplier);
-                })
-                .getId_produto();
+        Produto produtoSupplier = map(dto);
+        produtoSupplier.setQuantidade(0);
+        produtoRepository.save(produtoSupplier);
         
-        int quantidadeNescessaria = dto.quantidade().trim().isEmpty() ? 0 : Integer.parseInt(dto.quantidade());
-        int quantidadeReservada = dto.quantidade().trim().isEmpty() ? 0 : Integer.parseInt(dto.quantidade()) * -1;
+        int quantidadeNescessaria = Integer.parseInt(dto.quantidade());
 
-        return ProdutoReservado.builder()
-                .id_produto(uuid)
-                .produto(dto.produto())
-                .referencia(dto.referencia())
-                .quantidadeNescessaria(quantidadeNescessaria)
-                .quantidadeReservada(quantidadeReservada)
-                .precoUnitario(Double.parseDouble(dto.precoUnitario()))
-                .build();
+        return new ProdutoReservado(produtoSupplier, quantidadeNescessaria);
+    }
+
+    public ProdutoReservado reservar(UUID uuidProduto, int quantidadeNescessaria){
+        Produto produto = produtoRepository.findById(uuidProduto).orElseThrow(() -> new NotFoundException("Produto não encontrado"));
+        produto.setQuantidade(0);
+        return new ProdutoReservado(produto,quantidadeNescessaria);
     }
 
     private static boolean isValid(ProdutoDTO dto) {

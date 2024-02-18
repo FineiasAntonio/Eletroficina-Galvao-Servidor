@@ -1,12 +1,13 @@
-package com.eletroficinagalvao.controledeservico.Domain.DTO;
+package com.eletroficinagalvao.controledeservico.Domain.DTO.OS;
 
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Funcionario;
 
+import java.io.File;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public record CreateOSRequestDTO(
+public record UpdateOSRequestDTO(
         String nome,
         String cpf,
         String endereco,
@@ -18,7 +19,7 @@ public record CreateOSRequestDTO(
         String obs,
         int funcionario_id,
         String coments,
-        List<ProdutoDTO> produtosReservados,
-        List<MultipartFile> imagemEntrada
+        boolean concluido,
+        String subSituacao
 ) {
 }

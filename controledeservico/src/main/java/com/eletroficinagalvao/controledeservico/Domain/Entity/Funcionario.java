@@ -2,19 +2,17 @@ package com.eletroficinagalvao.controledeservico.Domain.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Entity
-@Table (name = "funcionarios")
+@Document(collection = "funcionarios")
 public class Funcionario {
     
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column (name = "nome")
     private String nome;
 
 }

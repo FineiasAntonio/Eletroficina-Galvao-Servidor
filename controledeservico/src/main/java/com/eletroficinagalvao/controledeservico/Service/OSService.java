@@ -1,7 +1,7 @@
 package com.eletroficinagalvao.controledeservico.Service;
 
-import com.eletroficinagalvao.controledeservico.Domain.DTO.CreateOSRequestDTO;
-import com.eletroficinagalvao.controledeservico.Domain.DTO.UpdateOSRequestDTO;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.CreateOSRequestDTO;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.UpdateOSRequestDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.OS;
 import com.eletroficinagalvao.controledeservico.Domain.Mapper.OSMapper;
 import com.eletroficinagalvao.controledeservico.Exception.NotFoundException;
@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,9 +26,9 @@ public class OSService {
     @Autowired
     private OSRepository repository;
     @Autowired
-    private FuncionarioRepository repositoryFuncionario;
-    @Autowired
     private OSMapper mapper;
+    @Autowired
+    private ImageService imageService;
 
     public List<OS> getAll(){
         return repository.findAll();
@@ -39,22 +40,41 @@ public class OSService {
     }
 
     @Transactional
-    public void create(CreateOSRequestDTO ordemdeservico){
+    public void create(CreateOSRequestDTO ordemdeservico, List<MultipartFile> imagensEntrada){
         OS os = mapper.map(ordemdeservico);
-        repository.save(os);
-        log.info("Ordem de serviço registrada no nome de: " + repositoryFuncionario.findById(os.getFuncionario_id().getId()));
+        if (!imagensEntrada.isEmpty()){
+            os.setImagemEntrada(imageService.readImage(os.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
+        }
+
+        repository.insert(os);
+
+        log.info("Ordem de serviço registrada no nome de: " + os.getFuncionario().getNome());
     }
 
     @Transactional
     public void delete(String id){
         repository.deleteById(Integer.valueOf(id));
+        imageService.delete(Integer.parseInt(id));
+        log.info("OS apagada com sucesso");
     }
 
     @Transactional
-    public void update(int id, UpdateOSRequestDTO os){
-        OS correspondente = repository.findById(Integer.valueOf(id)).get();
+    public void update(int id,
+                       UpdateOSRequestDTO os,
+                       List<MultipartFile> imagensEntrada,
+                       List<MultipartFile> imagensSaida
+    ){
+        OS correspondente = repository.findById(Integer.valueOf(id)).orElseThrow(() -> new NotFoundException("OS não encontrada"));
         OS updatedOS = mapper.updateMap(correspondente, os);
-        System.out.println(updatedOS);
+
+        if (!imagensEntrada.isEmpty()){
+            updatedOS.setImagemEntrada(imageService.readImage(updatedOS.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
+        }
+        if (!imagensSaida.isEmpty()){
+            updatedOS.setImagemSaida(imageService.readImage(updatedOS.getId(), imagensSaida, ImageService.EXIT_METHOD));
+        }
+
         repository.save(updatedOS);
+        log.info("OS atualizada");
     }
 }

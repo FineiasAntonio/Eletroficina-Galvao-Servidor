@@ -1,5 +1,6 @@
 const url_OS = "http://localhost:8080/ordensdeservicos"
 const url_Funcionario = "http://localhost:8080/funcionarios"
+const url_Notification = "http://localhost:8080/notifications"
 
 function novaOrdem(modal){
     modal.showModal()
@@ -157,7 +158,7 @@ window.addEventListener("load", function() {
         const row = event.target.closest("tr")
         var os_id = row.cells[0].innerText
         
-        getById_OS(os_id)
+        showOS(os_id)
     })
 
     novaOrdemModal.onclose = function(){
@@ -172,7 +173,7 @@ window.addEventListener("load", function() {
         })
     }
 
-    getAll_OS()
+    updateTable()
     
 
 })
@@ -201,26 +202,7 @@ async function getAll_Funcionarios(){
         console.error("Erro durante a requisição:", error)
     }
 }
-async function getAll_OS() {
-    try {
-        const response = await fetch(url_OS)
-        const data = await response.json()
 
-        updateTable(data)
-    } catch (error) {
-        console.error("Erro durante a requisição:", error);
-    }
-}
-async function getById_OS(os_id) {
-    try {
-        const response = await fetch(url_OS + `/${os_id}`)
-        const data = await response.json()
-        console.log(data)
-        showOS(data)
-    } catch (error) {
-        console.error("Erro durante a requisição:", error);
-    }
-}
 async function post_OS(os) {
     console.log(os.dataSaida)
     try{
@@ -256,12 +238,13 @@ async function updateOS(id, os){
     console.log((await response).status)
     
 }
-function updateTable(list){
+function updateTable(){
     const table = document.querySelector("tbody");
 
     table.innerHTML = ""
 
-    list.forEach(element => {
+    getAllOS().then(lista => {
+        lista.forEach(element => {
         var row = `<tr>\
                     <td>${element.os}</td>\
                     <td>${element.nome}</td>\
@@ -274,9 +257,9 @@ function updateTable(list){
         
         table.innerHTML += row;
 
-    });
+    })});
 }
-function showOS(os_data){
+function showOS(os_id){
     const os_selecionada = document.getElementById("os_selecionada")
     const div_data = document.getElementById("data_div")
 
@@ -284,36 +267,38 @@ function showOS(os_data){
         div_data.innerHTML = ""
     }
 
-    os_selecionada.querySelector(".apagarOs").onclick = function() {
-        deleteOS(os_data.os);
-    };
+    const ordem = getOSById(os_id).then(os_data => {
+        os_selecionada.querySelector(".apagarOs").onclick = function() {
+            deleteOS(os_data.os);
+        };
+        
+        os_selecionada.querySelector(".editarOs").onclick = function() {
+            editarOs(os_selecionada, os_data);
+        };
     
-    os_selecionada.querySelector(".editarOs").onclick = function() {
-        editarOs(os_selecionada, os_data);
-    };
-
-
-    var data = `<div class="infos"><h2>Nome: </h2><label>${os_data.nome}</label></div>
-                <div class="infos"><h2>CPF: </h2><label>${os_data.cpf}</label></div>
-                <div class="infos"><h2>Endereço: </h2><label>${os_data.endereco}</label></div>
-                <div class="infos"><h2>Telefone: </h2><label>${os_data.telefone}</label></div>
-                <hr>
-                <div class="infos"><h2>Equipamento: </h2><label>${os_data.equipamento}</label></div>
-                <div class="infos"><h2>Série: </h2><label>${os_data.numeroSerie}</label></div>
-                <hr>
-                <div class="infos"><h2>Serviço: </h2><label>${os_data.servico}</label></div>
-                <div class="infos"><h2>Data de entrada: </h2><label>${os_data.dataEntrada}</label></div>
-                <div class="infos"><h2>Data para entrega: </h2><label>${os_data.dataSaida}</label></div>
-                <div class="infos"><h2>Situação: </h2><label>${os_data.situacao}</label></div>
-                <div class="infos"><h2>Técnico responsável: </h2><label>${os_data.funcionario_id.nome}</label></div>
-                <div class="infos"><h2>Observações do cliente: </h2><label>${os_data.obs}</label></div>
-                <div class="infos"><h2>Coments: </h2><label>${os_data.coments}</label></div>
-                
-                `
-
-    div_data.innerHTML += data
-
-    os_selecionada.showModal()
+    
+        var data = `<div class="infos"><h2>Nome: </h2><label>${os_data.nome}</label></div>
+                    <div class="infos"><h2>CPF: </h2><label>${os_data.cpf}</label></div>
+                    <div class="infos"><h2>Endereço: </h2><label>${os_data.endereco}</label></div>
+                    <div class="infos"><h2>Telefone: </h2><label>${os_data.telefone}</label></div>
+                    <hr>
+                    <div class="infos"><h2>Equipamento: </h2><label>${os_data.equipamento}</label></div>
+                    <div class="infos"><h2>Série: </h2><label>${os_data.numeroSerie}</label></div>
+                    <hr>
+                    <div class="infos"><h2>Serviço: </h2><label>${os_data.servico}</label></div>
+                    <div class="infos"><h2>Data de entrada: </h2><label>${os_data.dataEntrada}</label></div>
+                    <div class="infos"><h2>Data para entrega: </h2><label>${os_data.dataSaida}</label></div>
+                    <div class="infos"><h2>Situação: </h2><label>${os_data.situacao}</label></div>
+                    <div class="infos"><h2>Técnico responsável: </h2><label>${os_data.funcionario_id.nome}</label></div>
+                    <div class="infos"><h2>Observações do cliente: </h2><label>${os_data.obs}</label></div>
+                    <div class="infos"><h2>Coments: </h2><label>${os_data.coments}</label></div>
+                    
+                    `
+    
+        div_data.innerHTML += data
+    
+        os_selecionada.showModal()
+    });
 }
 async function editarOs(os_modal, os_data){
     const response = await fetch(url_Funcionario)
@@ -341,12 +326,11 @@ async function editarOs(os_modal, os_data){
       <label>Data para entrega</label>
       <input type="date" placeholder="Data de entrega" id="dataSaidaE" value="${os_data.dataSaida}">
 
-      <label>Situação</label>
-      <select id="situacaoBox" value="${os_data.situacao}">
-        <option value = "1">Em Andamento</option>
-        <option value = "2">Aguardando Peça</option>
-        <option value = "3">Aguardando Retirada</option>
-        <option value = "0">Concluido</option>
+      <input type="checkbox" id="concluir"> Concluído
+
+      <select id="situacaoBox" value="${os_data.subSituacao}" hidden>
+        <option value = "1">Aguardando Retirada</option>
+        <option value = "0">Entregue</option>
       </select>
 
       <label>Técnico responsável</label>
@@ -379,6 +363,22 @@ async function editarOs(os_modal, os_data){
 
   `
 
+    const concluirCheck = document.getElementById("concluir")
+    const situacaoBox = document.getElementById("situacaoBox")
+
+    var concluidoBoolean = null
+
+  concluirCheck.addEventListener("change", function() {
+    if(concluirCheck.checked){
+        situacaoBox.removeAttribute("hidden")
+        concluidoBoolean = true
+    } else {
+        situacaoBox.setAttribute("hidden", "true")
+        concluidoBoolean = false
+    }
+
+  })
+
 const submitBtn = os_modal.querySelector(".submitUpdate")
 submitBtn.onclick = function() {
     const osE = {
@@ -393,7 +393,9 @@ submitBtn.onclick = function() {
         obs: document.getElementById('obsE').value,
         funcionario_id: document.getElementById("funcionarioBoxEdit").value,
         coments: document.getElementById("comentsE").value,
-        situacao: document.getElementById("situacaoBox").value
+        situacao: concluidoBoolean,
+        subSituacao: situacaoBox.value
+        
     };
 
     console.log(osE)
@@ -405,6 +407,7 @@ submitBtn.onclick = function() {
 }
 
 }
+
 function formatarMoeda(valor) {
     const valorNumerico = parseFloat(valor.toString().replace(/[^\d.]/g, ''));
     //const valorFormatado = (isNaN(valorNumerico)) ? '' : 'R$ ' + valorNumerico.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');;
@@ -416,3 +419,40 @@ function desformatarMoeda(valorFormatado) {
     const valorNumerico = parseFloat(valorFormatado.replace(/[^\d.,]/g, '').replace(',', '.'));
     return isNaN(valorNumerico) ? 0 : valorNumerico;
 }
+
+async function getAllOS(){
+    var response = await fetch(url_OS);
+    var data = await response.json();
+
+    console.log(data)
+
+    return data;
+}
+async function getOSById(id) {
+    try {
+        const response = await fetch(url_OS + `/${id}`)
+        const data = await response.json()
+        
+        return data
+    } catch (error) {
+        console.error("Erro durante a requisição:", error);
+    }
+}
+
+async function verifyNewNotification(){
+    var response = await fetch(url_Notification)
+    
+    if (response.status == 200){
+
+    }
+}
+
+function showNotifications() {
+    var notificationPopup = document.getElementById("notification-window");
+    notificationPopup.style.display = "block";
+  }
+
+  function hideNotifications() {
+    var notificationPopup = document.getElementById("notification-window");
+    notificationPopup.style.display = "none";
+  }
