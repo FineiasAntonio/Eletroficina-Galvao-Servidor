@@ -1,31 +1,42 @@
 package com.eletroficinagalvao.controledeservico.Domain.Entity;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
-@Entity
+import java.util.UUID;
+
 @Data
+@NoArgsConstructor
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-@Table (name = "produtos_reservados")
-public class ProdutoReservado {
+public class ProdutoReservado{
 
     @Id
-    @Column(name = "id_produto", nullable = false, updatable = false)
-    private String id_produto;
+    private UUID id;
 
-    @Column (name = "produto", nullable = false)
     private String produto;
-    @Column (name = "referencia")
     private String referencia;
-    @Column (name = "quantidadeNescessaria")
-    private int quantidadeNescessaria;
-    @Column (name = "quantidadeReservada")
-    private int quantidadeReservada;
-    @Column (name = "preco_unitario")
+    private int quantidade;
     private double precoUnitario;
+    int quantidadeNescessaria;
+
+    public ProdutoReservado(Produto produto, int quantidadeNescessaria){
+        this.id = produto.getId();
+        this.produto = produto.getProduto();
+        this.referencia = produto.getReferencia();
+        this.quantidade = 0;
+        this.precoUnitario = produto.getPrecoUnitario();
+        this.quantidadeNescessaria = quantidadeNescessaria;
+    }
+
+    public ProdutoReservado(String produto, String referencia, int quantidade, double precoUnitario, int quantidadeNescessaria) {
+        this.produto = produto;
+        this.referencia = referencia;
+        this.quantidade = quantidade;
+        this.precoUnitario = precoUnitario;
+        this.quantidadeNescessaria = quantidadeNescessaria;
+    }
 }

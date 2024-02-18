@@ -1,9 +1,9 @@
 package com.eletroficinagalvao.controledeservico.Controller;
 
-import com.eletroficinagalvao.controledeservico.Domain.DTO.ProdutoDTO;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.Estoque.ProdutoDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Produto;
 import com.eletroficinagalvao.controledeservico.Domain.Mapper.ProdutoMapper;
-import com.eletroficinagalvao.controledeservico.Service.ProdutoService;
+import com.eletroficinagalvao.controledeservico.Service.EstoqueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -11,16 +11,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping ("/estoque")
-public class ProdutoController {
+public class EstoqueController {
 
     @Autowired
-    @Qualifier ("ProdutoService")
-    private ProdutoService service;
-    @Autowired
-    private ProdutoMapper mapper;
+    @Qualifier ("EstoqueService")
+    private EstoqueService service;
 
     @GetMapping
     public ResponseEntity<List<Produto>> getAll(){
@@ -29,13 +28,13 @@ public class ProdutoController {
 
     @GetMapping ("/{id}")
     public ResponseEntity<Produto> getById(@PathVariable String id){
-        return new ResponseEntity<>(service.getById(id), HttpStatus.OK);
+        return new ResponseEntity<>(service.getById(UUID.fromString(id)), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody List<ProdutoDTO> produtos){
         for (ProdutoDTO e: produtos) {
-            service.create(mapper.map(e));
+            service.create(e);
         }
         
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -49,7 +48,7 @@ public class ProdutoController {
 
     @PutMapping ("/{id}")
     public ResponseEntity<Void> update(@PathVariable String id, @RequestBody Produto produto){
-        service.update(id, produto);
+        service.update(UUID.fromString(id), produto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

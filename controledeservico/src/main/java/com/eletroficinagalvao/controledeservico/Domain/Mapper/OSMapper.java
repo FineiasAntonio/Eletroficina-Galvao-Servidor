@@ -1,11 +1,10 @@
 package com.eletroficinagalvao.controledeservico.Domain.Mapper;
 
-import com.eletroficinagalvao.controledeservico.Domain.DTO.CreateOSRequestDTO;
-import com.eletroficinagalvao.controledeservico.Domain.DTO.UpdateOSRequestDTO;
-import com.eletroficinagalvao.controledeservico.Domain.Entity.Funcionario;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.CreateOSRequestDTO;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.UpdateOSRequestDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.OS;
-import com.eletroficinagalvao.controledeservico.Domain.Entity.Reserva;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.ServicoSituacao;
+import com.eletroficinagalvao.controledeservico.Domain.Entity.SubSituacao;
 import com.eletroficinagalvao.controledeservico.Exception.BadRequestException;
 import com.eletroficinagalvao.controledeservico.Repository.FuncionarioRepository;
 
@@ -22,9 +21,9 @@ public class OSMapper {
 
     @Autowired
     private ReservaMapper reservaMapper;
-    @Autowired 
-    FuncionarioRepository funcionarioRepository;
- 
+    @Autowired
+    private FuncionarioRepository funcionarioRepository;
+
     public OS map(CreateOSRequestDTO dto) {
         OS ordemdeservico = new OS();
 
@@ -33,10 +32,8 @@ public class OSMapper {
             throw new BadRequestException("Ordem de serviço inválida");
         }
 
-        if (!dto.produtosReservados().isEmpty()) {
-            ordemdeservico.setId_reserva(reservaMapper.criarReserva(dto.produtosReservados()));
-            log.info("Reserva criada, id: %s".formatted(ordemdeservico.getId_reserva().getId_reserva()));
-        }
+        ordemdeservico.setReserva(reservaMapper.criarReserva(dto.produtosReservados(), dto.novoProdutoReservado(), ordemdeservico.getId()).orElse(null));
+        log.info("Reserva criada, id: %s".formatted(ordemdeservico.getReserva().getId()));
 
         ordemdeservico.setNome(dto.nome());
         ordemdeservico.setCpf(dto.cpf());
@@ -48,10 +45,15 @@ public class OSMapper {
         ordemdeservico.setObs(dto.obs());
         ordemdeservico.setComents(dto.coments());
         ordemdeservico.setDataSaida(Date.valueOf(dto.dataSaida()));
-        ordemdeservico.setFuncionario_id(funcionarioRepository.findById(dto.funcionario_id()).get());
+        ordemdeservico.setFuncionario(funcionarioRepository.findById(dto.funcionario_id()).get());
 
         ordemdeservico.setDataEntrada(Date.valueOf(LocalDate.now()));
-        ordemdeservico.setSituacao(ServicoSituacao.EM_ANDAMENTO);
+
+        if ((ordemdeservico.getReserva() != null) && ordemdeservico.getReserva().isAtivo()) {
+            ordemdeservico.setSituacao(ServicoSituacao.AGUARDANDO_PECA);
+        } else {
+            ordemdeservico.setSituacao(ServicoSituacao.EM_ANDAMENTO);
+        }
 
         return ordemdeservico;
     }
@@ -73,19 +75,18 @@ public class OSMapper {
         ordemdeservico.setObs(dto.obs());
         ordemdeservico.setComents(dto.coments());
         ordemdeservico.setDataSaida(Date.valueOf(dto.dataSaida()));
-        ordemdeservico.setFuncionario_id(dto.funcionario_id());
+        ordemdeservico.setSubSituacao(SubSituacao.getSubStatus(Integer.parseInt(dto.subSituacao())));
+        ordemdeservico.setFuncionario(funcionarioRepository.findById(dto.funcionario_id()).get());
 
-        if (dto.status().equals("0")){
+        if (dto.concluido()) {
             ordemdeservico.setSituacao(ServicoSituacao.CONCLUIDO);
-            ordemdeservico.getId_reserva().setAtivo(false);
-            ordemdeservico.setDataConclusao(Date.valueOf(LocalDate.now()));
+        } else {
+            if (ordemdeservico.getReserva().isAtivo()) {
+                ordemdeservico.setSituacao(ServicoSituacao.AGUARDANDO_PECA);
+            } else {
+                ordemdeservico.setSituacao(ServicoSituacao.EM_ANDAMENTO);
+            }
         }
-        if (dto.status().equals("1") || dto.status().equals("2")) {
-            ordemdeservico.setSituacao(ServicoSituacao.getStatus(Integer.parseInt(dto.status())));
-            ordemdeservico.getId_reserva().setAtivo(true);
-            ordemdeservico.setDataConclusao(null);
-        }
-
 
         return ordemdeservico;
     }
@@ -93,21 +94,20 @@ public class OSMapper {
     private static boolean isValid(CreateOSRequestDTO dto) {
         if (
                 dto == null ||
-                dto.nome().trim().isEmpty() ||
-                dto.equipamento().trim().isEmpty()
-            
+                        dto.nome().trim().isEmpty() ||
+                        dto.equipamento().trim().isEmpty()
+
         ) {
             return false;
         }
         return true;
     }
+
     private static boolean isValid(UpdateOSRequestDTO dto) {
         if (
                 dto == null ||
-                dto.os().trim().isEmpty() ||
-                dto.nome().trim().isEmpty() ||
-                dto.equipamento().trim().isEmpty() ||
-                dto.funcionario_id() == null
+                        dto.nome().trim().isEmpty() ||
+                        dto.equipamento().trim().isEmpty()
         ) {
             return false;
         }

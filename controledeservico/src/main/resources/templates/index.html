@@ -12,12 +12,32 @@
         <img class="logo" src="media/pdf_loja_logo.png">
         <h1>Eletroficina Galvão Serviços</h1>
         
+        
+
+        
+
         <ul>
           <li><a href="index.html">Ordens de Serviço</a></li>
           <li><a href="estoque.html">Estoque</a></li>
           <li><a>Controle</a></li>
         </ul>
 
+        <button onclick="showNotifications()">
+          <img src="" alt="notificações">
+        </button>
+
+    </div>
+
+    <div id="notification-window" style="display: none;">
+      <div>
+        <img src="https://static-00.iconduck.com/assets.00/warning-icon-512x475-3uq28x4p.png" alt="">
+      </div>
+      <div>
+        <p>A ordem de serviço X do cliente XXX já possui todas as peças nescessárias</p>
+        <button>Reservar agora</button>
+        <button>Abrir ordem</button>
+      </div>
+      <button onclick="hideNotifications()"></button>
     </div>
 
     <div id="container">  
@@ -29,7 +49,7 @@
             <tr>
                 <th scope="col">Ordem de Serviço</th>
                 <th scope="col">Cliente</th>
-                <th scope="col">Produto</th>
+                <th scope="col">Equipamento</th>
                 <th scope="col">Data de Saída</th>
                 <th scope="col">Serviço</th>
                 <th scope="col">Situação</th>
@@ -56,7 +76,7 @@
         </div>
         <hr>
         <div>
-          <h2>Informações do produto</h2>
+          <h2>Informações do equipamento</h2>
           <input type="text" placeholder="equipamento" id="equipamento">
           <input type="number" placeholder="Número de série" id="numeroSerie">
         </div>
@@ -82,19 +102,24 @@
           <label>Observações do cliente</label>
           <input type="text" id="obs">
 
-          
+          <label>Comentários</label>
+          <input type="text" id="coments">
 
         </div>
       </form>
       <button onclick="abrirFolhaOrçamento(document.getElementById('folhaOrçamentoModal'))">Folha de orçamento</button>
           <button onclick="submit()">Enviar</button>
     </dialog>
+
     <dialog id="os_selecionada">
-      <button onclick="fechar(document.getElementById('novaOrdemModal'))">X</button>
+      <button onclick="fechar(document.getElementById('os_selecionada'))">X</button>
+      <button class="apagarOs">Excluir</button>
+      <button class="editarOs">Editar</button>
       <div id="data_div">
         
       </div>
     </dialog>
+
     <dialog id="folhaOrçamentoModal">
       <h1>Orçamento</h1>
       <button onclick="fechar(document.getElementById('folhaOrçamentoModal'))">X</button>

@@ -1,39 +1,37 @@
 package com.eletroficinagalvao.controledeservico.Domain.Entity;
 
-import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table (name = "estoque")
-public class Produto {
+@Builder
+@Document(collection = "estoque")
+public class Produto{
 
-    @Id
-    @Column (name = "id_produto", nullable = false, updatable = false)
-    @GeneratedValue (strategy = GenerationType.UUID)
-    private String id_produto;
+        @Id
+        private UUID id;
 
-    @Column (name = "produto", nullable = false)
-    private String produto;
-    @Column (name = "referencia")
-    private String referencia;
-    @Column (name = "quantidade", nullable = false)
-    private int quantidade;
-    @Column (name = "preco_unitario")
-    private double precoUnitario;
-    
+        private String produto;
+        private String referencia;
+        private int quantidade;
+        private double precoUnitario;
+
     public Produto(String produto, String referencia, int quantidade, double precoUnitario) {
+        this.id = UUID.randomUUID();
         this.produto = produto;
         this.referencia = referencia;
         this.quantidade = quantidade;
         this.precoUnitario = precoUnitario;
     }
 
-    
-
 }
+

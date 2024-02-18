@@ -1,54 +1,62 @@
 package com.eletroficinagalvao.controledeservico.Service;
 
+import com.eletroficinagalvao.controledeservico.Domain.DTO.Estoque.ProdutoDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Produto;
+import com.eletroficinagalvao.controledeservico.Domain.Mapper.ProdutoMapper;
 import com.eletroficinagalvao.controledeservico.Exception.NotFoundException;
 import com.eletroficinagalvao.controledeservico.Repository.ProdutoRepository;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
-@Qualifier ("ProdutoService")
+@Qualifier ("EstoqueService")
 @Log4j2
-public class ProdutoService{
+public class EstoqueService {
 
     @Autowired
     private ProdutoRepository repository;
+    @Autowired
+    private ProdutoMapper produtoMapper;
 
     public List<Produto> getAll() {
         return repository.findAll();
     }
 
-    public Produto getById(String id) {
+    public Produto getById(UUID id) {
         return repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Produto não encontrado"));
     }
 
     public List<Produto> getByLikeThisName(String name) {
-        return repository.getByLikeThisName(name);
+        return repository.findByProdutoLike(name);
     }
 
     @Transactional
-    public Produto create(Produto produto) {
-        // trocar o DTO aqui como parametro
-        Produto p = repository.save(produto);
-        log.info("Produto registrado: " + produto.getProduto());
-        return p;
+    public void create(ProdutoDTO produto) {
+        Produto p = repository.save(produtoMapper.map(produto));
+
+        log.info("Produto registrado: " + p.getProduto());
     }
 
     @Transactional
-    public void update(String id, Produto produto) {
+    public void update(UUID id, Produto produto) {
+
         Produto produtoSelecionado = getById(id);
-        produtoSelecionado = produto;
+
+        BeanUtils.copyProperties(produto, produtoSelecionado);
+
         repository.save(produtoSelecionado);
     }
 
     public void delete(String id) {
-        repository.deleteById(id);
+
+        repository.deleteById(UUID.fromString(id));
     }
 }

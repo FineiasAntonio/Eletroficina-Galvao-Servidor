@@ -14,7 +14,7 @@ import java.util.Properties;
 @Component
 @Log4j2
 public class AppProperties {
-    private static final Path propertyFilePath = Paths.get("").toAbsolutePath();
+    private static final Path propertyFilePath = Paths.get("").toAbsolutePath().getParent();
 
     private static Properties properties = new Properties();
 
@@ -24,6 +24,7 @@ public class AppProperties {
         } catch (IOException e) {
             log.error("Arquivo de propriedades não encontrado");
         }
+
     }
 
     public static String get(String key){
