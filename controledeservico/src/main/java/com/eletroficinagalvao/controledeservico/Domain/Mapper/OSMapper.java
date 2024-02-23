@@ -18,7 +18,6 @@ import java.time.LocalDate;
 @Component
 @Log4j2
 public class OSMapper {
-
     @Autowired
     private ReservaMapper reservaMapper;
     @Autowired
@@ -32,7 +31,11 @@ public class OSMapper {
             throw new BadRequestException("Ordem de serviço inválida");
         }
 
-        ordemdeservico.setReserva(reservaMapper.criarReserva(dto.produtosReservados(), dto.novoProdutoReservado(), ordemdeservico.getId()).orElse(null));
+        ordemdeservico.setReserva(reservaMapper.criarReserva(
+                dto.produtosReservados(),
+                dto.novoProdutoReservado(),
+                ordemdeservico.getId()
+        ).orElse(null));
         log.info("Reserva criada, id: %s".formatted(ordemdeservico.getReserva().getId()));
 
         ordemdeservico.setNome(dto.nome());
@@ -42,10 +45,10 @@ public class OSMapper {
         ordemdeservico.setEquipamento(dto.equipamento());
         ordemdeservico.setNumeroSerie(dto.numeroSerie());
         ordemdeservico.setServico(dto.servico());
-        ordemdeservico.setObs(dto.obs());
-        ordemdeservico.setComents(dto.coments());
+        ordemdeservico.setObservacao(dto.observacao());
+        ordemdeservico.setObservacao(dto.comentarios());
         ordemdeservico.setDataSaida(Date.valueOf(dto.dataSaida()));
-        ordemdeservico.setFuncionario(funcionarioRepository.findById(dto.funcionario_id()).get());
+        ordemdeservico.setFuncionario(funcionarioRepository.findById(dto.funcionarioId()).get());
 
         ordemdeservico.setDataEntrada(Date.valueOf(LocalDate.now()));
 
@@ -72,11 +75,11 @@ public class OSMapper {
         ordemdeservico.setEquipamento(dto.equipamento());
         ordemdeservico.setNumeroSerie(dto.numeroSerie());
         ordemdeservico.setServico(dto.servico());
-        ordemdeservico.setObs(dto.obs());
-        ordemdeservico.setComents(dto.coments());
+        ordemdeservico.setObservacao(dto.observacao());
+        ordemdeservico.setComentarios(dto.comentarios());
         ordemdeservico.setDataSaida(Date.valueOf(dto.dataSaida()));
         ordemdeservico.setSubSituacao(SubSituacao.getSubStatus(Integer.parseInt(dto.subSituacao())));
-        ordemdeservico.setFuncionario(funcionarioRepository.findById(dto.funcionario_id()).get());
+        ordemdeservico.setFuncionario(funcionarioRepository.findById(dto.funcionarioId()).get());
 
         if (dto.concluido()) {
             ordemdeservico.setSituacao(ServicoSituacao.CONCLUIDO);
@@ -92,25 +95,14 @@ public class OSMapper {
     }
 
     private static boolean isValid(CreateOSRequestDTO dto) {
-        if (
-                dto == null ||
-                        dto.nome().trim().isEmpty() ||
-                        dto.equipamento().trim().isEmpty()
-
-        ) {
-            return false;
-        }
-        return true;
+        return dto != null &&
+                !dto.nome().trim().isEmpty() &&
+                !dto.equipamento().trim().isEmpty();
     }
 
     private static boolean isValid(UpdateOSRequestDTO dto) {
-        if (
-                dto == null ||
-                        dto.nome().trim().isEmpty() ||
-                        dto.equipamento().trim().isEmpty()
-        ) {
-            return false;
-        }
-        return true;
+        return dto != null &&
+                !dto.nome().trim().isEmpty() &&
+                !dto.equipamento().trim().isEmpty();
     }
 }

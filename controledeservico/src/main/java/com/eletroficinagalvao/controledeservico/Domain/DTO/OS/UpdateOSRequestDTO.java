@@ -1,12 +1,5 @@
 package com.eletroficinagalvao.controledeservico.Domain.DTO.OS;
 
-import com.eletroficinagalvao.controledeservico.Domain.Entity.Funcionario;
-
-import java.io.File;
-import java.util.List;
-
-import org.springframework.web.multipart.MultipartFile;
-
 public record UpdateOSRequestDTO(
         String nome,
         String cpf,
@@ -16,9 +9,9 @@ public record UpdateOSRequestDTO(
         String equipamento,
         String numeroSerie,
         String servico,
-        String obs,
-        int funcionario_id,
-        String coments,
+        String observacao,
+        int funcionarioId,
+        String comentarios,
         boolean concluido,
         String subSituacao
 ) {
