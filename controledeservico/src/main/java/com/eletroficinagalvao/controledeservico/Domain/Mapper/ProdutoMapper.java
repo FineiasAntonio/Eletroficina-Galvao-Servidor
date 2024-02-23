@@ -24,9 +24,9 @@ public class ProdutoMapper {
         }
 
         return new Produto(dto.produto(),
-                         dto.referencia(),
-                         dto.quantidade().trim().isEmpty() ? 0 : Integer.parseInt(dto.quantidade()),
-                         Double.parseDouble(dto.precoUnitario()));
+                           dto.referencia(), dto.quantidade(),
+                           dto.precoUnitario()
+        );
     }
 
     public ProdutoReservado mapReserva(ProdutoDTO dto) {
@@ -38,16 +38,17 @@ public class ProdutoMapper {
         Produto produtoSupplier = map(dto);
         produtoSupplier.setQuantidade(0);
         produtoRepository.save(produtoSupplier);
-        
-        int quantidadeNescessaria = Integer.parseInt(dto.quantidade());
+
+        int quantidadeNescessaria = dto.quantidade();
 
         return new ProdutoReservado(produtoSupplier, quantidadeNescessaria);
     }
 
-    public ProdutoReservado reservar(UUID uuidProduto, int quantidadeNescessaria){
-        Produto produto = produtoRepository.findById(uuidProduto).orElseThrow(() -> new NotFoundException("Produto não encontrado"));
+    public ProdutoReservado reservar(UUID uuidProduto, int quantidadeNescessaria) {
+        Produto produto = produtoRepository.findById(uuidProduto)
+                .orElseThrow(() -> new NotFoundException("Produto não encontrado"));
         produto.setQuantidade(0);
-        return new ProdutoReservado(produto,quantidadeNescessaria);
+        return new ProdutoReservado(produto, quantidadeNescessaria);
     }
 
     private static boolean isValid(ProdutoDTO dto) {
