@@ -14,9 +14,9 @@ public record CreateOSRequestDTO(
         String equipamento,
         String numeroSerie,
         String servico,
-        String obs,
-        int funcionario_id,
-        String coments,
+        String observacao,
+        int funcionarioId,
+        String comentarios,
         List<ReservaProdutoRequestDTO> produtosReservados,
         List<ProdutoDTO> novoProdutoReservado
 ) {

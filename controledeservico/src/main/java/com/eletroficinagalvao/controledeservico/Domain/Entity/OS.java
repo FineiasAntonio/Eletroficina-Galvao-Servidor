@@ -1,15 +1,9 @@
 package com.eletroficinagalvao.controledeservico.Domain.Entity;
 
-import com.eletroficinagalvao.controledeservico.Domain.Entity.Funcionario;
-import com.eletroficinagalvao.controledeservico.Domain.Entity.Reserva;
-import com.eletroficinagalvao.controledeservico.Domain.Entity.ServicoSituacao;
-import com.eletroficinagalvao.controledeservico.Domain.Entity.SubSituacao;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
 
@@ -37,7 +31,7 @@ public class OS {
     private Date dataEntrega;
     private String equipamento;
     private String numeroSerie;
-    private String obs;
+    private String observacao;
     private String servico;
     private ServicoSituacao situacao;
     private SubSituacao subSituacao;
@@ -45,8 +39,7 @@ public class OS {
     private String imagemSaida;
     private String video;
     private Funcionario funcionario;
-    private String coments;
+    private String comentarios;
     private Reserva reserva;
     private double valorTotal;
-
 }
