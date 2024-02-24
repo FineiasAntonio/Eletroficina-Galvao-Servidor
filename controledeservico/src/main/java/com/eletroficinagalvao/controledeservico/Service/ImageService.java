@@ -65,8 +65,7 @@ public class ImageService {
                 String filePath = String.format("Imagens/%d/%s/%s", id, this.method, tempFile.getName().concat(e.getOriginalFilename().substring(e.getOriginalFilename().lastIndexOf("."))));
 
                 BlobId blobId = BlobId.of("eletroficina-galvao-storage.appspot.com", filePath);
-                //TODO: reconhecer o jpg
-                BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("image/png").build();
+                BlobInfo blobInfo = getExtensionFromBlob(blobId);
                 storage.create(blobInfo, Files.readAllBytes(tempFile.toPath()));
 
                 inputStream.close();
@@ -84,6 +83,15 @@ public class ImageService {
             throw new RuntimeException(e);
         }
         return images;
+    }
+
+    private BlobInfo getExtensionFromBlob(BlobId blobId){
+        String fileExtension = blobId.getName().substring(blobId.getName().lastIndexOf("."));
+
+        if(fileExtension.contains("jpg")){
+            return BlobInfo.newBuilder(blobId).setContentType("image/jpeg").build();
+        }
+        return BlobInfo.newBuilder(blobId).setContentType("image/png").build();
     }
 
     private void setMethod(int method) {
