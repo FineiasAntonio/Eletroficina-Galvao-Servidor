@@ -41,7 +41,6 @@ public class OSService {
     @Transactional
     public void create(CreateOSRequestDTO ordemdeservico, List<MultipartFile> imagensEntrada){
         OS os = mapper.map(ordemdeservico);
-        System.out.println(os.getId());
         if (!imagensEntrada.isEmpty()){
             os.setImagemEntrada(imageService.uploadImage(os.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
         }
@@ -54,7 +53,6 @@ public class OSService {
     @Transactional
     public void delete(String id){
         repository.deleteById(Integer.valueOf(id));
-        imageService.delete(Integer.parseInt(id));
         log.info("OS apagada com sucesso");
     }
 
