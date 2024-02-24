@@ -12,14 +12,8 @@ import java.util.Date;
 @ToString
 public class OS {
 
-    private static int controleId = 1;
-
     @Id
-    private int id = controleId++;
-
-    public static void setControleId(int controleId) {
-        OS.controleId = controleId;
-    }
+    private int id;
 
     private String nome;
     private String telefone;

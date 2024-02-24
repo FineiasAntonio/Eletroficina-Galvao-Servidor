@@ -5,7 +5,6 @@ import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.UpdateOSRequestDTO
 import com.eletroficinagalvao.controledeservico.Domain.Entity.OS;
 import com.eletroficinagalvao.controledeservico.Domain.Mapper.OSMapper;
 import com.eletroficinagalvao.controledeservico.Exception.NotFoundException;
-import com.eletroficinagalvao.controledeservico.Repository.FuncionarioRepository;
 import com.eletroficinagalvao.controledeservico.Repository.OSRepository;
 
 import lombok.extern.log4j.Log4j2;
@@ -42,8 +41,9 @@ public class OSService {
     @Transactional
     public void create(CreateOSRequestDTO ordemdeservico, List<MultipartFile> imagensEntrada){
         OS os = mapper.map(ordemdeservico);
+        System.out.println(os.getId());
         if (!imagensEntrada.isEmpty()){
-            os.setImagemEntrada(imageService.readImage(os.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
+            os.setImagemEntrada(imageService.uploadImage(os.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
         }
 
         repository.insert(os);
@@ -68,10 +68,10 @@ public class OSService {
         OS updatedOS = mapper.updateMap(correspondente, os);
 
         if (!imagensEntrada.isEmpty()){
-            updatedOS.setImagemEntrada(imageService.readImage(updatedOS.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
+            updatedOS.setImagemEntrada(imageService.uploadImage(updatedOS.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
         }
         if (!imagensSaida.isEmpty()){
-            updatedOS.setImagemSaida(imageService.readImage(updatedOS.getId(), imagensSaida, ImageService.EXIT_METHOD));
+            updatedOS.setImagemSaida(imageService.uploadImage(updatedOS.getId(), imagensSaida, ImageService.EXIT_METHOD));
         }
 
         repository.save(updatedOS);
