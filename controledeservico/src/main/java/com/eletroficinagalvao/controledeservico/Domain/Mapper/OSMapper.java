@@ -1,5 +1,6 @@
 package com.eletroficinagalvao.controledeservico.Domain.Mapper;
 
+import com.eletroficinagalvao.controledeservico.Config.OSIDControlConfig;
 import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.CreateOSRequestDTO;
 import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.UpdateOSRequestDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.OS;
@@ -25,6 +26,7 @@ public class OSMapper {
 
     public OS map(CreateOSRequestDTO dto) {
         OS ordemdeservico = new OS();
+        ordemdeservico.setId(OSIDControlConfig.idAtual++);
 
         if (!isValid(dto)) {
             log.error("Ordem de serviço inválida");
@@ -67,6 +69,7 @@ public class OSMapper {
             log.error("Ordem de serviço inválida");
             throw new BadRequestException("Ordem de serviço inválida");
         }
+
 
         ordemdeservico.setNome(dto.nome());
         ordemdeservico.setCpf(dto.cpf());
