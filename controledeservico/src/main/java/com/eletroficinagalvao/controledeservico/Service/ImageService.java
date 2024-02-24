@@ -17,6 +17,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -35,22 +36,21 @@ public class ImageService {
     @Autowired
     private OSRepository repository;
 
-    public String uploadImage(int id, List<MultipartFile> imagens, int method) {
+    public List<String> uploadImage(int id, List<MultipartFile> imagens, int method) {
         setMethod(method);
 
+        List<String> images = new LinkedList<>();
         try {
             InputStream credentialsStream = ImageService.class.getClassLoader().getResourceAsStream("eletroficina-galvao-storage-firebase-adminsdk-31szq-ab6423537a.json");
             Credentials credentials = GoogleCredentials.fromStream(credentialsStream);
             Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-
-
 
             byte[] buffer = new byte[4096];
             int bytesRead;
 
             for (MultipartFile e : imagens) {
 
-                File tempFile = new File(String.format("%d_%d",id, random.nextInt(1000, 9999)));
+                File tempFile = new File(String.format("%d_%d", id, random.nextInt(1000, 9999)));
 
                 InputStream inputStream = e.getInputStream();
                 OutputStream outputStream = new FileOutputStream(tempFile);
@@ -62,21 +62,28 @@ public class ImageService {
                 outputStream.flush();
 
 
-                BlobId blobId = BlobId.of("eletroficina-galvao-storage.appspot.com",
-                        String.format("Imagens/%d/%s/%s", id, this.method, tempFile.getName().concat(e.getOriginalFilename().substring(e.getOriginalFilename().lastIndexOf(".")))));
+                String filePath = String.format("Imagens/%d/%s/%s", id, this.method, tempFile.getName().concat(e.getOriginalFilename().substring(e.getOriginalFilename().lastIndexOf("."))));
+
+                BlobId blobId = BlobId.of("eletroficina-galvao-storage.appspot.com", filePath);
                 //TODO: reconhecer o jpg
                 BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("image/png").build();
                 storage.create(blobInfo, Files.readAllBytes(tempFile.toPath()));
 
-                //TODO: ajeitar a url
-                String URL = "https://firebasestorage.googleapis.com/v0/b/eletroficina-galvao-storage.appspot.com/o/%s?alt=media".formatted(URLEncoder.encode(tempFile.getName(), StandardCharsets.UTF_8));
-                tempFile.delete();
+                inputStream.close();
+                outputStream.close();
+                storage.close();
+
+                images.add("https://firebasestorage.googleapis.com/v0/b/eletroficina-galvao-storage.appspot.com/o/%s?alt=media"
+                        .formatted(filePath.replace("/", "%2F")));
+
+                Files.delete(tempFile.toPath());
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        //TODO: retornar a url da pasta generalizada
-        return "aa";
+        return images;
     }
 
     private void setMethod(int method) {
@@ -89,44 +96,4 @@ public class ImageService {
         }
     }
 
-    // Depois
-//    public File getImageById(int id) {
-//        File zipTemp = new File("imagens_%d.zip".formatted(id));
-//        try {
-//            verify(id);
-//
-//            zipTemp.createNewFile();
-//
-//            List<File> fotos = Arrays.stream(Path.of(diretorioUsuario)
-//                            .toFile()
-//                            .listFiles())
-//                    .toList();
-//
-//            ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(zipTemp));
-//            for (File e : fotos) {
-//                try (InputStream inputStream = new FileInputStream(e)) {
-//
-//                    byte[] buffer = new byte[8192];
-//                    int bytesRead;
-//
-//                    zipOutputStream.putNextEntry(new ZipEntry(e.getName()));
-//
-//                    while ((bytesRead = inputStream.read(buffer)) != -1) {
-//                        zipOutputStream.write(buffer, 0, bytesRead);
-//                    }
-//
-//                }
-//            }
-//            zipOutputStream.close();
-//
-//        } catch (IOException ex) {
-//            ex.printStackTrace();
-//        } catch (SQLDataException ex) {
-//            ex.printStackTrace();
-//        }
-//        return zipTemp;
-//    }
-
-    public void delete(int id) {
-    }
 }

@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Document(collection = "ordensdeservico")
@@ -30,8 +31,8 @@ public class OS {
     private String servico;
     private ServicoSituacao situacao;
     private SubSituacao subSituacao;
-    private String imagemEntrada;
-    private String imagemSaida;
+    private List<String> imagemEntrada;
+    private List<String> imagemSaida;
     private String video;
     private Funcionario funcionario;
     private String comentarios;
