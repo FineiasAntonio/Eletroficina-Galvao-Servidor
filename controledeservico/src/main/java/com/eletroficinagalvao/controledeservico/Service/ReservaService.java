@@ -52,11 +52,6 @@ public class ReservaService {
             }
         }
 
-        OS os = osRepository.findById(id_os).get();
-        os.setReserva(reserva);
-        osRepository.save(os);
-        //TODO: procurar um jeito de fazer uma referência entre as collections
-
         reservaRepository.save(reserva);
         log.info("Reserva salva");
     }

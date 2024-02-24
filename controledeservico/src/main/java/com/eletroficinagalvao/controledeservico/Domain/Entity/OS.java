@@ -3,6 +3,7 @@ package com.eletroficinagalvao.controledeservico.Domain.Entity;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -34,6 +35,7 @@ public class OS {
     private String video;
     private Funcionario funcionario;
     private String comentarios;
+    @DBRef
     private Reserva reserva;
     private double valorTotal;
 }

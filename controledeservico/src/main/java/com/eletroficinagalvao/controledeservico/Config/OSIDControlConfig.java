@@ -20,13 +20,13 @@ public class OSIDControlConfig {
     public static int idAtual;
 
     @Bean
-    public OSIDControlConfig setarControleIdOS(){
+    public OSIDControlConfig setarControleIdOS() {
         List<OS> os = osRepository.findAll();
 
         os.sort(Comparator.comparingInt(OS::getId));
 
-        idAtual = os.get(os.size() - 1).getId() + 1;
-        log.info("Controle de ID das OS: id atual -> {}",idAtual);
+        idAtual = os.isEmpty() ? 1 : os.get(os.size() - 1).getId() + 1;
+        log.info("Controle de ID das OS: id atual -> {}", idAtual);
         return null;
     }
 }

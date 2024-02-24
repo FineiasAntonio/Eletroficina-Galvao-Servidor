@@ -26,6 +26,7 @@ public class OSMapper {
 
     public OS map(CreateOSRequestDTO dto) {
         OS ordemdeservico = new OS();
+        ordemdeservico.setId(OSIDControlConfig.idAtual++);
 
         if (!isValid(dto)) {
             log.error("Ordem de serviço inválida");
@@ -39,7 +40,6 @@ public class OSMapper {
         ).orElse(null));
         log.info("Reserva criada, id: %s".formatted(ordemdeservico.getReserva().getId()));
 
-        ordemdeservico.setId(OSIDControlConfig.idAtual++);
         ordemdeservico.setNome(dto.nome());
         ordemdeservico.setCpf(dto.cpf());
         ordemdeservico.setEndereco(dto.endereco());
