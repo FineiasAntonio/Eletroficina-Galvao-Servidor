@@ -19,7 +19,6 @@ import java.util.List;
 
 @Log4j2
 @Service
-@Qualifier ("OSService")
 public class OSService {
 
     @Autowired
