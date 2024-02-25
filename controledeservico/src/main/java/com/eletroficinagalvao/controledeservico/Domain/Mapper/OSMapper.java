@@ -4,6 +4,7 @@ import com.eletroficinagalvao.controledeservico.Config.OSIDControlConfig;
 import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.CreateOSRequestDTO;
 import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.UpdateOSRequestDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.OS;
+import com.eletroficinagalvao.controledeservico.Domain.Entity.Reserva;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.ServicoSituacao;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.SubSituacao;
 import com.eletroficinagalvao.controledeservico.Exception.BadRequestException;
@@ -36,8 +37,7 @@ public class OSMapper {
                 dto.produtosReservados(),
                 dto.novoProdutoReservado(),
                 ordemdeservico.getId()
-        ).orElse(null));
-        log.info("Reserva criada, id: %s".formatted(ordemdeservico.getReserva().getId()));
+        ).orElse(new Reserva(ordemdeservico.getId(), null, false)));
 
         ordemdeservico.setNome(dto.nome());
         ordemdeservico.setCpf(dto.cpf());

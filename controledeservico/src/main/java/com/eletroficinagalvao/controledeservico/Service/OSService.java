@@ -44,6 +44,7 @@ public class OSService {
             os.setImagemEntrada(imageService.uploadImage(os.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
         }
 
+        repository.save(os);
         log.info("Ordem de serviço registrada no nome de: " + os.getFuncionario().getNome());
         return os;
     }
