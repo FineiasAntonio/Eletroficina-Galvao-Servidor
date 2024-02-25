@@ -17,27 +17,23 @@ import lombok.extern.log4j.Log4j2;
 @Service
 @Log4j2
 @Qualifier ("FuncionarioService")
-public class FuncionarioService implements Services<Funcionario>{
+public class FuncionarioService {
 
     @Autowired
     private FuncionarioRepository repository;
 
-    @Override
     public List<Funcionario> getAll() {
         return repository.findAll();
     }
 
-    @Override
     public Funcionario getById(String id) {
         return repository.findById(Integer.valueOf(id)).orElseThrow(() -> new NotFoundException("Funcionário não encontrado"));
     }
 
-    @Override
     public List<Funcionario> getByLikeThisName(String name){
         return null;
     }
 
-    @Override
     @Transactional
     public void create(Funcionario t) {
         try {
@@ -48,13 +44,11 @@ public class FuncionarioService implements Services<Funcionario>{
         }
     }
 
-    @Override
     public void update(String id, Funcionario t) {
         repository.deleteById(t.getId());
         repository.save(t);
     }
 
-    @Override
     public void delete(String id) {
         repository.deleteById(Integer.valueOf(id));
     }

@@ -24,10 +24,10 @@ public class ReservaMapper {
 
         List<ProdutoReservado> produtosReservados = new LinkedList<>();
 
-        if (!produtos.isEmpty()) {
+        if (produtos != null && !produtos.isEmpty()) {
             produtosReservados.addAll(produtos.stream().map(e -> produtoMapper.reservar(e.uuidProduto(), e.quantidade())).toList());
         }
-        if (!novosProdutos.isEmpty()) {
+        if (novosProdutos != null && !novosProdutos.isEmpty()) {
             produtosReservados.addAll(novosProdutos.stream().map(e -> produtoMapper.mapReserva(e)).toList());
         }
 

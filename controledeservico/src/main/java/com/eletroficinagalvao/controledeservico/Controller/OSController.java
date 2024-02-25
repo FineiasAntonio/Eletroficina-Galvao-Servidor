@@ -2,9 +2,11 @@ package com.eletroficinagalvao.controledeservico.Controller;
 
 import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.CreateOSRequestDTO;
 import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.UpdateOSRequestDTO;
+import com.eletroficinagalvao.controledeservico.Domain.Entity.OS;
 import com.eletroficinagalvao.controledeservico.Service.ImageService;
 import com.eletroficinagalvao.controledeservico.Service.OSService;
 
+import com.google.api.Http;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -20,41 +22,42 @@ import java.util.List;
 public class OSController {
 
     @Autowired
-    @Qualifier("OSService")
     private OSService service;
 
     @GetMapping
-    public ResponseEntity getAll(){
-        return new ResponseEntity(service.getAll(), HttpStatus.OK);
+    public ResponseEntity<List<OS>> getAll(){
+        List<OS> ordens = service.getAll();
+        return ResponseEntity.status(HttpStatus.OK).body(ordens);
     }
 
     @GetMapping ("/{id}")
-    public ResponseEntity getById(@PathVariable int id){
-        return new ResponseEntity(service.getById(String.valueOf(id)), HttpStatus.OK);
+    public ResponseEntity<OS> getById(@PathVariable int id){
+        OS ordem = service.getById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(ordem);
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity create(
+    public ResponseEntity<OS> create(
             @RequestPart CreateOSRequestDTO ordemdeservico,
             @RequestPart List<MultipartFile> imagensEntrada
     ){
-        service.create(ordemdeservico, imagensEntrada);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        OS ordemCriada = service.create(ordemdeservico, imagensEntrada);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ordemCriada);
     }
 
     @DeleteMapping ("/{id}")
-    public ResponseEntity delete(@PathVariable int id){
-        service.delete(String.valueOf(id));
-        return new ResponseEntity(HttpStatus.OK);
+    public ResponseEntity<Void> delete(@PathVariable int id){
+        service.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity update(@PathVariable int id,
+    public ResponseEntity<OS> update(@PathVariable int id,
                                  @RequestPart UpdateOSRequestDTO os,
                                  @RequestPart List<MultipartFile> imagensEntrada,
                                  @RequestPart List<MultipartFile> imagensSaida
     ){
-        service.update(id, os, imagensEntrada, imagensSaida);
-        return new ResponseEntity(HttpStatus.OK);
+        OS ordemAtualizada = service.update(id, os, imagensEntrada, imagensSaida);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ordemAtualizada);
     }
 }
