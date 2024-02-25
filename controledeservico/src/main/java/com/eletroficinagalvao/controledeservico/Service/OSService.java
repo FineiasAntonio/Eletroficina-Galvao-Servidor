@@ -32,46 +32,46 @@ public class OSService {
         return repository.findAll();
     }
 
-    public OS getById(String id){
-        return repository.findById(Integer.valueOf(id))
+    public OS getById(int id){
+        return repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Não foi encontrado essa ordem de serviço"));
     }
 
     @Transactional
-    public void create(CreateOSRequestDTO ordemdeservico, List<MultipartFile> imagensEntrada){
+    public OS create(CreateOSRequestDTO ordemdeservico, List<MultipartFile> imagensEntrada){
         OS os = mapper.map(ordemdeservico);
         if (!imagensEntrada.isEmpty()){
             os.setImagemEntrada(imageService.uploadImage(os.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
         }
 
-        repository.insert(os);
-
         log.info("Ordem de serviço registrada no nome de: " + os.getFuncionario().getNome());
+        return os;
     }
 
     @Transactional
-    public void delete(String id){
-        repository.deleteById(Integer.valueOf(id));
-        log.info("OS apagada com sucesso");
+    public void delete(int id){
+        repository.deleteById(id);
+        log.info("OS {} apagada com sucesso", id);
     }
 
     @Transactional
-    public void update(int id,
+    public OS update(int id,
                        UpdateOSRequestDTO os,
                        List<MultipartFile> imagensEntrada,
                        List<MultipartFile> imagensSaida
     ){
-        OS correspondente = repository.findById(Integer.valueOf(id)).orElseThrow(() -> new NotFoundException("OS não encontrada"));
-        OS updatedOS = mapper.updateMap(correspondente, os);
+        OS ordemCorrespondente = repository.findById(Integer.valueOf(id)).orElseThrow(() -> new NotFoundException("OS não encontrada"));
+        OS ordemAtualizada = mapper.updateMap(ordemCorrespondente, os);
 
         if (!imagensEntrada.isEmpty()){
-            updatedOS.setImagemEntrada(imageService.uploadImage(updatedOS.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
+            ordemAtualizada.setImagemEntrada(imageService.uploadImage(ordemAtualizada.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
         }
         if (!imagensSaida.isEmpty()){
-            updatedOS.setImagemSaida(imageService.uploadImage(updatedOS.getId(), imagensSaida, ImageService.EXIT_METHOD));
+            ordemAtualizada.setImagemSaida(imageService.uploadImage(ordemAtualizada.getId(), imagensSaida, ImageService.EXIT_METHOD));
         }
 
-        repository.save(updatedOS);
+        repository.save(ordemAtualizada);
         log.info("OS atualizada");
+        return ordemAtualizada;
     }
 }

@@ -29,7 +29,6 @@ public class OSMapper {
         ordemdeservico.setId(OSIDControlConfig.idAtual++);
 
         if (!isValid(dto)) {
-            log.error("Ordem de serviço inválida");
             throw new BadRequestException("Ordem de serviço inválida");
         }
 
@@ -66,7 +65,6 @@ public class OSMapper {
     public OS updateMap(OS ordemdeservico, UpdateOSRequestDTO dto) {
 
         if (!isValid(dto)) {
-            log.error("Ordem de serviço inválida");
             throw new BadRequestException("Ordem de serviço inválida");
         }
 
