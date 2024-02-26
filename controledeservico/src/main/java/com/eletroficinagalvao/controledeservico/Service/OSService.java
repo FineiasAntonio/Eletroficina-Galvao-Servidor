@@ -54,20 +54,9 @@ public class OSService {
     }
 
     @Transactional
-    public OS update(int id,
-                       UpdateOSRequestDTO os,
-                       List<MultipartFile> imagensEntrada,
-                       List<MultipartFile> imagensSaida
-    ){
-        OS ordemCorrespondente = repository.findById(Integer.valueOf(id)).orElseThrow(() -> new NotFoundException("OS não encontrada"));
+    public OS update(int id, UpdateOSRequestDTO os){
+        OS ordemCorrespondente = repository.findById(id).orElseThrow(() -> new NotFoundException("OS não encontrada"));
         OS ordemAtualizada = mapper.updateMap(ordemCorrespondente, os);
-
-        if (!imagensEntrada.isEmpty()){
-            ordemAtualizada.setImagemEntrada(imageService.uploadImage(ordemAtualizada.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
-        }
-        if (!imagensSaida.isEmpty()){
-            ordemAtualizada.setImagemSaida(imageService.uploadImage(ordemAtualizada.getId(), imagensSaida, ImageService.EXIT_METHOD));
-        }
 
         repository.save(ordemAtualizada);
         log.info("OS atualizada");
@@ -88,11 +77,5 @@ public class OSService {
                 throw new BadRequestException("Método inválido");
         }
         repository.save(os);
-    }
-    public void storageEntranceImage(int id, List<MultipartFile> imagensEntrada){
-        imageService.uploadImage(id, imagensEntrada, ImageService.ENTRANCE_METHOD);
-    }
-    public void storageExitImage(int id, List<MultipartFile> imagensSaida){
-        imageService.uploadImage(id, imagensSaida, ImageService.EXIT_METHOD);
     }
 }

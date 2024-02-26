@@ -46,12 +46,8 @@ public class OSController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<OS> update(@PathVariable int id,
-                                 @RequestPart UpdateOSRequestDTO os,
-                                 @RequestPart List<MultipartFile> imagensEntrada,
-                                 @RequestPart List<MultipartFile> imagensSaida
-    ){
-        OS ordemAtualizada = service.update(id, os, imagensEntrada, imagensSaida);
+    public ResponseEntity<OS> update(@PathVariable int id, @RequestPart UpdateOSRequestDTO os){
+        OS ordemAtualizada = service.update(id, os);
         return ResponseEntity.status(HttpStatus.CREATED).body(ordemAtualizada);
     }
 
