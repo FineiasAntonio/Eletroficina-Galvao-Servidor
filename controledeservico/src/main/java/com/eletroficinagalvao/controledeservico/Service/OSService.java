@@ -68,10 +68,10 @@ public class OSService {
         OS os = repository.findById(id).orElseThrow(() -> new NotFoundException("Ordem de serviço não encontrada"));
         switch (method){
             case ImageService.ENTRANCE_METHOD:
-                os.setImagemEntrada(imageService.uploadImage(id, imagens, method));
+                os.getImagemEntrada().addAll(imageService.uploadImage(id, imagens, method));
                 break;
             case ImageService.EXIT_METHOD:
-                os.setImagemSaida(imageService.uploadImage(id, imagens, method));
+                os.getImagemSaida().addAll(imageService.uploadImage(id, imagens, method));
                 break;
             default:
                 throw new BadRequestException("Método inválido");

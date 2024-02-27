@@ -45,7 +45,7 @@ public class OSController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping("/{id}")
     public ResponseEntity<OS> update(@PathVariable int id, @RequestPart UpdateOSRequestDTO os){
         OS ordemAtualizada = service.update(id, os);
         return ResponseEntity.status(HttpStatus.CREATED).body(ordemAtualizada);
