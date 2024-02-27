@@ -35,13 +35,18 @@ public class ProdutoMapper {
             throw new BadRequestException("produto inválido");
         }
 
-        Produto produtoSupplier = map(dto);
-        produtoSupplier.setQuantidade(0);
-        produtoRepository.save(produtoSupplier);
+
+        Produto produto = produtoRepository.findByProduto(dto.produto())
+                .orElseGet(() -> {
+            Produto supplier = map(dto);
+            supplier.setQuantidade(0);
+            produtoRepository.save(supplier);
+            return supplier;
+        });
 
         int quantidadeNescessaria = dto.quantidade();
 
-        return new ProdutoReservado(produtoSupplier, quantidadeNescessaria);
+        return new ProdutoReservado(produto, quantidadeNescessaria);
     }
 
     public ProdutoReservado reservar(UUID uuidProduto, int quantidadeNescessaria) {
