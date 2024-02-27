@@ -3,12 +3,9 @@ package com.eletroficinagalvao.controledeservico.Controller;
 import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.CreateOSRequestDTO;
 import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.UpdateOSRequestDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.OS;
-import com.eletroficinagalvao.controledeservico.Service.ImageService;
 import com.eletroficinagalvao.controledeservico.Service.OSService;
 
-import com.google.api.Http;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,12 +33,9 @@ public class OSController {
         return ResponseEntity.status(HttpStatus.OK).body(ordem);
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<OS> create(
-            @RequestPart CreateOSRequestDTO ordemdeservico,
-            @RequestPart List<MultipartFile> imagensEntrada
-    ){
-        OS ordemCriada = service.create(ordemdeservico, imagensEntrada);
+    @PostMapping
+    public ResponseEntity<OS> create(@RequestBody CreateOSRequestDTO ordemdeservico){
+        OS ordemCriada = service.create(ordemdeservico);
         return ResponseEntity.status(HttpStatus.CREATED).body(ordemCriada);
     }
 
@@ -51,13 +45,19 @@ public class OSController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<OS> update(@PathVariable int id,
-                                 @RequestPart UpdateOSRequestDTO os,
-                                 @RequestPart List<MultipartFile> imagensEntrada,
-                                 @RequestPart List<MultipartFile> imagensSaida
-    ){
-        OS ordemAtualizada = service.update(id, os, imagensEntrada, imagensSaida);
+    @PutMapping("/{id}")
+    public ResponseEntity<OS> update(@PathVariable int id, @RequestPart UpdateOSRequestDTO os){
+        OS ordemAtualizada = service.update(id, os);
         return ResponseEntity.status(HttpStatus.CREATED).body(ordemAtualizada);
+    }
+
+    @PostMapping (value = "/image/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> storageImage(
+            @PathVariable int id,
+            @RequestParam(name = "method", required = true) int method,
+            @RequestBody List<MultipartFile> imagens
+    ){
+        service.storageImage(id, imagens, method);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

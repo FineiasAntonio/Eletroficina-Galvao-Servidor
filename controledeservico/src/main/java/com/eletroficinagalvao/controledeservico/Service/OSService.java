@@ -4,6 +4,7 @@ import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.CreateOSRequestDTO
 import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.UpdateOSRequestDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.OS;
 import com.eletroficinagalvao.controledeservico.Domain.Mapper.OSMapper;
+import com.eletroficinagalvao.controledeservico.Exception.BadRequestException;
 import com.eletroficinagalvao.controledeservico.Exception.NotFoundException;
 import com.eletroficinagalvao.controledeservico.Repository.OSRepository;
 
@@ -38,11 +39,8 @@ public class OSService {
     }
 
     @Transactional
-    public OS create(CreateOSRequestDTO ordemdeservico, List<MultipartFile> imagensEntrada){
+    public OS create(CreateOSRequestDTO ordemdeservico){
         OS os = mapper.map(ordemdeservico);
-        if (!imagensEntrada.isEmpty()){
-            os.setImagemEntrada(imageService.uploadImage(os.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
-        }
 
         repository.save(os);
         log.info("Ordem de serviço registrada no nome de: " + os.getFuncionario().getNome());
@@ -56,23 +54,28 @@ public class OSService {
     }
 
     @Transactional
-    public OS update(int id,
-                       UpdateOSRequestDTO os,
-                       List<MultipartFile> imagensEntrada,
-                       List<MultipartFile> imagensSaida
-    ){
-        OS ordemCorrespondente = repository.findById(Integer.valueOf(id)).orElseThrow(() -> new NotFoundException("OS não encontrada"));
+    public OS update(int id, UpdateOSRequestDTO os){
+        OS ordemCorrespondente = repository.findById(id).orElseThrow(() -> new NotFoundException("OS não encontrada"));
         OS ordemAtualizada = mapper.updateMap(ordemCorrespondente, os);
-
-        if (!imagensEntrada.isEmpty()){
-            ordemAtualizada.setImagemEntrada(imageService.uploadImage(ordemAtualizada.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
-        }
-        if (!imagensSaida.isEmpty()){
-            ordemAtualizada.setImagemSaida(imageService.uploadImage(ordemAtualizada.getId(), imagensSaida, ImageService.EXIT_METHOD));
-        }
 
         repository.save(ordemAtualizada);
         log.info("OS atualizada");
         return ordemAtualizada;
+    }
+
+    @Transactional
+    public void storageImage(int id, List<MultipartFile> imagens, int method){
+        OS os = repository.findById(id).orElseThrow(() -> new NotFoundException("Ordem de serviço não encontrada"));
+        switch (method){
+            case ImageService.ENTRANCE_METHOD:
+                os.getImagemEntrada().addAll(imageService.uploadImage(id, imagens, method));
+                break;
+            case ImageService.EXIT_METHOD:
+                os.getImagemSaida().addAll(imageService.uploadImage(id, imagens, method));
+                break;
+            default:
+                throw new BadRequestException("Método inválido");
+        }
+        repository.save(os);
     }
 }

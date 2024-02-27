@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @Data
@@ -31,8 +32,8 @@ public class OS {
     private String servico;
     private ServicoSituacao situacao;
     private SubSituacao subSituacao;
-    private List<String> imagemEntrada;
-    private List<String> imagemSaida;
+    private List<String> imagemEntrada = new LinkedList<>();
+    private List<String> imagemSaida = new LinkedList<>();
     private String video;
     private Funcionario funcionario;
     private String comentarios;
