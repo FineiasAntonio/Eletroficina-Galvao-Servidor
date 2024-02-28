@@ -36,4 +36,20 @@ public class ReservaMapper {
 
     }
 
+    public Reserva atualizarReserva(Reserva reserva, List<ReservaProdutoRequestDTO> produtos, List<ProdutoDTO> novosProdutos){
+
+        List<ProdutoReservado> produtosReservados = new LinkedList<>();
+
+        if (produtos != null && !produtos.isEmpty()) {
+            produtosReservados.addAll(produtos.stream().map(e -> produtoMapper.reservar(e.uuidProduto(), e.quantidade())).toList());
+        }
+        if (novosProdutos != null && !novosProdutos.isEmpty()) {
+            produtosReservados.addAll(novosProdutos.stream().map(e -> produtoMapper.mapReserva(e)).toList());
+        }
+
+        reserva.getProdutos_reservados().addAll(produtosReservados);
+
+        return reserva;
+    }
+
 }

@@ -17,6 +17,7 @@ public class ProdutoMapper {
     @Autowired
     private ProdutoRepository produtoRepository;
 
+    // mapeia pro estoque
     public Produto map(ProdutoDTO dto) {
 
         if (dto == null || !isValid(dto)) {
@@ -29,6 +30,7 @@ public class ProdutoMapper {
         );
     }
 
+    // mapeia para a reserva
     public ProdutoReservado mapReserva(ProdutoDTO dto) {
 
         if (dto == null || !isValid(dto)) {
@@ -49,6 +51,7 @@ public class ProdutoMapper {
         return new ProdutoReservado(produto, quantidadeNescessaria);
     }
 
+    // pega do estoque e faz uma nova instancia de produto reservado
     public ProdutoReservado reservar(UUID uuidProduto, int quantidadeNescessaria) {
         Produto produto = produtoRepository.findById(uuidProduto)
                 .orElseThrow(() -> new NotFoundException("Produto não encontrado"));

@@ -1,5 +1,6 @@
 package com.eletroficinagalvao.controledeservico.Service;
 
+import com.eletroficinagalvao.controledeservico.Exception.InternalServerErrorException;
 import com.eletroficinagalvao.controledeservico.Repository.OSRepository;
 import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -29,12 +30,8 @@ public class ImageService {
 
     @Getter
     private String method;
-    private String diretorioUsuario;
 
-    private Random random = new Random();
-
-    @Autowired
-    private OSRepository repository;
+    private final Random random = new Random();
 
     public List<String> uploadImage(int id, List<MultipartFile> imagens, int method) {
         setMethod(method);
@@ -78,9 +75,9 @@ public class ImageService {
                 Files.delete(tempFile.toPath());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new InternalServerErrorException(e.getMessage());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new InternalServerErrorException(e.getMessage());
         }
         return images;
     }

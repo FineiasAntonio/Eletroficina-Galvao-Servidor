@@ -17,4 +17,8 @@ public enum SubSituacao {
     public static SubSituacao getSubStatus(int i){
         return Arrays.stream(SubSituacao.values()).filter(e -> e.valor == i).findFirst().get();
     }
+
+    public int get(){
+        return valor;
+    }
 }
