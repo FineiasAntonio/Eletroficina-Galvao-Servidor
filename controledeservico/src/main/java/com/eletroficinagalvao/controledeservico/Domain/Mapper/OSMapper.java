@@ -57,12 +57,10 @@ public class OSMapper {
 
         if ((ordemdeservico.getReserva() != null) && ordemdeservico.getReserva().isAtivo()) {
             ordemdeservico.setSituacao(ServicoSituacao.AGUARDANDO_PECA);
+            ordemdeservico.setValorTotal(atualizarValorOS(ordemdeservico.getReserva()));
         } else {
             ordemdeservico.setSituacao(ServicoSituacao.EM_ANDAMENTO);
         }
-
-        if(ordemdeservico.getReserva().isAtivo())
-            ordemdeservico.setValorTotal(atualizarValorOS(ordemdeservico.getReserva()));
 
         return ordemdeservico;
     }
@@ -101,7 +99,7 @@ public class OSMapper {
         } else {
             if (ordemdeservico.getReserva().isAtivo()) {
                 ordemdeservico.setSituacao(ServicoSituacao.AGUARDANDO_PECA);
-                atualizarValorOS(ordemdeservico.getReserva());
+                ordemdeservico.setValorTotal(atualizarValorOS(ordemdeservico.getReserva()));
             } else {
                 ordemdeservico.setSituacao(ServicoSituacao.EM_ANDAMENTO);
             }

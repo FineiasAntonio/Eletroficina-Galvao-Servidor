@@ -46,7 +46,7 @@ public class OSController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OS> update(@PathVariable int id, @RequestPart UpdateOSRequestDTO os){
+    public ResponseEntity<OS> update(@PathVariable int id, @RequestBody UpdateOSRequestDTO os){
         OS ordemAtualizada = service.update(id, os);
         return ResponseEntity.status(HttpStatus.CREATED).body(ordemAtualizada);
     }
@@ -54,7 +54,7 @@ public class OSController {
     @PostMapping (value = "/image/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> storageImage(
             @PathVariable int id,
-            @RequestParam(name = "method", required = true) int method,
+            @RequestParam(name = "method") int method,
             @RequestBody List<MultipartFile> imagens
     ){
         service.storageImage(id, imagens, method);

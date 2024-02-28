@@ -1,12 +1,11 @@
 package com.eletroficinagalvao.controledeservico.Service;
 
 import com.eletroficinagalvao.controledeservico.Domain.DTO.Reserva.ReservaProdutoRequestDTO;
-import com.eletroficinagalvao.controledeservico.Domain.Entity.OS;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Produto;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.ProdutoReservado;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Reserva;
 import com.eletroficinagalvao.controledeservico.Exception.BadRequestException;
-import com.eletroficinagalvao.controledeservico.Repository.OSRepository;
+import com.eletroficinagalvao.controledeservico.Exception.NotFoundException;
 import com.eletroficinagalvao.controledeservico.Repository.ProdutoRepository;
 import com.eletroficinagalvao.controledeservico.Repository.ReservaRepository;
 
@@ -25,8 +24,6 @@ public class ReservaService {
     private ReservaRepository reservaRepository;
     @Autowired
     private ProdutoRepository produtoRepository;
-    @Autowired
-    private OSRepository osRepository;
 
     public List<Reserva> getAll() {
         return reservaRepository.findAll();
@@ -36,7 +33,7 @@ public class ReservaService {
     public void reservarProdutoDoEstoque(int id_os, ReservaProdutoRequestDTO produto) {
 
         //Segunda verificação pra ver se há a quantidade no estoque
-        Produto produtoDoEstoque = produtoRepository.findById(produto.uuidProduto()).get();
+        Produto produtoDoEstoque = produtoRepository.findById(produto.uuidProduto()).orElseThrow(() -> new NotFoundException("Produto não encontrado no estoque"));
         if (produtoDoEstoque.getQuantidade() < produto.quantidade()) {
             throw new BadRequestException("Não há quantidade suficiente de %s para ser reservado".formatted(produtoDoEstoque.getProduto()));
         } else {
