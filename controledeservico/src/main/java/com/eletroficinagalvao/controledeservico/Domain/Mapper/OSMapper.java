@@ -126,7 +126,7 @@ public class OSMapper {
     private double atualizarValorOS(Reserva reserva){
         return reserva.getProdutos_reservados()
                 .stream()
-                .flatMapToDouble(e -> DoubleStream.of(e.getPrecoUnitario()))
+                .mapToDouble(x -> x.getPrecoUnitario() * x.getQuantidadeNescessaria())
                 .reduce(0, (x, y) -> x + y);
     }
 }
