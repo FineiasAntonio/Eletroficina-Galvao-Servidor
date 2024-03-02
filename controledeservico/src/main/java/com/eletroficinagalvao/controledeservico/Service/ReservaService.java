@@ -32,6 +32,11 @@ public class ReservaService {
     @Transactional
     public void reservarProdutoDoEstoque(int id_os, ReservaProdutoRequestDTO produto) {
 
+        Reserva reserva = reservaRepository.findByIdOS(id_os);
+
+        if (!reserva.isAtivo())
+            throw new BadRequestException("Reserva fechada");
+
         //Segunda verificação pra ver se há a quantidade no estoque
         Produto produtoDoEstoque = produtoRepository.findById(produto.uuidProduto()).orElseThrow(() -> new NotFoundException("Produto não encontrado no estoque"));
         if (produtoDoEstoque.getQuantidade() < produto.quantidade()) {
@@ -42,7 +47,7 @@ public class ReservaService {
             log.info("Produto do estoque reduzido");
         }
 
-        Reserva reserva = reservaRepository.findByIdOS(id_os);
+
         for (ProdutoReservado e: reserva.getProdutos_reservados()){
             if (e.getId().equals(produto.uuidProduto())){
                 e.setQuantidade(e.getQuantidade() + produto.quantidade());
