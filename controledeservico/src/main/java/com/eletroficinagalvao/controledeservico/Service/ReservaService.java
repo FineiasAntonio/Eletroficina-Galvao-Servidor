@@ -37,10 +37,13 @@ public class ReservaService {
         if (!reserva.isAtivo())
             throw new BadRequestException("Reserva fechada");
 
-        //Segunda verificação pra ver se há a quantidade no estoque
+        //verificação pra ver se há a quantidade no estoque
         Produto produtoDoEstoque = produtoRepository.findById(produto.uuidProduto()).orElseThrow(() -> new NotFoundException("Produto não encontrado no estoque"));
         if (produtoDoEstoque.getQuantidade() < produto.quantidade()) {
             throw new BadRequestException("Não há quantidade suficiente de %s para ser reservado".formatted(produtoDoEstoque.getProduto()));
+        } else if (reserva.getProdutos_reservados().stream()
+                .anyMatch(x -> (x.getId().equals(produto.uuidProduto()) && x.getQuantidade() + produto.quantidade() > x.getQuantidadeNescessaria()))) {
+            throw new BadRequestException("Você está tentando reservar mais do que é nescessário");
         } else {
             produtoDoEstoque.setQuantidade(produtoDoEstoque.getQuantidade() - produto.quantidade());
             produtoRepository.save(produtoDoEstoque);
