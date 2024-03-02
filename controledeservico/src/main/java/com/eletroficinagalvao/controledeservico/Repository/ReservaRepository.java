@@ -13,6 +13,6 @@ public interface ReservaRepository extends MongoRepository<Reserva, UUID> {
 
     public Reserva findByIdOS(int idOS);
 
-
+    public List<Reserva> findByAtivo(boolean ativo);
 
 }
