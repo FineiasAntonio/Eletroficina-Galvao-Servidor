@@ -126,6 +126,6 @@ public class OSMapper {
         return reserva.getProdutos_reservados()
                 .stream()
                 .mapToDouble(x -> x.getPrecoUnitario() * x.getQuantidadeNescessaria())
-                .reduce(0, (x, y) -> x + y);
+                .reduce(0, (x, y) -> x + y) + reserva.getMaoDeObra();
     }
 }
