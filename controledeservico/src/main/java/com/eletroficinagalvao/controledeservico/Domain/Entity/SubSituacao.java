@@ -6,7 +6,8 @@ public enum SubSituacao {
     AGUARDANDO_RETIRADA (1),
     ENTREGUE (0),
     MONTADO(2),
-    TESTADO(3);
+    TESTADO(3),
+    APROVADO(4);
 
     private final int valor;
 

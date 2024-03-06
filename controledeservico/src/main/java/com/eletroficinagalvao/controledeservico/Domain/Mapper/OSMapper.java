@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.stream.DoubleStream;
 
 @Component
@@ -36,10 +37,9 @@ public class OSMapper {
         }
 
         ordemdeservico.setReserva(reservaMapper.criarReserva(
-                dto.produtosReservados(),
-                dto.novoProdutoReservado(),
+                dto.reserva(),
                 ordemdeservico.getId()
-        ).orElse(new Reserva(ordemdeservico.getId(), null, false)));
+        ).orElse(new Reserva(ordemdeservico.getId(), new LinkedList<>(), false, 0)));
 
         ordemdeservico.setNome(dto.nome());
         ordemdeservico.setCpf(dto.cpf());
@@ -86,8 +86,7 @@ public class OSMapper {
 
         ordemdeservico.setReserva(reservaMapper.atualizarReserva(
                 ordemdeservico.getReserva(),
-                dto.produtosReservados(),
-                dto.novoProdutoReservado()
+                dto.reserva()
         ));
 
         if (dto.concluido()) {
@@ -126,7 +125,7 @@ public class OSMapper {
     private double atualizarValorOS(Reserva reserva){
         return reserva.getProdutos_reservados()
                 .stream()
-                .flatMapToDouble(e -> DoubleStream.of(e.getPrecoUnitario()))
-                .reduce(0, (x, y) -> x + y);
+                .mapToDouble(x -> x.getPrecoUnitario() * x.getQuantidadeNescessaria())
+                .reduce(0, (x, y) -> x + y) + reserva.getMaoDeObra();
     }
 }

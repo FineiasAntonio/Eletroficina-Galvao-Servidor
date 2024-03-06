@@ -26,8 +26,8 @@ public class FuncionarioService {
         return repository.findAll();
     }
 
-    public Funcionario getById(String id) {
-        return repository.findById(Integer.valueOf(id)).orElseThrow(() -> new NotFoundException("Funcionário não encontrado"));
+    public Funcionario getById(int id) {
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Funcionário não encontrado"));
     }
 
     public List<Funcionario> getByLikeThisName(String name){
@@ -35,10 +35,11 @@ public class FuncionarioService {
     }
 
     @Transactional
-    public void create(Funcionario t) {
+    public Funcionario create(Funcionario t) {
         try {
-            repository.save(t);
+            Funcionario funcionarioCriado = repository.save(t);
             log.info("Funcionário registrado: " + t.getNome());
+            return funcionarioCriado;
         } catch (Exception e){
             throw new InternalServerErrorException("Funcionário não registrado" + e.getMessage());
         }

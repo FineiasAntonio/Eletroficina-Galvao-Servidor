@@ -1,6 +1,6 @@
 package com.eletroficinagalvao.controledeservico.Controller;
 
-import com.eletroficinagalvao.controledeservico.Domain.DTO.Reserva.ReservaProdutoRequestDTO;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.Reserva.ReservaProdutoExistenteDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Reserva;
 import com.eletroficinagalvao.controledeservico.Service.ReservaService;
 
@@ -26,7 +26,7 @@ public class ReservaController {
     }
 
     @PostMapping("/{os}")
-    public ResponseEntity<Void> reservarProduto(@PathVariable int os, @RequestBody ReservaProdutoRequestDTO produto){
+    public ResponseEntity<Void> reservarProduto(@PathVariable int os, @RequestBody ReservaProdutoExistenteDTO produto){
         reservaService.reservarProdutoDoEstoque(os, produto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
