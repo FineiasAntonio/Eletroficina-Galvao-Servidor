@@ -1,7 +1,8 @@
 package com.eletroficinagalvao.controledeservico.Domain.Mapper;
 
 import com.eletroficinagalvao.controledeservico.Domain.DTO.Estoque.ProdutoDTO;
-import com.eletroficinagalvao.controledeservico.Domain.DTO.Reserva.ReservaProdutoRequestDTO;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.Reserva.ReservaDTO;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.Reserva.ReservaProdutoExistenteDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.ProdutoReservado;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Reserva;
 import com.eletroficinagalvao.controledeservico.Repository.ReservaRepository;
@@ -20,34 +21,36 @@ public class ReservaMapper {
     @Autowired
     private ReservaRepository reservaRepository;
 
-    public Optional<Reserva> criarReserva(List<ReservaProdutoRequestDTO> produtos, List<ProdutoDTO> novosProdutos, int idOS) {
+    public Optional<Reserva> criarReserva(ReservaDTO reserva, int idOS) {
 
         List<ProdutoReservado> produtosReservados = new LinkedList<>();
 
-        if (produtos != null && !produtos.isEmpty()) {
-            produtosReservados.addAll(produtos.stream().map(e -> produtoMapper.reservar(e.uuidProduto(), e.quantidade())).toList());
+        if (reserva.produtosExistentes() != null && !reserva.produtosExistentes().isEmpty()) {
+            produtosReservados.addAll(reserva.produtosExistentes().stream().map(e -> produtoMapper.reservar(e.uuidProduto(), e.quantidade())).toList());
         }
-        if (novosProdutos != null && !novosProdutos.isEmpty()) {
-            produtosReservados.addAll(novosProdutos.stream().map(e -> produtoMapper.mapReserva(e)).toList());
+        if (reserva.produtosNovos() != null && !reserva.produtosNovos().isEmpty()) {
+            produtosReservados.addAll(reserva.produtosNovos().stream().map(e -> produtoMapper.mapReserva(e)).toList());
         }
 
-
-        return produtosReservados.isEmpty() ? Optional.empty() : Optional.of(reservaRepository.save(new Reserva(idOS, produtosReservados, true)));
+        return produtosReservados.isEmpty() ? Optional.empty() : Optional.of(reservaRepository.save(
+                new Reserva(idOS, produtosReservados, true, reserva.maoDeObra()))
+        );
 
     }
 
-    public Reserva atualizarReserva(Reserva reserva, List<ReservaProdutoRequestDTO> produtos, List<ProdutoDTO> novosProdutos){
+    public Reserva atualizarReserva(Reserva reserva, ReservaDTO reservaAtualizada){
 
         List<ProdutoReservado> produtosReservados = new LinkedList<>();
 
-        if (produtos != null && !produtos.isEmpty()) {
-            produtosReservados.addAll(produtos.stream().map(e -> produtoMapper.reservar(e.uuidProduto(), e.quantidade())).toList());
+        if (reservaAtualizada.produtosExistentes() != null && !reservaAtualizada.produtosExistentes().isEmpty()) {
+            produtosReservados = (reservaAtualizada.produtosExistentes().stream().map(e -> produtoMapper.reservar(e.uuidProduto(), e.quantidade())).toList());
         }
-        if (novosProdutos != null && !novosProdutos.isEmpty()) {
-            produtosReservados.addAll(novosProdutos.stream().map(e -> produtoMapper.mapReserva(e)).toList());
+        if (reservaAtualizada.produtosNovos() != null && !reservaAtualizada.produtosNovos().isEmpty()) {
+            produtosReservados = (reservaAtualizada.produtosNovos().stream().map(e -> produtoMapper.mapReserva(e)).toList());
         }
 
         reserva.getProdutos_reservados().addAll(produtosReservados);
+        reserva.setMaoDeObra(reservaAtualizada.maoDeObra());
 
         return reserva;
     }

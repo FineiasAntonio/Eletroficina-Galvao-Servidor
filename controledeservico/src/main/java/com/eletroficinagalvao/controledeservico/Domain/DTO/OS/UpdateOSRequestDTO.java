@@ -1,7 +1,8 @@
 package com.eletroficinagalvao.controledeservico.Domain.DTO.OS;
 
 import com.eletroficinagalvao.controledeservico.Domain.DTO.Estoque.ProdutoDTO;
-import com.eletroficinagalvao.controledeservico.Domain.DTO.Reserva.ReservaProdutoRequestDTO;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.Reserva.ReservaDTO;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.Reserva.ReservaProdutoExistenteDTO;
 
 import java.util.List;
 
@@ -19,7 +20,6 @@ public record UpdateOSRequestDTO(
         String comentarios,
         boolean concluido,
         int subSituacao,
-        List<ReservaProdutoRequestDTO> produtosReservados,
-        List<ProdutoDTO> novoProdutoReservado
+        ReservaDTO reserva
 ) {
 }

@@ -1,6 +1,6 @@
 package com.eletroficinagalvao.controledeservico.Service;
 
-import com.eletroficinagalvao.controledeservico.Domain.DTO.Reserva.ReservaProdutoRequestDTO;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.Reserva.ReservaProdutoExistenteDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Produto;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.ProdutoReservado;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Reserva;
@@ -30,7 +30,7 @@ public class ReservaService {
     }
 
     @Transactional
-    public void reservarProdutoDoEstoque(int id_os, ReservaProdutoRequestDTO produto) {
+    public void reservarProdutoDoEstoque(int id_os, ReservaProdutoExistenteDTO produto) {
 
         Reserva reserva = reservaRepository.findByIdOS(id_os);
 
@@ -40,9 +40,12 @@ public class ReservaService {
         //verificação pra ver se há a quantidade no estoque
         Produto produtoDoEstoque = produtoRepository.findById(produto.uuidProduto()).orElseThrow(() -> new NotFoundException("Produto não encontrado no estoque"));
         if (produtoDoEstoque.getQuantidade() < produto.quantidade()) {
+
             throw new BadRequestException("Não há quantidade suficiente de %s para ser reservado".formatted(produtoDoEstoque.getProduto()));
+
         } else if (reserva.getProdutos_reservados().stream()
                 .anyMatch(x -> (x.getId().equals(produto.uuidProduto()) && x.getQuantidade() + produto.quantidade() > x.getQuantidadeNescessaria()))) {
+
             throw new BadRequestException("Você está tentando reservar mais do que é nescessário");
         } else {
             produtoDoEstoque.setQuantidade(produtoDoEstoque.getQuantidade() - produto.quantidade());
@@ -51,8 +54,8 @@ public class ReservaService {
         }
 
 
-        for (ProdutoReservado e: reserva.getProdutos_reservados()){
-            if (e.getId().equals(produto.uuidProduto())){
+        for (ProdutoReservado e : reserva.getProdutos_reservados()) {
+            if (e.getId().equals(produto.uuidProduto())) {
                 e.setQuantidade(e.getQuantidade() + produto.quantidade());
             }
         }

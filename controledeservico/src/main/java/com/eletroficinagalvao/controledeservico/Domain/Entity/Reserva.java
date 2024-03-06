@@ -26,6 +26,7 @@ public class Reserva {
     private int idOS;
     private List<ProdutoReservado> produtos_reservados;
     private boolean ativo;
+    private int maoDeObra;
 
     public Reserva(List<ProdutoReservado> produtos_reservados) {
         this.produtos_reservados = produtos_reservados;
@@ -36,9 +37,10 @@ public class Reserva {
         this.ativo = ativo;
     }
 
-    public Reserva(int idOS, List<ProdutoReservado> produtos_reservados, boolean ativo) {
+    public Reserva(int idOS, List<ProdutoReservado> produtos_reservados, boolean ativo, int maoDeObra) {
         this.idOS = idOS;
         this.produtos_reservados = produtos_reservados;
         this.ativo = ativo;
+        this.maoDeObra = maoDeObra;
     }
 }
