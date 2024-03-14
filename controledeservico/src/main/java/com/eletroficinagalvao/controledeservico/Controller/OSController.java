@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -47,6 +49,7 @@ public class OSController {
 
     @PutMapping("/{id}")
     public ResponseEntity<OS> update(@PathVariable int id, @RequestBody UpdateOSRequestDTO os){
+        System.out.println(os);
         OS ordemAtualizada = service.update(id, os);
         return ResponseEntity.status(HttpStatus.CREATED).body(ordemAtualizada);
     }
@@ -57,7 +60,18 @@ public class OSController {
             @RequestParam(name = "method") int method,
             @RequestBody List<MultipartFile> imagens
     ){
+        System.out.println(id);
+        System.out.println(method);
+        System.out.println(imagens);
         service.storageImage(id, imagens, method);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/print/{id}")
+    public ModelAndView getDocDetails(@PathVariable("id") int id){
+        ModelAndView mv = new ModelAndView("doc");
+        OS os = service.getById(id);
+        mv.addObject("os", os);
+        return mv;
     }
 }

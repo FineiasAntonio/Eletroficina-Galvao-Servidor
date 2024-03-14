@@ -8,6 +8,7 @@ import com.eletroficinagalvao.controledeservico.Exception.BadRequestException;
 import com.eletroficinagalvao.controledeservico.Exception.NotFoundException;
 import com.eletroficinagalvao.controledeservico.Repository.OSRepository;
 
+import com.eletroficinagalvao.controledeservico.Repository.ReservaRepository;
 import lombok.extern.log4j.Log4j2;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class OSService {
 
     @Autowired
     private OSRepository repository;
+    @Autowired
+    private ReservaRepository reservaRepository;
     @Autowired
     private OSMapper mapper;
     @Autowired
@@ -50,6 +53,7 @@ public class OSService {
     @Transactional
     public void delete(int id){
         repository.deleteById(id);
+        reservaRepository.delete(reservaRepository.findByIdOS(id));
         log.info("OS {} apagada com sucesso", id);
     }
 

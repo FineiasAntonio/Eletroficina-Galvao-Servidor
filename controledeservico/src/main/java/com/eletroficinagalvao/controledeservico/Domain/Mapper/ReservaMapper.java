@@ -6,6 +6,7 @@ import com.eletroficinagalvao.controledeservico.Domain.DTO.Reserva.ReservaProdut
 import com.eletroficinagalvao.controledeservico.Domain.Entity.ProdutoReservado;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Reserva;
 import com.eletroficinagalvao.controledeservico.Repository.ReservaRepository;
+import com.eletroficinagalvao.controledeservico.Service.ReservaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,10 @@ public class ReservaMapper {
     private ReservaRepository reservaRepository;
 
     public Optional<Reserva> criarReserva(ReservaDTO reserva, int idOS) {
+
+        if(reserva == null){
+            return Optional.empty();
+        }
 
         List<ProdutoReservado> produtosReservados = new LinkedList<>();
 
@@ -40,6 +45,8 @@ public class ReservaMapper {
 
     public Reserva atualizarReserva(Reserva reserva, ReservaDTO reservaAtualizada){
 
+        reserva = reservaRepository.findById(reserva.getId()).get();
+
         List<ProdutoReservado> produtosReservados = new LinkedList<>();
 
         if (reservaAtualizada.produtosExistentes() != null && !reservaAtualizada.produtosExistentes().isEmpty()) {
@@ -49,10 +56,12 @@ public class ReservaMapper {
             produtosReservados = (reservaAtualizada.produtosNovos().stream().map(e -> produtoMapper.mapReserva(e)).toList());
         }
 
+
         reserva.getProdutos_reservados().addAll(produtosReservados);
         reserva.setMaoDeObra(reservaAtualizada.maoDeObra());
 
-        return reserva;
+
+        return reservaRepository.save(reserva);
     }
 
 }

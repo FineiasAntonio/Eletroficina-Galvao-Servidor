@@ -11,6 +11,8 @@ import com.eletroficinagalvao.controledeservico.Exception.BadRequestException;
 import com.eletroficinagalvao.controledeservico.Exception.NotFoundException;
 import com.eletroficinagalvao.controledeservico.Repository.FuncionarioRepository;
 
+import com.eletroficinagalvao.controledeservico.Service.FuncionarioService;
+import com.eletroficinagalvao.controledeservico.Service.ReservaService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,6 +29,7 @@ public class OSMapper {
     private ReservaMapper reservaMapper;
     @Autowired
     private FuncionarioRepository funcionarioRepository;
+
 
     public OS map(CreateOSRequestDTO dto) {
         OS ordemdeservico = new OS();
@@ -62,6 +65,8 @@ public class OSMapper {
             ordemdeservico.setSituacao(ServicoSituacao.EM_ANDAMENTO);
         }
 
+
+
         return ordemdeservico;
     }
 
@@ -70,6 +75,8 @@ public class OSMapper {
         if (!isValid(dto)) {
             throw new BadRequestException("Ordem de serviço inválida");
         }
+
+
 
         ordemdeservico.setNome(dto.nome());
         ordemdeservico.setCpf(dto.cpf());
@@ -80,8 +87,8 @@ public class OSMapper {
         ordemdeservico.setServico(dto.servico());
         ordemdeservico.setObservacao(dto.observacao());
         ordemdeservico.setComentarios(dto.comentarios());
-        ordemdeservico.setDataSaida(Date.valueOf(dto.dataSaida()));
-        ordemdeservico.setSubSituacao(SubSituacao.getSubStatus(dto.subSituacao()));
+        ordemdeservico.setDataSaida(Date.valueOf(dto.dataSaida().toLocalDate()));
+        ordemdeservico.setSubSituacao(dto.subSituacao());
         ordemdeservico.setFuncionario(funcionarioRepository.findById(dto.funcionarioId()).orElseThrow(() -> new NotFoundException("Funcionário não encontrado")));
 
         ordemdeservico.setReserva(reservaMapper.atualizarReserva(
@@ -92,8 +99,8 @@ public class OSMapper {
         if (dto.concluido()) {
             ordemdeservico.setSituacao(ServicoSituacao.CONCLUIDO);
             ordemdeservico.setDataConclusao(Date.valueOf(LocalDate.now()));
-            if (dto.subSituacao() == SubSituacao.ENTREGUE.get()){
-                ordemdeservico.setDataSaida(Date.valueOf(LocalDate.now()));
+            if (dto.subSituacao() == SubSituacao.ENTREGUE){
+                ordemdeservico.setDataEntrega(Date.valueOf(LocalDate.now()));
             }
         } else {
             if (ordemdeservico.getReserva().isAtivo()) {

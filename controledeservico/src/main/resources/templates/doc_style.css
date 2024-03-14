@@ -1,0 +1,49 @@
+@page {
+    size: A4;
+    margin: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+body{
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+}
+
+#head{
+    padding-right: 40px;
+    display: flex;
+    height: 120px;
+    justify-content: space-between;
+    align-items: center;
+}
+#head > img {
+    width: 100px;
+    height: 100px;
+}
+
+#body1 {
+    display: grid;
+}
+#info_cliente {
+    align-items: self-start;
+    display: flex;
+    flex-direction: column;
+}
+#info_cliente > p{
+    margin: 4px;
+}
+#banco_e_qr{
+    display: flex;
+
+}
+
+p{
+    font-size: medium;
+    font-family: Arial, Helvetica, sans-serif;
+}
+#info_cliente > p{
+    
+    font-weight: bold;
+}

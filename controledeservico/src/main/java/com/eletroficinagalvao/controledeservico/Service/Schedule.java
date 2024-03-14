@@ -37,7 +37,6 @@ public class Schedule {
             reserva.getProdutos_reservados().forEach(produto -> {
                 Produto produtoDoEstoque = produtoRepository.findById(produto.getId()).get();
                 BeanUtils.copyProperties(produtoDoEstoque, produto, "quantidade", "quantidadeNescessaria");
-                log.info("alterado");
             });
             reservaRepository.save(reserva);
         });

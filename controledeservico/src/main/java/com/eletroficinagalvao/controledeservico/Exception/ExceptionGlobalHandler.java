@@ -25,6 +25,7 @@ public class ExceptionGlobalHandler{
     @ExceptionHandler(InternalServerErrorException.class)
     public ResponseEntity<ExceptionDTO> handleInternalServerErrorException(InternalServerErrorException e){
         log.error(e.getMessage());
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ExceptionDTO(e.getMessage()));
     }
 
