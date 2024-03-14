@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordem de Serviço</title>
+    <style>
+        @page {
+    size: A4;
+    margin: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+body{
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+}
+
+#head{
+    padding-right: 40px;
+    display: flex;
+    height: 120px;
+    justify-content: space-between;
+    align-items: center;
+}
+#head > img {
+    width: 100px;
+    height: 100px;
+}
+
+#body1 {
+    display: grid;
+}
+#info_cliente {
+    align-items: self-start;
+    display: flex;
+    flex-direction: column;
+}
+#info_cliente > p{
+    margin: 4px;
+}
+#info_cliente2 {
+    align-items: self-start;
+    justify-content: left;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+#info_cliente2 > p{
+    margin-right: 40px;
+    margin-bottom: 4px;
+}
+#info_cliente2 > p:nth-child(4){
+    margin-right: 450px;
+}
+#banco_e_qr{
+    display: flex;
+
+}
+
+p{
+    font-size: medium;
+    font-family: Arial, Helvetica, sans-serif;
+}
+#info_cliente > p{
+
+    font-weight: bold;
+}
+
+#table_div{
+    display: flex;
+    justify-content: center;
+    font-size: medium;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+
+}
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid #000;
+    width: 90%; /* Defina a largura desejada, por exemplo, 80% */
+    margin: auto;
+}
+th, td {
+    padding: 0px 20px;
+    text-align: left;
+
+    border-bottom: 2px solid #000;
+}
+tfoot > tr{
+    border: none;
+}
+td:nth-child(1){
+    width: 65%;
+}
+td:nth-child(4){
+    text-align: right;
+    border-left: 2px solid #000;
+}
+td{
+    height: 30px;
+    border-bottom: 2px solid #000;
+}
+
+
+    </style>
+</head>
+
+<body>
+<div id="head">
+    <div>
+        <img th:src="@{'/Assets/loja_logo.png'}" height="120px" width="120px" alt="">
+        <img th:src="@{'/Assets/infos_redes_local.png'}" height="70px" width="200px" alt="">
+    </div>
+
+    <h1 th:style="'margin-left: -70px;'">Ordem de Serviço</h1>
+    <h1 th:text="'OS: ' + ${os.id}"></h1>
+</div>
+
+<div id="body1">
+    <div style="display: flex; justify-content: space-between;">
+        <div id="info_cliente">
+            <p>Cliente: <span th:text="${os.nome}"></span></p>
+            <p>Data de entrada: <strong th:text="${#dates.format(os.dataEntrada, 'dd/MM/yyyy')}"></strong></p>
+            <p>Telefone: <span th:text="${os.telefone}"></span></p>
+            <p>Equipamento: <span th:text="${os.equipamento}"></span></p>
+            <p>Serviço: <span th:text="${os.servico}"></span></p>
+        </div>
+        <div>
+            <img th:src="@{/Assets/infos_contrato.png}" height="120px" width="300px" alt="" id="contrato">
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<div id="body2" style="display: flex; justify-content: space-between;">
+    <img th:src="@{/Assets/loja_logo.png}" height="120px" width="120px" alt="">
+    <h1>Ordem de Serviço</h1>
+    <h1 style="display: flex; justify-content: center; margin-right: 50px;" th:text="${os.id}"></h1>
+</div>
+
+<div>
+    <div style="display: flex;">
+        <div id="info_cliente2">
+            <p>Cliente: <strong th:text="${os.nome}"></strong></p>
+            <p>Data de entrada: <strong th:text="${#dates.format(os.dataEntrada, 'dd/MM/yyyy')}"></strong></p>
+            <p>Telefone: <strong th:text="${os.telefone}"></strong></p>
+            <p>Equipamento: <strong th:text="${os.equipamento}"></strong></p>
+            <p>Serviço: <strong th:text="${os.servico}"></strong></p>
+        </div>
+    </div>
+    <div>
+        <p>Observações: <strong th:text="${os.observacao}"></strong></p>
+    </div>
+    <div style="text-align: center;">
+        <h1>Orçamento</h1>
+    </div>
+    <div id="table_div">
+        <table>
+            <tbody>
+            <tr th:each="item, itemStat : ${os.reserva.produtos_reservados}">
+                <td th:text="${item.produto}"></td>
+                <td th:text="'R$' + ${item.precoUnitario}"></td>
+                <td th:text="${item.quantidade}"></td>
+                <td th:text="'R$' + ${item.precoUnitario * item.quantidade}"></td>
+            </tr>
+            <!-- Adiciona linhas vazias para completar até 9 linhas -->
+            <tr th:each="i : ${#numbers.sequence(0, 8 - #lists.size(os.reserva.produtos_reservados))}">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td>Mão de obra</td>
+                <td></td>
+                <td></td>
+                <td th:text="${os.reserva.maoDeObra}"></td>
+            </tr>
+            <tr>
+                <td>Total</td>
+                <td></td>
+                <td></td>
+                <td th:text="'R$' + ${os.valorTotal}"></td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<div style="bottom: 0; position: fixed; display: flex; text-align: center; margin-left: 10px; margin-right: 10px;">
+    <div style="display: flex; flex-direction: column; margin-right: 5px;">
+        <p>____________________________</p>
+        <p style="font-size: small; margin-top: -3px;">Assinatura do técnico</p>
+    </div>
+    <div style="display: flex; flex-direction: column; margin-right: 5px;">
+        <p>____________________________</p>
+        <p style="font-size: small; margin-top: -3px;">Assinatura do atendente</p>
+    </div>
+    <div style="display: flex; flex-direction: column; ">
+        <p>____________________________</p>
+        <p style="font-size: small; margin-top: -3px;">Assinatura do cliente</p>
+    </div>
+</div>
+
+</body>
+
+</html>

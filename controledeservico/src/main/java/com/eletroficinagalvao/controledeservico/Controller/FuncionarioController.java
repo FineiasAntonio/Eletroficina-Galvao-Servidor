@@ -2,41 +2,46 @@ package com.eletroficinagalvao.controledeservico.Controller;
 
 import java.util.List;
 
+import com.eletroficinagalvao.controledeservico.Service.FuncionarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Funcionario;
-import com.eletroficinagalvao.controledeservico.Service.Services;
 
 @RestController
 @RequestMapping("/funcionarios")
 public class FuncionarioController {
     
     @Autowired
-    @Qualifier ("FuncionarioService")
-    private Services<Funcionario> service;
+    private FuncionarioService service;
 
     @GetMapping
     public ResponseEntity<List<Funcionario>> getAll(){
-        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(service.getAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Funcionario> getById(@PathVariable int id){
-        return new ResponseEntity<Funcionario>(service.getById(String.valueOf(id)), HttpStatus.OK);
+        Funcionario funcionario = service.getById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(funcionario);
     }
 
     @PostMapping
-    public ResponseEntity create(Funcionario funcionario){
-        service.create(funcionario);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<Funcionario> create(Funcionario funcionario){
+        Funcionario funcionarioCriado = service.create(funcionario);
+        return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioCriado);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> delete(int id){
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    }
+
+    @PutMapping
+    public ResponseEntity<Funcionario> update(int id, Funcionario funcionario){
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
 }

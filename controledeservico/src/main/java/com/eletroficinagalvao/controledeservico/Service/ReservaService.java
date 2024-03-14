@@ -1,12 +1,11 @@
 package com.eletroficinagalvao.controledeservico.Service;
 
-import com.eletroficinagalvao.controledeservico.Domain.DTO.Reserva.ReservaProdutoRequestDTO;
-import com.eletroficinagalvao.controledeservico.Domain.Entity.OS;
+import com.eletroficinagalvao.controledeservico.Domain.DTO.Reserva.ReservaProdutoExistenteDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Produto;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.ProdutoReservado;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.Reserva;
 import com.eletroficinagalvao.controledeservico.Exception.BadRequestException;
-import com.eletroficinagalvao.controledeservico.Repository.OSRepository;
+import com.eletroficinagalvao.controledeservico.Exception.NotFoundException;
 import com.eletroficinagalvao.controledeservico.Repository.ProdutoRepository;
 import com.eletroficinagalvao.controledeservico.Repository.ReservaRepository;
 
@@ -25,37 +24,41 @@ public class ReservaService {
     private ReservaRepository reservaRepository;
     @Autowired
     private ProdutoRepository produtoRepository;
-    @Autowired
-    private OSRepository osRepository;
 
     public List<Reserva> getAll() {
         return reservaRepository.findAll();
     }
 
     @Transactional
-    public void reservarProdutoDoEstoque(int id_os, ReservaProdutoRequestDTO produto) {
+    public void reservarProdutoDoEstoque(int id_os, ReservaProdutoExistenteDTO produto) {
 
-        //Segunda verificação pra ver se há a quantidade no estoque
-        Produto produtoDoEstoque = produtoRepository.findById(produto.uuidProduto()).get();
+        Reserva reserva = reservaRepository.findByIdOS(id_os);
+
+        if (!reserva.isAtivo())
+            throw new BadRequestException("Reserva fechada");
+
+        //verificação pra ver se há a quantidade no estoque
+        Produto produtoDoEstoque = produtoRepository.findById(produto.uuidProduto()).orElseThrow(() -> new NotFoundException("Produto não encontrado no estoque"));
         if (produtoDoEstoque.getQuantidade() < produto.quantidade()) {
+
             throw new BadRequestException("Não há quantidade suficiente de %s para ser reservado".formatted(produtoDoEstoque.getProduto()));
+
+        } else if (reserva.getProdutos_reservados().stream()
+                .anyMatch(x -> (x.getId().equals(produto.uuidProduto()) && x.getQuantidade() + produto.quantidade() > x.getQuantidadeNescessaria()))) {
+
+            throw new BadRequestException("Você está tentando reservar mais do que é nescessário");
         } else {
             produtoDoEstoque.setQuantidade(produtoDoEstoque.getQuantidade() - produto.quantidade());
             produtoRepository.save(produtoDoEstoque);
             log.info("Produto do estoque reduzido");
         }
 
-        Reserva reserva = reservaRepository.findByIdOS(id_os);
-        for (ProdutoReservado e: reserva.getProdutos_reservados()){
-            if (e.getId().equals(produto.uuidProduto())){
+
+        for (ProdutoReservado e : reserva.getProdutos_reservados()) {
+            if (e.getId().equals(produto.uuidProduto())) {
                 e.setQuantidade(e.getQuantidade() + produto.quantidade());
             }
         }
-
-        OS os = osRepository.findById(id_os).get();
-        os.setReserva(reserva);
-        osRepository.save(os);
-        //TODO: procurar um jeito de fazer uma referência entre as collections
 
         reservaRepository.save(reserva);
         log.info("Reserva salva");

@@ -17,6 +17,7 @@ public class ProdutoMapper {
     @Autowired
     private ProdutoRepository produtoRepository;
 
+    // mapeia pro estoque
     public Produto map(ProdutoDTO dto) {
 
         if (dto == null || !isValid(dto)) {
@@ -29,21 +30,28 @@ public class ProdutoMapper {
         );
     }
 
+    // mapeia para a reserva
     public ProdutoReservado mapReserva(ProdutoDTO dto) {
 
         if (dto == null || !isValid(dto)) {
             throw new BadRequestException("produto inválido");
         }
 
-        Produto produtoSupplier = map(dto);
-        produtoSupplier.setQuantidade(0);
-        produtoRepository.save(produtoSupplier);
+
+        Produto produto = produtoRepository.findByProduto(dto.produto())
+                .orElseGet(() -> {
+            Produto supplier = map(dto);
+            supplier.setQuantidade(0);
+            produtoRepository.save(supplier);
+            return supplier;
+        });
 
         int quantidadeNescessaria = dto.quantidade();
 
-        return new ProdutoReservado(produtoSupplier, quantidadeNescessaria);
+        return new ProdutoReservado(produto, quantidadeNescessaria);
     }
 
+    // pega do estoque e faz uma nova instancia de produto reservado
     public ProdutoReservado reservar(UUID uuidProduto, int quantidadeNescessaria) {
         Produto produto = produtoRepository.findById(uuidProduto)
                 .orElseThrow(() -> new NotFoundException("Produto não encontrado"));

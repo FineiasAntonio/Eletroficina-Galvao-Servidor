@@ -4,10 +4,11 @@ import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.CreateOSRequestDTO
 import com.eletroficinagalvao.controledeservico.Domain.DTO.OS.UpdateOSRequestDTO;
 import com.eletroficinagalvao.controledeservico.Domain.Entity.OS;
 import com.eletroficinagalvao.controledeservico.Domain.Mapper.OSMapper;
+import com.eletroficinagalvao.controledeservico.Exception.BadRequestException;
 import com.eletroficinagalvao.controledeservico.Exception.NotFoundException;
-import com.eletroficinagalvao.controledeservico.Repository.FuncionarioRepository;
 import com.eletroficinagalvao.controledeservico.Repository.OSRepository;
 
+import com.eletroficinagalvao.controledeservico.Repository.ReservaRepository;
 import lombok.extern.log4j.Log4j2;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,12 @@ import java.util.List;
 
 @Log4j2
 @Service
-@Qualifier ("OSService")
 public class OSService {
 
     @Autowired
     private OSRepository repository;
+    @Autowired
+    private ReservaRepository reservaRepository;
     @Autowired
     private OSMapper mapper;
     @Autowired
@@ -34,47 +36,50 @@ public class OSService {
         return repository.findAll();
     }
 
-    public OS getById(String id){
-        return repository.findById(Integer.valueOf(id))
+    public OS getById(int id){
+        return repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Não foi encontrado essa ordem de serviço"));
     }
 
     @Transactional
-    public void create(CreateOSRequestDTO ordemdeservico, List<MultipartFile> imagensEntrada){
+    public OS create(CreateOSRequestDTO ordemdeservico){
         OS os = mapper.map(ordemdeservico);
-        if (!imagensEntrada.isEmpty()){
-            os.setImagemEntrada(imageService.readImage(os.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
-        }
 
-        repository.insert(os);
-
+        repository.save(os);
         log.info("Ordem de serviço registrada no nome de: " + os.getFuncionario().getNome());
+        return os;
     }
 
     @Transactional
-    public void delete(String id){
-        repository.deleteById(Integer.valueOf(id));
-        imageService.delete(Integer.parseInt(id));
-        log.info("OS apagada com sucesso");
+    public void delete(int id){
+        repository.deleteById(id);
+        reservaRepository.delete(reservaRepository.findByIdOS(id));
+        log.info("OS {} apagada com sucesso", id);
     }
 
     @Transactional
-    public void update(int id,
-                       UpdateOSRequestDTO os,
-                       List<MultipartFile> imagensEntrada,
-                       List<MultipartFile> imagensSaida
-    ){
-        OS correspondente = repository.findById(Integer.valueOf(id)).orElseThrow(() -> new NotFoundException("OS não encontrada"));
-        OS updatedOS = mapper.updateMap(correspondente, os);
+    public OS update(int id, UpdateOSRequestDTO os){
+        OS ordemCorrespondente = repository.findById(id).orElseThrow(() -> new NotFoundException("OS não encontrada"));
+        OS ordemAtualizada = mapper.updateMap(ordemCorrespondente, os);
 
-        if (!imagensEntrada.isEmpty()){
-            updatedOS.setImagemEntrada(imageService.readImage(updatedOS.getId(), imagensEntrada, ImageService.ENTRANCE_METHOD));
-        }
-        if (!imagensSaida.isEmpty()){
-            updatedOS.setImagemSaida(imageService.readImage(updatedOS.getId(), imagensSaida, ImageService.EXIT_METHOD));
-        }
-
-        repository.save(updatedOS);
+        repository.save(ordemAtualizada);
         log.info("OS atualizada");
+        return ordemAtualizada;
+    }
+
+    @Transactional
+    public void storageImage(int id, List<MultipartFile> imagens, int method){
+        OS os = repository.findById(id).orElseThrow(() -> new NotFoundException("Ordem de serviço não encontrada"));
+        switch (method){
+            case ImageService.ENTRANCE_METHOD:
+                os.getImagemEntrada().addAll(imageService.uploadImage(id, imagens, method));
+                break;
+            case ImageService.EXIT_METHOD:
+                os.getImagemSaida().addAll(imageService.uploadImage(id, imagens, method));
+                break;
+            default:
+                throw new BadRequestException("Método inválido");
+        }
+        repository.save(os);
     }
 }

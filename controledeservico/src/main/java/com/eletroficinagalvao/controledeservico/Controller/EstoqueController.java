@@ -32,11 +32,9 @@ public class EstoqueController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody List<ProdutoDTO> produtos){
-        for (ProdutoDTO e: produtos) {
-            service.create(e);
-        }
-        
+    public ResponseEntity<Void> create(@RequestBody ProdutoDTO produtos){
+            service.create(produtos);
+
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

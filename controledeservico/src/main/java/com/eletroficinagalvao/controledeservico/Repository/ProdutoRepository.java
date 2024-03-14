@@ -14,4 +14,6 @@ public interface ProdutoRepository extends MongoRepository<Produto, UUID> {
 
     Set<Produto> findByQuantidadeGreaterThan(int quantidade);
 
+    Optional<Produto> findByProduto(String name);
+
 }
