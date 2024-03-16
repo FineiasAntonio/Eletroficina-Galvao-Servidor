@@ -1,0 +1,12 @@
+input {
+    font-family: inherit;
+    width: calc(100% / 5);
+    height: 30px;
+    border: 0;
+    border-bottom: 2px solid rgb(177, 177, 177);
+    outline: 0;
+    font-size: 1.3rem;
+    padding: 7px 0;
+    background: transparent;
+    color: rgb(26, 26, 26);
+}
