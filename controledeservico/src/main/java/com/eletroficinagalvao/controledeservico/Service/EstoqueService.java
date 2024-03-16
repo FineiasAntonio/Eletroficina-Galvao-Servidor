@@ -5,6 +5,7 @@ import com.eletroficinagalvao.controledeservico.Domain.Entity.Produto;
 import com.eletroficinagalvao.controledeservico.Domain.Mapper.ProdutoMapper;
 import com.eletroficinagalvao.controledeservico.Exception.NotFoundException;
 import com.eletroficinagalvao.controledeservico.Repository.ProdutoRepository;
+import com.eletroficinagalvao.controledeservico.Repository.ReservaRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class EstoqueService {
     private ProdutoRepository repository;
     @Autowired
     private ProdutoMapper produtoMapper;
+    @Autowired
+    private ReservaRepository reservaRepository;
 
     public List<Produto> getAll() {
         return repository.findAll();
@@ -56,7 +59,13 @@ public class EstoqueService {
     }
 
     public void delete(String id) {
-
         repository.deleteById(UUID.fromString(id));
+        reservaRepository.findAll().forEach(e -> {
+            e.getProdutos_reservados().stream()
+                    .filter(produto -> produto.getId() == UUID.fromString(id))
+                    .findAny()
+                    .ifPresent(produtoEncontrado -> e.getProdutos_reservados().remove(produtoEncontrado));
+            reservaRepository.save(e);
+        });
     }
 }
