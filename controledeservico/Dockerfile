@@ -4,4 +4,4 @@ WORKDIR /app
 
 COPY target/controledeservico.jar /app
 
-CMD ["java", "-jar", "app/controledeservico.jar"]
+CMD ["java", "-jar", "controledeservico.jar"]
