@@ -15,7 +15,6 @@ export default function Form() {
   const [osRequest, setOsRequest] = useState<OSCreateRequest>();
   const [imagens, setImagens] = useState<Blob[]>([]);
 
-  console.log(imagens)
 
   const setarReserva = (produtosExistentesInput: produtosReservados[], produtosNovosInput: NovoProduto[], maoDeObraInput: number) => {
     const Reserva = {

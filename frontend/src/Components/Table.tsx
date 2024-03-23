@@ -8,6 +8,18 @@ import { useNavigate } from "react-router-dom";
 
 export default function Table() {
 
+  const fetchData = async () => {
+    try {
+      const osData = await getAllOS();
+      setData(osData);
+      NsetData(osData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  fetchData()
+
   const navigate = useNavigate();
 
   const [ordemSelecionada, setOrdemSelecionada] = useState<OrdemServico>();
@@ -17,16 +29,6 @@ export default function Table() {
   const [Ndata, NsetData] = useState<OrdemServico[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const osData = await getAllOS();
-        setData(osData);
-        NsetData(osData);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     fetchData();
   }, []);
 

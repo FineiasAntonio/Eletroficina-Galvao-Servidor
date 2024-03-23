@@ -93,7 +93,7 @@ export interface OSCreateRequest {
     equipamento: string;
     numeroSerie: string;
     servico: string;
-    dataSaida: Date;
+    dataSaida: string;
     funcionarioId: number;
     observacao: string;
     comentarios: string;

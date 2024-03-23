@@ -17,7 +17,6 @@ export default function OSForm({ setarOS, adicionarImagens }: FormProps) {
 
     const [data, setData] = useState<Funcionario[]>([]);
 
-    //const [imagens, setImagens] = useState<Blob[]>([]);
     const [formData, setFormData] = useState<OSCreateRequest>({
         nome: '',
         cpf: '',
@@ -26,8 +25,8 @@ export default function OSForm({ setarOS, adicionarImagens }: FormProps) {
         equipamento: '',
         numeroSerie: '',
         servico: '',
-        dataSaida: new Date(),
-        funcionarioId: 0,
+        dataSaida: new Date().toISOString().split("T")[0],
+        funcionarioId: 1,
         observacao: '',
         comentarios: '',
         reserva: {
@@ -46,6 +45,9 @@ export default function OSForm({ setarOS, adicionarImagens }: FormProps) {
         }
         if (e.target.name == "cpf") {
             e.target.value = formatCPF(e.target.value);
+        }
+        if (e.target.name == "funcionario") {
+            formData.funcionarioId = e.target.value
         }
 
         const { name, value } = e.target;
@@ -244,7 +246,7 @@ export default function OSForm({ setarOS, adicionarImagens }: FormProps) {
                                         <input
                                             type="date"
                                             name="dataSaida"
-                                            value={formData.dataSaida ? new Date(formData.dataSaida).toISOString().split('T')[0] : ''}
+                                            defaultValue={formData.dataSaida ? new Date(formData.dataSaida).toISOString().split('T')[0] : ""}
                                             onChange={handleInputChange}
                                             className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                                         />
@@ -263,7 +265,7 @@ export default function OSForm({ setarOS, adicionarImagens }: FormProps) {
                                     <select
                                         id="funcionario"
                                         name="funcionario"
-                                        value={formData.funcionarioId}
+                                        defaultValue={formData.funcionarioId}
                                         onChange={handleInputChange}
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                                     >
