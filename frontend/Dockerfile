@@ -1,12 +1,13 @@
 FROM node:latest
 
-WORKDIR /app
+WORKDIR /
 
-COPY . /app
+COPY . .
 
-RUN npm install
-RUN npm run build
+RUN yarn add postcss-cli@latest
+RUN yarn add react-scripts@latest
+RUN yarn build
 
-EXPOSE 5173
+CMD ["yarn", "start"]
 
-CMD ["npm", "run", "dev"]
+EXPOSE 3000

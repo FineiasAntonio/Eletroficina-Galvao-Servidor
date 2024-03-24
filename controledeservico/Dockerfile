@@ -1,7 +1,13 @@
 FROM amazoncorretto:17-alpine-jdk
 
-WORKDIR /app
+RUN apk add --no-cache maven
 
-COPY target/controledeservico.jar /app
+WORKDIR /
 
-CMD ["java", "-jar", "controledeservico.jar"]
+COPY . .
+
+RUN mvn clean install
+
+CMD ["java", "-jar", "target/controledeservico-1.0.jar"]
+
+EXPOSE 8080
