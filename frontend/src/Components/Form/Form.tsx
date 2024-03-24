@@ -13,7 +13,7 @@ export default function Form() {
 
   const [reserva, setReserva] = useState<Reserva>();
   const [osRequest, setOsRequest] = useState<OSCreateRequest>();
-  const [imagens, setImagens] = useState<Blob[]>([]);
+  //const [imagens, setImagens] = useState<Blob[]>([]);
 
 
   const setarReserva = (produtosExistentesInput: produtosReservados[], produtosNovosInput: NovoProduto[], maoDeObraInput: number) => {
@@ -30,7 +30,8 @@ export default function Form() {
   }
 
   const adicionarImagens = (novasImagens: Blob[]) => {
-    setImagens((prevData) => [...prevData, ...novasImagens]);
+    // setImagens((prevData) => [...prevData, ...novasImagens]);
+    console.log(novasImagens)
   };
 
   const envia = async () => {
