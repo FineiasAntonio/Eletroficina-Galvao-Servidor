@@ -42,7 +42,7 @@ export default function NavBar() {
                                 <div className="flex-shrink-0">
                                     <img
                                         className="h-20 w-20"
-                                        src="src/Assets/loja_logo.png"
+                                        src="/Assets/loja_logo.png"
                                         alt="Eletroficina Galvão Logo"
                                     />
                                 </div>

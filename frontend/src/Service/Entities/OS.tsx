@@ -42,7 +42,7 @@ export interface UpdateOrdemServicoDTO {
     cpf: string;
     telefone: string;
     endereco: string;
-    dataSaida: Date;
+    dataSaida: string;
     equipamento: string;
     numeroSerie: string;
     funcionarioId: number;

@@ -24,8 +24,9 @@ public class ReservaMapper {
 
     public Optional<Reserva> criarReserva(ReservaDTO reserva, int idOS) {
 
-        if(reserva == null){
-            return Optional.empty();
+        if(reserva.produtosExistentes().isEmpty() && reserva.produtosNovos().isEmpty()){
+            Reserva reservaVazia = new Reserva(idOS, new LinkedList<>(), false, reserva.maoDeObra());
+            return Optional.of(reservaRepository.save(reservaVazia));
         }
 
         List<ProdutoReservado> produtosReservados = new LinkedList<>();
@@ -45,7 +46,7 @@ public class ReservaMapper {
 
     public Reserva atualizarReserva(Reserva reserva, ReservaDTO reservaAtualizada){
 
-        reserva = reservaRepository.findById(reserva.getId()).get();
+        reserva = reservaRepository.findById(reserva.getId()).orElseThrow(() -> new NullPointerException("Não era pra ser null"));
 
         List<ProdutoReservado> produtosReservados = new LinkedList<>();
 
@@ -60,6 +61,9 @@ public class ReservaMapper {
         reserva.getProdutos_reservados().addAll(produtosReservados);
         reserva.setMaoDeObra(reservaAtualizada.maoDeObra());
 
+        if(!reserva.getProdutos_reservados().isEmpty()){
+            reserva.setAtivo(true);
+        }
 
         return reservaRepository.save(reserva);
     }

@@ -12,7 +12,7 @@ import UpdateOrcamentoForm from "./UpdateOrcamentoForm";
 export default function UpdateForm() {
 
     const navigate = useNavigate();
-    let { id } = useParams();
+    const { id } = useParams();
 
     const [funcionarios, setFuncionarios] = useState<Funcionario[]>();
     const [reserva, setReserva] = useState<Reserva>();
@@ -41,7 +41,7 @@ export default function UpdateForm() {
         cpf: "",
         telefone: "",
         endereco: "",
-        dataSaida: new Date(),
+        dataSaida: "",
         equipamento: "",
         numeroSerie: "",
         funcionarioId: 0,
@@ -64,10 +64,8 @@ export default function UpdateForm() {
 
         const { name, value, type, checked } = e.target;
 
-        let inputValue: string | boolean
-
         // Se for um campo de checkbox, use 'checked' em vez de 'value'
-        inputValue = type === "checkbox" ? checked : value;
+        const inputValue = type === "checkbox" ? checked : value;
 
         setUpdateRequest((prevData) => ({
             ...prevData,
@@ -87,7 +85,7 @@ export default function UpdateForm() {
                     cpf: osData?.cpf || "",
                     endereco: osData?.endereco || "",
                     telefone: osData?.telefone || "",
-                    dataSaida: osData.dataSaida,
+                    dataSaida: osData.dataSaida.toISOString(),
                     equipamento: osData.equipamento,
                     numeroSerie: osData.numeroSerie,
                     funcionarioId: osData.funcionario.id,
@@ -135,7 +133,7 @@ export default function UpdateForm() {
 
     const envia = async () => {
 
-        let osAtualizada: UpdateOrdemServicoDTO = {
+        const osAtualizada: UpdateOrdemServicoDTO = {
             nome: updateRequest.nome,
             cpf: updateRequest.cpf,
             endereco: updateRequest.endereco,
@@ -329,7 +327,7 @@ export default function UpdateForm() {
                                                 <input
                                                     type="date"
                                                     name="dataSaida"
-                                                    value={new Date(OS?.dataSaida).toISOString().split('T')[0]}
+                                                    defaultValue={new Date(OS?.dataSaida).toISOString().split('T')[0]}
                                                     onChange={handleInputChange}
                                                     className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                                                 />

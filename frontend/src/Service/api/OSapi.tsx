@@ -68,7 +68,7 @@ export async function updateOS(id: number, os: UpdateOrdemServicoDTO): Promise<n
     const response = await API.put(`/ordensdeservicos/${id}`, os);
 
     if (response.status === 201){
-        toast.error(`${response.status} - ${response.data}`)
+        toast.success(`${response.status} - ${response.data}`)
         console.log('atualizado')
     }
     

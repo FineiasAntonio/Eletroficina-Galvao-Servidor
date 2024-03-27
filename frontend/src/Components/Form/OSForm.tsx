@@ -38,7 +38,7 @@ export default function OSForm({ setarOS, adicionarImagens }: FormProps) {
         setarOS(formData);
     }, [formData]);
 
-    const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
 
         if (e.target.name == "telefone") {
             e.target.value = formatTelefone(e.target.value);
@@ -47,7 +47,7 @@ export default function OSForm({ setarOS, adicionarImagens }: FormProps) {
             e.target.value = formatCPF(e.target.value);
         }
         if (e.target.name == "funcionario") {
-            formData.funcionarioId = e.target.value
+            formData.funcionarioId = parseInt(e.target.value)
         }
 
         const { name, value } = e.target;
