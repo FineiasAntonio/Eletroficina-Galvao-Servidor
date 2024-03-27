@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.eletroficinagalvao</groupId>
 	<artifactId>controledeservico</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>controledeservico</name>
 	<description>Controle de Serviços e Estoque da Eletroficina Galvão</description>
 	<properties>

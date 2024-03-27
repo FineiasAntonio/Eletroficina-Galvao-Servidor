@@ -39,10 +39,12 @@ public class OSMapper {
             throw new BadRequestException("Ordem de serviço inválida");
         }
 
+        System.out.println(dto);
+
         ordemdeservico.setReserva(reservaMapper.criarReserva(
                 dto.reserva(),
                 ordemdeservico.getId()
-        ).orElse(new Reserva(ordemdeservico.getId(), new LinkedList<>(), false, 0)));
+        ).orElseGet(() -> new Reserva(ordemdeservico.getId(), new LinkedList<>(), false, 0)));
 
         ordemdeservico.setNome(dto.nome());
         ordemdeservico.setCpf(dto.cpf());

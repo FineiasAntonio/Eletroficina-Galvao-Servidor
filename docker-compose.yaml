@@ -1,0 +1,41 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo_c
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo:/data/db
+    networks:
+      - server
+    command: mongod --replSet rs0
+
+  backend:
+    image: backend
+    container_name: back_c
+    build: 
+      context: ./controledeservico
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+    networks:
+      - server
+
+  # frontend:
+  #   image: frontend
+  #   container_name: front_c
+  #   build: 
+  #     context: ./frontend
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - backend
+  #   networks:
+  #     - server
+
+volumes:
+  mongo:
+
+networks:
+  server:
