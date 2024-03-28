@@ -3,6 +3,7 @@ package com.eletroficinagalvao.controledeservico.Domain.DTO.OS;
 import com.eletroficinagalvao.controledeservico.Domain.DTO.Estoque.ProdutoDTO;
 import com.eletroficinagalvao.controledeservico.Domain.DTO.Reserva.ReservaDTO;
 import com.eletroficinagalvao.controledeservico.Domain.DTO.Reserva.ReservaProdutoExistenteDTO;
+import com.eletroficinagalvao.controledeservico.Domain.Entity.Midia;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public record CreateOSRequestDTO(
         String observacao,
         int funcionarioId,
         String comentarios,
-        ReservaDTO reserva
+        ReservaDTO reserva,
+        Midia midia
 ) {
 }

@@ -52,7 +52,7 @@ public class Schedule {
                 .forEach(x -> {
 
                     x.setSituacao(ServicoSituacao.EM_ANDAMENTO);
-                    x.setSubSituacao(SubSituacao.APROVADO);
+                    x.setSubSituacao(SubSituacao.AGUARDANDO_MONTAGEM);
                     osRepository.save(x);
 
                     // TODO: estudar queries do mongodb para fazer um update melhor

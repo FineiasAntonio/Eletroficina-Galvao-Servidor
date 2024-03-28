@@ -5,9 +5,10 @@ import java.util.Arrays;
 public enum SubSituacao {
     AGUARDANDO_RETIRADA (1),
     ENTREGUE (0),
-    MONTADO(2),
-    TESTADO(3),
-    APROVADO(4);
+    AGUARDANDO_ORCAMENTO(2),
+    AGUARDANDO_MONTAGEM(3),
+    MONTADO(4),
+    TESTADO(5);
 
     private final int valor;
 

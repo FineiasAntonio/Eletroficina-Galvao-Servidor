@@ -22,11 +22,11 @@ public class ReservaMapper {
     @Autowired
     private ReservaRepository reservaRepository;
 
-    public Optional<Reserva> criarReserva(ReservaDTO reserva, int idOS) {
+    public Reserva criarReserva(ReservaDTO reserva, int idOS) {
 
         if(reserva.produtosExistentes().isEmpty() && reserva.produtosNovos().isEmpty()){
             Reserva reservaVazia = new Reserva(idOS, new LinkedList<>(), false, reserva.maoDeObra());
-            return Optional.of(reservaRepository.save(reservaVazia));
+            return reservaRepository.save(reservaVazia);
         }
 
         List<ProdutoReservado> produtosReservados = new LinkedList<>();
@@ -38,8 +38,8 @@ public class ReservaMapper {
             produtosReservados.addAll(reserva.produtosNovos().stream().map(e -> produtoMapper.mapReserva(e)).toList());
         }
 
-        return produtosReservados.isEmpty() ? Optional.empty() : Optional.of(reservaRepository.save(
-                new Reserva(idOS, produtosReservados, true, reserva.maoDeObra()))
+        return reservaRepository.save(
+                new Reserva(idOS, produtosReservados, true, reserva.maoDeObra())
         );
 
     }

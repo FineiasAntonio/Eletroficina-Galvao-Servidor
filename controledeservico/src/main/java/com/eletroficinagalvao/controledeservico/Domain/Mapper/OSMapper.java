@@ -39,12 +39,10 @@ public class OSMapper {
             throw new BadRequestException("Ordem de serviço inválida");
         }
 
-        System.out.println(dto);
-
         ordemdeservico.setReserva(reservaMapper.criarReserva(
                 dto.reserva(),
                 ordemdeservico.getId()
-        ).orElseGet(() -> new Reserva(ordemdeservico.getId(), new LinkedList<>(), false, 0)));
+        ));
 
         ordemdeservico.setNome(dto.nome());
         ordemdeservico.setCpf(dto.cpf());
@@ -57,17 +55,16 @@ public class OSMapper {
         ordemdeservico.setObservacao(dto.comentarios());
         ordemdeservico.setDataSaida(Date.valueOf(dto.dataSaida()));
         ordemdeservico.setFuncionario(funcionarioRepository.findById(dto.funcionarioId()).get());
-
+        ordemdeservico.getMidias().add(dto.midia());
         ordemdeservico.setDataEntrada(Date.valueOf(LocalDate.now()));
 
-        if ((ordemdeservico.getReserva() != null) && ordemdeservico.getReserva().isAtivo()) {
+        if (ordemdeservico.getReserva().isAtivo()) {
             ordemdeservico.setSituacao(ServicoSituacao.AGUARDANDO_PECA);
             ordemdeservico.setValorTotal(atualizarValorOS(ordemdeservico.getReserva()));
         } else {
             ordemdeservico.setSituacao(ServicoSituacao.EM_ANDAMENTO);
+            ordemdeservico.setSubSituacao(SubSituacao.AGUARDANDO_ORCAMENTO);
         }
-
-
 
         return ordemdeservico;
     }
@@ -77,8 +74,6 @@ public class OSMapper {
         if (!isValid(dto)) {
             throw new BadRequestException("Ordem de serviço inválida");
         }
-
-
 
         ordemdeservico.setNome(dto.nome());
         ordemdeservico.setCpf(dto.cpf());
@@ -91,6 +86,7 @@ public class OSMapper {
         ordemdeservico.setComentarios(dto.comentarios());
         ordemdeservico.setDataSaida(Date.valueOf(dto.dataSaida().toLocalDate()));
         ordemdeservico.setSubSituacao(dto.subSituacao());
+        ordemdeservico.getMidias().add(dto.midia());
         ordemdeservico.setFuncionario(funcionarioRepository.findById(dto.funcionarioId()).orElseThrow(() -> new NotFoundException("Funcionário não encontrado")));
 
         ordemdeservico.setReserva(reservaMapper.atualizarReserva(
@@ -113,7 +109,6 @@ public class OSMapper {
             }
             ordemdeservico.setDataConclusao(null);
             ordemdeservico.setDataEntrega(null);
-
         }
 
         return ordemdeservico;

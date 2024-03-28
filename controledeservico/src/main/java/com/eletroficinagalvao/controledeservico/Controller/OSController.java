@@ -54,19 +54,6 @@ public class OSController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ordemAtualizada);
     }
 
-    @PostMapping (value = "/image/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> storageImage(
-            @PathVariable int id,
-            @RequestParam(name = "method") int method,
-            @RequestBody List<MultipartFile> imagens
-    ){
-        System.out.println(id);
-        System.out.println(method);
-        System.out.println(imagens);
-        service.storageImage(id, imagens, method);
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
     @GetMapping("/print/{id}")
     public ModelAndView getDocDetails(@PathVariable("id") int id){
         ModelAndView mv = new ModelAndView("doc");
