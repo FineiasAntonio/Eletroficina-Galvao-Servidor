@@ -6,6 +6,7 @@ import { NovoProduto } from "../../Service/Entities/Produto";
 import { OSCreateRequest } from "../../Service/Entities/OS";
 import { createOS } from "../../Service/api/OSapi";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function Form() {
 
@@ -13,7 +14,7 @@ export default function Form() {
 
   const [reserva, setReserva] = useState<Reserva>();
   const [osRequest, setOsRequest] = useState<OSCreateRequest>();
-  //const [imagens, setImagens] = useState<Blob[]>([]);
+  const [imagens, setImagens] = useState<Blob[]>([]);
 
 
   const setarReserva = (produtosExistentesInput: produtosReservados[], produtosNovosInput: NovoProduto[], maoDeObraInput: number) => {
@@ -30,11 +31,12 @@ export default function Form() {
   }
 
   const adicionarImagens = (novasImagens: Blob[]) => {
-    // setImagens((prevData) => [...prevData, ...novasImagens]);
+    setImagens((prevData) => [...prevData, ...novasImagens]);
     console.log(novasImagens)
   };
 
   const envia = async () => {
+
     const request = {
       nome: osRequest?.nome,
       telefone: osRequest?.telefone,
@@ -50,8 +52,21 @@ export default function Form() {
       reserva: reserva
     }
 
-    createOS(request);
-    navigate("/")
+    const inputsObrigatorios = [
+      { propriedade: 'Nome', valor: request.nome },
+      { propriedade: 'Equipamento', valor: request.equipamento },
+      { propriedade: 'Serviço', valor: request.servico }
+  ];
+
+    if(inputsObrigatorios.some(e => e.valor?.trim() == "")){
+      console.error("Campo inválido")
+      toast.error(`O Campo ${inputsObrigatorios.find(e => e.valor?.trim() == "")?.propriedade} está vazio`)
+      return
+    }
+
+    console.log(request)
+    /* createOS(request);
+    navigate("/") */
     /* if (response.id) {
       uploadImages(response.id, imagens, 1);
     } */

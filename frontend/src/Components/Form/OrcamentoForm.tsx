@@ -101,7 +101,13 @@ export default function OrcamentoForm({ setarReserva }: FormProps) {
     };
 
     const handleMaoDeObra = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseFloat(event.target.value);
+
+        event.target.value = event.target.value.match(/[0-9,]/g)?.join("") ?? "";
+        
+        const valorSemCifrao = event.target.value.replace("R$", ""); 
+        event.target.value = `R$${valorSemCifrao}`; 
+
+        const value = parseFloat(valorSemCifrao.replace(",", "."));
         setMaoDeObra(isNaN(value) ? 0 : value);
     }
 
@@ -202,7 +208,7 @@ export default function OrcamentoForm({ setarReserva }: FormProps) {
 
             <div className="h-32 mt-3 items-center flex">
                 <label>Mão de obra</label>
-                <input type="number" className="ml-5" onChange={handleMaoDeObra} />
+                <input type="text" className="ml-5" onChange={handleMaoDeObra} />
             </div>
         </div>
     )

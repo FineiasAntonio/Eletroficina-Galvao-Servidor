@@ -96,6 +96,7 @@ export default function OSForm({ setarOS, adicionarImagens }: FormProps) {
                                     <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                                         <input
                                             type="text"
+                                            id="nomeInput"
                                             name="nome"
                                             value={formData.nome}
                                             onChange={handleInputChange}
@@ -117,6 +118,7 @@ export default function OSForm({ setarOS, adicionarImagens }: FormProps) {
                                     <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                                         <input
                                             type="text"
+                                            id="cpfInput"
                                             name="cpf"
                                             value={formData.cpf}
                                             onChange={handleInputChange}
@@ -137,6 +139,7 @@ export default function OSForm({ setarOS, adicionarImagens }: FormProps) {
                                     <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                                         <input
                                             type="text"
+                                            id="telefoneInput"
                                             name="telefone"
                                             value={formData.telefone}
                                             onChange={handleInputChange}
@@ -180,6 +183,7 @@ export default function OSForm({ setarOS, adicionarImagens }: FormProps) {
                                     <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                                         <input
                                             type="text"
+                                            id="equipamentoInput"
                                             name="equipamento"
                                             value={formData.equipamento}
                                             onChange={handleInputChange}
@@ -224,6 +228,7 @@ export default function OSForm({ setarOS, adicionarImagens }: FormProps) {
                                     <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                                         <input
                                             type="text"
+                                            id="servicoInput"
                                             name="servico"
                                             value={formData.servico}
                                             onChange={handleInputChange}
@@ -246,7 +251,7 @@ export default function OSForm({ setarOS, adicionarImagens }: FormProps) {
                                         <input
                                             type="date"
                                             name="dataSaida"
-                                            defaultValue={formData.dataSaida ? new Date(formData.dataSaida).toISOString().split('T')[0] : ""}
+                                            defaultValue={new Date(Date.now()).toISOString().split("T")[0]}
                                             onChange={handleInputChange}
                                             className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                                         />
@@ -354,6 +359,9 @@ export default function OSForm({ setarOS, adicionarImagens }: FormProps) {
                                         </div>
                                     )*/}
                                 </div>
+                                <div>
+                                    <input type="text" className='w-full mt-2' placeholder='Descrição'/>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -382,3 +390,5 @@ const formatCPF = (inputCPF: string): string => {
     const formattedTelefone = telefone.replace(/(\d{2})(\d{4,5})(\d{4})/, '($1) $2-$3');
     return formattedTelefone;
   };
+
+  
