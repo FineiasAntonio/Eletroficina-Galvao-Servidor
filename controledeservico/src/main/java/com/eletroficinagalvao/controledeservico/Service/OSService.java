@@ -29,8 +29,6 @@ public class OSService {
     private ReservaRepository reservaRepository;
     @Autowired
     private OSMapper mapper;
-    @Autowired
-    private ImageService imageService;
 
     public List<OS> getAll(){
         return repository.findAll();
@@ -65,21 +63,5 @@ public class OSService {
         repository.save(ordemAtualizada);
         log.info("OS atualizada");
         return ordemAtualizada;
-    }
-
-    @Transactional
-    public void storageImage(int id, List<MultipartFile> imagens, int method){
-        OS os = repository.findById(id).orElseThrow(() -> new NotFoundException("Ordem de serviço não encontrada"));
-        switch (method){
-            case ImageService.ENTRANCE_METHOD:
-                os.getImagemEntrada().addAll(imageService.uploadImage(id, imagens, method));
-                break;
-            case ImageService.EXIT_METHOD:
-                os.getImagemSaida().addAll(imageService.uploadImage(id, imagens, method));
-                break;
-            default:
-                throw new BadRequestException("Método inválido");
-        }
-        repository.save(os);
     }
 }
